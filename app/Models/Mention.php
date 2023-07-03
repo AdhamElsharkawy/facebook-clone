@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Mention extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
 }

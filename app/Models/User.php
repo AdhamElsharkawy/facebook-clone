@@ -8,7 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-
 class User extends Authenticatable implements JWTSubject
 {
     use  HasFactory, Notifiable;
@@ -55,4 +54,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return asset($this->image);
     } //end of retreving image directly
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    } //end of department
 }
