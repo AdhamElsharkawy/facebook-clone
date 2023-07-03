@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
         // $faker = Factory::create();
         User::factory(30)->create();
         User::create([
+            'title'=> 'Sir.',
             'name' => 'super admin',
             'email' => 'super_admin@app.com',
             'email_verified_at' => now(),
