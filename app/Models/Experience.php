@@ -11,4 +11,13 @@ class Experience extends Model
 
     protected $guarded = [];
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    } // end company
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    } // end user
 }

@@ -12,6 +12,6 @@ class CertificationSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Certification::factory(10)->create();
     }
 }
