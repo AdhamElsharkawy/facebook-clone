@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\RoundController;
 use App\Http\Controllers\Api\TeamController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,5 +20,10 @@ use Illuminate\Support\Facades\Route;
 require __DIR__ . '/auth.php';
 
 Route::group(['as' => 'api.'], function () {
-    // write your public APIs here
+        Route::controller(AuthController::class)->group(function () {
+        Route::post('login', 'login');
+        Route::post('register', 'register');
+        Route::post('logout', 'logout');
+        Route::post('refresh', 'refresh');
+    });
 });
