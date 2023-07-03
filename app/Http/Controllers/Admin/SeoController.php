@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Seo;
 use App\Http\Controllers\Controller;
+
+use App\Models\Seo;
 use App\Http\Requests\Admin\Seo\UpdateSeoRequest;
 use App\Http\Traits\ImageTrait;
 

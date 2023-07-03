@@ -1,9 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\RoleController;
-use App\Http\Controllers\Api\RoundController;
-use App\Http\Controllers\Api\TeamController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
