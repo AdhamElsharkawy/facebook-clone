@@ -11,4 +11,13 @@ class Company extends Model
 
     protected $guarded = [];
 
+    public function experiences()
+    {
+        return $this->hasMany(Experience::class);
+    } //end of experiences
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'experiences')->withPivot('title', 'start_date', 'end_date', 'description', 'is_current', 'type');
+    } //end of users
 }

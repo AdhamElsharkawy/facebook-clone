@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('education', function (Blueprint $table) {
+        Schema::create('experiences', function (Blueprint $table) {
             $table->id();
-            $table->string('degree');
-            $table->string('major');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->boolean('type')->default(1);
             $table->dateTime('start_date');
             $table->dateTime('end_date')->nullable();
             $table->boolean('is_current')->default(0);
-            $table->string('location')->nullable();
-            $table->bigInteger('college_id')->unsigned()->nullable();
-            
+            $table->bigInteger('company_id')->unsigned()->nullable();
+
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('college_id')->references('id')->on('colleges')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('education');
+        Schema::dropIfExists('experiences');
     }
 };

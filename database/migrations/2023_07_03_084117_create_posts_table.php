@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->string('thread');
+            $table->json('images')->nullable();
+            $table->dateTime('poll_end_date')->nullable();
+            $table->bigInteger('votes')->default(0);
+
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

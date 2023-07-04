@@ -11,4 +11,13 @@ class Poll extends Model
 
     protected $guarded = [];
 
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    } //end of post
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    } //end of user
 }

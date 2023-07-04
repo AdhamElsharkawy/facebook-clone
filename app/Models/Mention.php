@@ -11,4 +11,18 @@ class Mention extends Model
 
     protected $guarded = [];
 
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    } //end of post
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    } //end of user
+
+    public function comment()
+    {
+        return $this->belongsTo(Comment::class);
+    } //end of comment
 }

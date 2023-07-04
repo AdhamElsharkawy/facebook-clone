@@ -11,4 +11,13 @@ class Education extends Model
 
     protected $guarded = [];
 
+    public function college()
+    {
+        return $this->belongsTo(College::class);
+    }//end of college
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    } //end of user
 }

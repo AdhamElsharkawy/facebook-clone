@@ -12,6 +12,6 @@ class CollegeSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\College::factory(10)->create();
     }
 }
