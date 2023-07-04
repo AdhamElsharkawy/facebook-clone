@@ -30,11 +30,10 @@ class CreateUsersTable extends Migration
             $table->string('front_theme')->default('light');
             $table->string('back_theme')->default('light');
 
-            $table->bigInteger('department_id')->unsigned()->nullable();
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('department_id')->constrained('departments')->onUpdate('cascade');
         });
     }
 

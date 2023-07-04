@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
+            $table->integer('reaction')->default(0);
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('post_id')->unsigned()->nullable();
+            $table->bigInteger('comment_id')->unsigned()->nullable();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }

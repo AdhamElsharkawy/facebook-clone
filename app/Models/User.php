@@ -60,13 +60,58 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Department::class);
     } //end of department
 
-    public function education()
-    {
-        return $this->hasMany(Education::class);
-    } //end of education
-
-    public function experience()
+    public function experiences()
     {
         return $this->hasMany(Experience::class);
     } //end of experience
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'experiences')->withPivot('title', 'start_date', 'end_date', 'description', 'is_current', 'type');
+    } //end of companies
+
+    public function educations()
+    {
+        return $this->hasMany(Education::class);
+    } //end of educations
+
+    public function colleges()
+    {
+        return $this->belongsToMany(College::class, 'educations')->withPivot('degree', 'major', 'start_date', 'end_date', 'description', 'is_current', 'location');
+    } //end of colleges
+
+    public function certifications()
+    {
+        return $this->hasMany(Certification::class);
+    } //end of certifications
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    } //end of posts
+
+    public function polls()
+    {
+        return $this->hasMany(Poll::class);
+    } //end of polls
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    } //end of comments
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    } //end of likes
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    } //end of notifications
+
+    public function mentions()
+    {
+        return $this->hasMany(Mention::class);
+    } //end of mentions
 }

@@ -18,9 +18,11 @@ return new class extends Migration
             $table->boolean('type')->default(1);
             $table->dateTime('start_date');
             $table->dateTime('end_date')->nullable();
+            $table->boolean('is_current')->default(0);
+            $table->bigInteger('company_id')->unsigned()->nullable();
 
-            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }
