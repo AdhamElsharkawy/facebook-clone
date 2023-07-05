@@ -12,6 +12,6 @@ class PollSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Poll::factory()->count(160)->create();
     }
 }

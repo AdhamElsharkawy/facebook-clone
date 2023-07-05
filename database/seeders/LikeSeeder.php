@@ -12,6 +12,6 @@ class LikeSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Like::factory()->count(100)->create();
     }
 }

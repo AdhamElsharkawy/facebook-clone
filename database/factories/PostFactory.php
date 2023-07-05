@@ -17,7 +17,14 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "thread" => $this->faker->sentence(3),
+            "images" => json_encode([
+                "assets/images/default.png",
+                "assets/images/default.png",
+                "assets/images/default.png",
+            ]),
+            "poll_end_date" => $this->faker->dateTimeBetween('+1 day', '+2 day'),
+            "user_id" => $this->faker->numberBetween(1, 20),
         ];
     }
 }

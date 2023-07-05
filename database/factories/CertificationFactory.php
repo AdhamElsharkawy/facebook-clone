@@ -17,7 +17,11 @@ class CertificationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "major" => $this->faker->sentence(3),
+            "start_date" => $this->faker->dateTime(),
+            "end_date" => $this->faker->dateTime(),
+            "college_id" => $this->faker->numberBetween(1, 5),
+            "user_id" => $this->faker->numberBetween(1, 20),
         ];
     }
 }

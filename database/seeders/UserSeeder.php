@@ -15,14 +15,14 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // $faker = Factory::create();
-        User::factory(30)->create();
+        User::factory(20)->create();
         User::create([
             'title'=> 'Sir.',
             'name' => 'super admin',
             'email' => 'super_admin@app.com',
             'email_verified_at' => now(),
             'password' => bcrypt('12345678'),
-            'role' => 'super_admin',
+            'role' => 'admin',
         ]);
     }
 }

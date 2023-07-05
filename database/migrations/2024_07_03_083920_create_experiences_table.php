@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->boolean('type')->default(1);
+            $table->integer('type')->default(1);
             $table->dateTime('start_date');
             $table->dateTime('end_date')->nullable();
             $table->boolean('is_current')->default(0);

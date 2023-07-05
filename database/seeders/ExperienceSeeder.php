@@ -12,6 +12,6 @@ class ExperienceSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Experience::factory()->count(80)->create();
     }
 }

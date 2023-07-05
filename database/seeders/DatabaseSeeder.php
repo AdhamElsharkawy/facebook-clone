@@ -9,20 +9,20 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            DepartmentSeeder::class,
             UserSeeder::class,
             SeoSeeder::class,
+            CollegeSeeder::class,
             CertificationSeeder::class,
             CompanySeeder::class,
-            CollegeSeeder::class,
-            CommentSeeder::class,
-            DepartmentSeeder::class,
             EducationSeeder::class,
-            EventSeeder::class,
             ExperienceSeeder::class,
-            LikeSeeder::class,
-            MentionSeeder::class,
+            EventSeeder::class,
             NotificationSeeder::class,
             PostSeeder::class,
+            MentionSeeder::class,
+            LikeSeeder::class,
+            CommentSeeder::class,
             PollSeeder::class,
         ]);
     }
