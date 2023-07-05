@@ -9,12 +9,17 @@ use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
+
 class UserFactory extends Factory
 {
+    private $department_index = 0;
+    
     protected $model = User::class;
 
     public function definition()
     {
+        $this->department_index++;
+        if($this->department_index > 3) $this->department_index = 1;
         return [
             'title' => $this->faker->title(),
             'name' => $this->faker->name(),
@@ -24,6 +29,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
+            'department_id' => $this->department_index,
         ];
     }
 

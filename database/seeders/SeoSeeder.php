@@ -14,15 +14,9 @@ class SeoSeeder extends Seeder
     {
         Seo::updateOrCreate([
             'id' => 1,
-            'title' => [
-                'en' => 'Tabeeb Gara7',
-                'ar' => 'طبيب جراح'
-            ],
-            'description' => [
-                'en' => 'Tabeeb Gara7',
-                'ar' => 'طبيب جراح'
-            ],
-            'keywords' => 'tabeeb, gara7',
+            'title' => 'Blue Internal',
+            'description' => 'Blue Internal',
+            'keywords' => 'Blue, Internal',
             'image' => ''
         ]);
     }

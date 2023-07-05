@@ -12,6 +12,6 @@ class NotificationSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Notification::factory()->count(100)->create();
     }
 }

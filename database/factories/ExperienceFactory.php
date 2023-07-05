@@ -17,12 +17,12 @@ class ExperienceFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => rand(1, 10),
-            'user_id' => rand(1, 10),
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph(3),
-            'start_date' => $this->faker->dateTimeBetween('-10 years', '-5 years'),
-            'end_date' => $this->faker->dateTimeBetween('-5 years', 'now'),
+            "title" => $this->faker->sentence(3),
+            "description" => $this->faker->sentence(10),
+            'start_date' => $this->faker->dateTimeBetween('now', '+1 year'),
+            'end_date' => $this->faker->dateTimeBetween('+1 year', '+2 year'),
+            "company_id" => $this->faker->numberBetween(1, 5),
+            "user_id" => $this->faker->numberBetween(1, 20),
         ];
     }
 }

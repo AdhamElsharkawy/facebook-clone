@@ -17,7 +17,9 @@ class LikeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "reaction" => $this->faker->numberBetween(1, 3),
+            "post_id" => $this->faker->numberBetween(1, 80),
+            "user_id" => $this->faker->numberBetween(1, 20),
         ];
     }
 }

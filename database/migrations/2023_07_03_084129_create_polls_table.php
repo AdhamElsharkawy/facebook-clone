@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('poll');
             $table->bigInteger('votes')->default(0);
+            $table->bigInteger("user_id")->unsigned()->nullable();
 
             $table->foreignId('post_id')->constrained('posts')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }

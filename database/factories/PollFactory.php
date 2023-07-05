@@ -17,7 +17,9 @@ class PollFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "poll" => $this->faker->sentence(3),
+
+            "post_id" => $this->faker->numberBetween(1, 80),
         ];
     }
 }

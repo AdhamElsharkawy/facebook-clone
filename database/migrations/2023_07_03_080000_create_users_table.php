@@ -29,11 +29,12 @@ class CreateUsersTable extends Migration
             $table->json("social_links")->nullable();
             $table->string('front_theme')->default('light');
             $table->string('back_theme')->default('light');
+            $table->bigInteger('department_id')->unsigned()->nullable();
 
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreignId('department_id')->constrained('departments')->onUpdate('cascade');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('set null')->onUpdate('cascade');
         });
     }
 
