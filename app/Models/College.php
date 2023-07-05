@@ -11,6 +11,15 @@ class College extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'image_path'
+    ]; //end of appends
+
+    public function getImagePathAttribute()
+    {
+        return asset($this->image);
+    } //end of retreving image directly
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'educations')->withPivot('degree','major', 'start_date', 'end_date', 'description', 'is_current', 'location');

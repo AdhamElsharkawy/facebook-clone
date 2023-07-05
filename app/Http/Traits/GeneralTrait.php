@@ -18,7 +18,7 @@ trait GeneralTrait
         $response = [
             'status' => true,
             'message' => $message,
-            'url' => url('/') . '/',
+            'url' => env('APP_URL') . '/',
             'data' => $data,
             'seo' => $seo,
         ];
