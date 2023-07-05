@@ -36,9 +36,23 @@
             :class="{ 'text-right': $store.getters['isRtl'] }"
         ></Column>
 
+
+        <Column
+            field="title"
+            header="title"
+            :sortable="true"
+            headerStyle="width:14%; min-width:10rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">Title</span>
+                {{ slotProps.data.title }}
+            </template>
+        </Column>
+
         <Column
             field="name"
-            :header="$t('name')"
+            header="name"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
@@ -51,7 +65,7 @@
 
         <Column
             field="image"
-            :header="$t('image')"
+            header="image"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
@@ -68,7 +82,7 @@
 
         <Column
             field="email"
-            :header="$t('email')"
+            header="email"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
@@ -81,7 +95,7 @@
 
         <Column
             field="role"
-            :header="$t('role')"
+            header="role"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
@@ -93,8 +107,71 @@
         </Column>
 
         <Column
+            field="mobile"
+            header="mobile"
+            :sortable="true"
+            headerStyle="width:14%; min-width:14rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">Mobile</span>
+                {{ slotProps.data.mobile }}
+            </template>
+        </Column>
+
+        <Column
+            field="status"
+            header="status"
+            :sortable="true"
+            headerStyle="width:14%; min-width:14rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">Status</span>
+                {{ slotProps.data.status }}
+            </template>
+        </Column>
+        <Column
+            field="birth_date"
+            header="BirthDate"
+            :sortable="true"
+            headerStyle="width:14%; min-width:14rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">Birth Date</span>
+                {{ slotProps.data.birth_date }}
+            </template>
+        </Column>
+        <Column
+            field="score"
+            header="score"
+            :sortable="true"
+            headerStyle="width:14%; min-width:14rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">Score</span>
+                {{ slotProps.data.score }}
+            </template>
+        </Column>
+        <Column
+            field="department"
+            header="department"
+            :sortable="true"
+            headerStyle="width:14%; min-width:14rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">department</span>
+                {{ slotProps.data.department?.name }}
+            </template>
+        </Column>
+
+
+        <Column
             field="action"
-            :header="$t('actions')"
+            header="actions"
             headerStyle="min-width:10rem;display: flex; justify-content: center;"
             class="text-center"
         >
@@ -155,6 +232,7 @@ export default {
             type: Array,
             required: true,
         },
+
     }, //end of props
 
     emits: ["selectUsers", "deleteUser", "editUser"],

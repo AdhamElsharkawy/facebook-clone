@@ -26,7 +26,7 @@
                                     'mr-2': !$store.getters['isRtl'],
                                     'ml-2': $store.getters['isRtl'],
                                 }"
-                                @click="createNewUser"
+                                @click="createNewDepartment"
                             />
                             <Button
                                 :label="$t('delete')"
@@ -34,7 +34,7 @@
                                 class="p-button-danger"
                                 @click="confirmDeleteSelected"
                                 :disabled="
-                                    !selectedUsers || !selectedUsers.length
+                                    !selectedDepartments || !selectedDepartments.length
                                 "
                             />
                         </div>
@@ -50,24 +50,23 @@
                     </template>
                 </Toolbar>
 
-                <user-list
-                    ref="listUserComponent"
-                    :currentUsers="currentUsers"
-                    @selectUsers="selectUsers"
-                    @editUser="editUser"
-                    @deleteUser="fill"
-                ></user-list>
+                <department-list
+                    ref="listDepartmentComponent"
+                    :currentDepartments="currentDepartments"
+                    @selectDepartments="selectDepartments"
+                    @editDepartment="editDepartment"
+                    @deleteDepartment="fill"
+                ></department-list>
 
-                <edit-user ref="editUserComponent" :departments="departments"></edit-user>
+                <edit-department ref="editDepartmentComponent"></edit-department>
 
-                <create-user
-                    ref="createUserComponent"
-                    @userCreated="fill"
-                    :departments="departments"
-                ></create-user>
+                <create-department
+                    ref="createDepartmentComponent"
+                    @departmentCreated="fill"
+                ></create-department>
 
                 <Dialog
-                    v-model:visible="deleteUsersDialog"
+                    v-model:visible="deleteDepartmentsDialog"
                     :style="{ width: '450px' }"
                     header="Confirm"
                     :modal="true"
@@ -77,9 +76,9 @@
                             class="pi pi-exclamation-triangle mr-3"
                             style="font-size: 2rem"
                         />
-                        <span v-if="user"
+                        <span v-if="department"
                             >Are you sure you want to delete the selected
-                            users?</span
+                            departments?</span
                         >
                     </div>
                     <template #footer>
@@ -87,13 +86,13 @@
                             label="No"
                             icon="pi pi-times"
                             class="p-button-text"
-                            @click="deleteUsersDialog = false"
+                            @click="deleteDepartmentsDialog = false"
                         />
                         <Button
                             label="Yes"
                             icon="pi pi-check"
                             class="p-button-text"
-                            @click="deleteSelectedUsers"
+                            @click="deleteSelectedDepartments"
                         />
                     </template>
                 </Dialog>
@@ -103,44 +102,43 @@
 </template>
 
 <script>
-import UserList from "./UserList.vue";
-import EditUser from "../edit/EditUser.vue";
-import CreateUser from "../create/CreateUser.vue";
+import DepartmentList from "./DepartmentList.vue";
+import EditDepartment from "../edit/EditDepartment.vue";
+import CreateDepartment from "../create/CreateDepartment.vue";
 import { useToast } from "primevue/usetoast";
 
 export default {
-    components: { UserList, EditUser, CreateUser },
+    components: { DepartmentList, EditDepartment, CreateDepartment },
     data() {
         return {
-            currentUsers: [],
-            deleteUsersDialog: false,
-            selectedUsers: null,
+            currentDepartments: [],
+            deleteDepartmentsDialog: false,
+            selectedDepartments: null,
             loading: false,
             isEmpty: false,
             errors: null,
-            departments: [],
         };
     }, //end of data
 
     methods: {
-        createNewUser() {
-            this.user = {};
-            this.$refs.createUserComponent.openDialog();
+        createNewDepartment() {
+            this.department = {};
+            this.$refs.createDepartmentComponent.openDialog();
         }, //end of openNew
 
-        deleteSelectedUsers() {
+        deleteSelectedDepartments() {
             this.loading = true;
             axios
-                .delete("/api/admin/users/delete/all", {
+                .delete("/api/admin/departments/delete/all", {
                     data: {
-                        users: this.selectedUsers.map((val) => val.id),
+                        departments: this.selectedDepartments.map((val) => val.id),
                     },
                 })
                 .then((response) => {
-                    this.currentUsers = this.currentUsers.filter(
-                        (val) => !this.selectedUsers.includes(val)
+                    this.currentDepartments = this.currentDepartments.filter(
+                        (val) => !this.selectedDepartments.includes(val)
                     );
-                    this.selectedUsers = null;
+                    this.selectedDepartments = null;
                     this.toast.add({
                         severity: "success",
                         summary: "Successful",
@@ -160,27 +158,27 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                    this.deleteUsersDialog = false;
+                    this.deleteDepartmentsDialog = false;
                 });
-        }, //end of deleteSelectedUsers
+        }, //end of deleteSelectedDepartments
 
         confirmDeleteSelected() {
-            this.deleteUsersDialog = true;
+            this.deleteDepartmentsDialog = true;
         }, //end of confirmDeleteSelected
 
         exportCSV() {
-            this.$refs.listUserComponent.exportCSV();
+            this.$refs.listDepartmentComponent.exportCSV();
         }, //end of exportCSV
 
         fill() {
             this.loading = true;
             axios
-                .get("/api/admin/users")
+                .get("/api/admin/departments")
                 .then((response) => {
-                    this.currentUsers = response.data.users;
+                    this.currentDepartments = response.data.departments;
                     this.departments = response.data.departments;
-                    // console.log(this.currentUsers);
-                    // console.log(this.departments);
+                    console.log(this.currentDepartments);
+                    console.log(this.departments);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -190,13 +188,13 @@ export default {
                 }); //end of axios request
         }, //end of fill function
 
-        selectUsers(selectedUsers) {
-            this.selectedUsers = selectedUsers;
-        }, //end of selectUsers
+        selectDepartments(selectedDepartments) {
+            this.selectedDepartments = selectedDepartments;
+        }, //end of selectDepartments
 
-        editUser(user) {
-            this.$refs.editUserComponent.openDialog(user);
-        }, //end of editUser
+        editDepartment(department) {
+            this.$refs.editDepartmentComponent.openDialog(department);
+        }, //end of editDepartment
     }, //end of methods
 
     beforeMount() {

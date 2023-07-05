@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,15 +17,16 @@ class UserController extends Controller
 {
     use ImageTrait;
 
-    private $paginate_users = 10;
-
     public function index(Request $request)
     {
-        return ['users' => User::where('email', '!=', 'super_admin@app.com')->latest()->get()];
+        $users = User::where('email', '!=', 'super_admin@app.com')->with('department')->latest()->get();
+        $departments = Department::all();
+        return ['users' => $users, 'departments' => $departments];
     } //end of index
 
     public function store(StoreUserRequest $request)
     {
+
         //encrypt password
         $form_data = $request->except(['password', 'password_confirmation', 'image']);
         $form_data['password'] = bcrypt($request->password);
@@ -33,9 +35,6 @@ class UserController extends Controller
         $request->image ? $form_data['image'] = $this->img($request->image, 'images/users/') : '';
 
         User::create($form_data);
-
-        // send test mail to user
-        // Mail::to($user)->send(new TestMail($user));
 
         return response()->json(['message' => __('User Created Successfully')]);
     } //end of store
@@ -60,6 +59,7 @@ class UserController extends Controller
         } else {
             $form_data['image'] = $user->image;
         }
+
         $user->update($form_data);
 
         return response()->json(['message' => __('User Updated Successfully')]);

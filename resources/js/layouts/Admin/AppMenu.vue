@@ -26,6 +26,12 @@ const model = ref([
                 to: "/admin/users",
                 name: "admin.users",
             },
+            {
+                label: 'Departments',
+                icon: "pi pi-users",
+                to: "/admin/departments",
+                name: "admin.departments",
+            },
         ],
     },
     {

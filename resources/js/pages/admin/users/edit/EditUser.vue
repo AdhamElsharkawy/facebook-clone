@@ -16,9 +16,31 @@
 
         <div class="field">
             <label
+                for="title"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >title</label
+            >
+            <InputText
+                id="title"
+                v-model.trim="user.title"
+                required="true"
+                autofocus
+                type="text"
+                :class="[
+                    { 'p-invalid': submitted && !user.title },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.title">
+                    titleIsRequired
+                </small>
+        </div>
+
+        <div class="field">
+            <label
                 for="name"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("name") }}</label
+            >name</label
             >
             <InputText
                 id="name"
@@ -31,16 +53,16 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !user.name">{{
-                $t("nameIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !user.name">
+                    nameIsRequired
+                </small>
         </div>
 
         <div class="field">
             <label
                 for="email"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("email") }}</label
+            >email</label
             >
             <InputText
                 id="email"
@@ -52,16 +74,37 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !user.email">{{
-                $t("emailIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !user.email">
+                    emailIsRequired
+                </small>
+        </div>
+
+        <div class="field">
+            <label
+                for="mobile"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >mobile</label
+            >
+            <InputText
+                id="mobile"
+                v-model.trim="user.mobile"
+                required="true"
+                type="mobile"
+                :class="[
+                    { 'p-invalid': submitted && !user.mobile },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.mobile">
+                    mobileIsRequired
+                </small>
         </div>
 
         <div class="field">
             <label
                 class="mb-3"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("role") }}</label
+            >role</label
             >
             <div class="formgrid grid">
                 <div class="field-radiobutton col-6">
@@ -71,7 +114,7 @@
                         value="admin"
                         v-model="user.role"
                     />
-                    <label for="role1">{{ $t("admin") }}</label>
+                    <label for="role1">admin</label>
                 </div>
                 <div class="field-radiobutton col-6">
                     <RadioButton
@@ -80,9 +123,79 @@
                         value="user"
                         v-model="user.role"
                     />
-                    <label for="role2">{{ $t("user") }}</label>
+                    <label for="role2">user</label>
                 </div>
             </div>
+        </div>
+        <div class="field">
+            <label
+                class="mb-3"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >status</label
+            >
+            <div class="formgrid grid">
+                <div class="field-radiobutton col-6">
+                    <RadioButton
+                        id="status1"
+                        name="status"
+                        value="active"
+                        v-model="user.status"
+                    />
+                    <label for="status1">Active</label>
+                </div>
+                <div class="field-radiobutton col-6">
+                    <RadioButton
+                        id="status2"
+                        name="status"
+                        value="blocked"
+                        v-model="user.status"
+                    />
+                    <label for="status2">blocked</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label
+                for="birth_date"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >birth_date</label
+            >
+            <Calendar required="true" id="birth_date" v-model="user.birth_date" :class="[{ 'p-invalid': submitted && !user.birth_date },]" dateFormat="yy-mm-dd" />
+            <small class="p-invalid" v-if="submitted && !user.birth_date">
+                    birth_dateIsRequired
+                </small>
+        </div>
+
+        <div class="field">
+            <label
+                for="score"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >score</label
+            >
+            <InputText
+                id="score"
+                v-model.number="user.score"
+                required="true"
+                type="number"
+                :class="[
+                    { 'p-invalid': submitted && !user.score },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.score">
+                    scoreIsRequired
+                </small>
+        </div>
+
+        <div class="field">
+            <label
+                for="departments"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >Department</label
+            >
+            <Dropdown v-model="selectedOption" :options="departments" optionLabel="name"
+                      placeholder="Select a Department" class="w-full md:w-14rem"/>
         </div>
 
         <template #footer>
@@ -109,14 +222,16 @@
 </template>
 
 <script>
-import { useToast } from "primevue/usetoast";
+import {useToast} from "primevue/usetoast";
 
 export default {
+    props: ["departments"],
     data() {
         return {
             user: {},
             userDialog: false,
             submitted: false,
+            selectedOption: null,
         };
     },
     methods: {
@@ -126,9 +241,33 @@ export default {
             if (this.user.name && this.user.name.trim() && this.user.email) {
                 this.loading = true;
                 const formData = new FormData();
+                const options = {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "numeric"
+                };
+                // if condition this.user.birthdate is yyyy-mm-dd
+                let regEx = /^\d{4}-\d{2}-\d{2}$/;
+                let convertedDate;
+                if(this.user.birth_date !== regEx && typeof this.user.birth_date == 'object'){
+                    console.log(typeof this.user.birth_date);
+                    const formattedDate = this.user.birth_date.toLocaleDateString('en-US', options).replace(/\//g, '-');
+                    const [month, day, year] = formattedDate.split('-').map(Number);
+                     convertedDate = `${year}-${month}-${day}`;
+                    console.log(typeof convertedDate);
+                    console.log(convertedDate);
+                    this.user.birth_date = convertedDate;
+                }
+                formData.append("title", this.user.title);
                 formData.append("name", this.user.name);
                 formData.append("email", this.user.email);
+                formData.append("mobile", this.user.mobile);
+                formData.append("status", this.user.status);
+                formData.append("score", this.user.score);
                 formData.append("role", this.user.role);
+                // this.user.department.name = this.selectedOption.name;
+                formData.append("department_id", this.selectedOption.id);
+                formData.append("birth_date", convertedDate ?? this.user.birth_date);
                 formData.append("_method", "PUT");
                 axios
                     .post("/api/admin/users/" + this.user.id, formData)
@@ -158,13 +297,14 @@ export default {
         }, //end of updateUser
 
         editUser(editUser) {
-            this.user = { ...editUser };
+            this.user = {...editUser};
             this.userDialog = true;
         }, //end of editUser
 
         openDialog(user) {
             this.user = user;
             this.userDialog = true;
+            this.selectedOption = this.user.department;
         }, //end of openDialog
 
         hideDialog() {
