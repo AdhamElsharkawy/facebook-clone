@@ -38,7 +38,7 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTIdentifier()
     {
         return $this->getKey();
-    }
+    } //end of getJWTIdentifier
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
@@ -48,12 +48,17 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }
+    } //end of getJWTCustomClaims
 
     public function getImagePathAttribute()
     {
         return asset($this->image);
     } //end of retreving image directly
+
+    public function getBirthDateAttribute($value)
+    {
+        return date('Y-m-d', strtotime($value));
+    } //end of getBirthDateAttribute
 
     public function department()
     {

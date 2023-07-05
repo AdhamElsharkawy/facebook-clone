@@ -30,15 +30,19 @@ php artisan key:generate
 ```
 php artisan migrate --seed
 ```
+6. Create JWT secret key:
+```
+php artisan jwt:secret
+```
 
-6. Install npm packages and build assets:
+7. Install npm packages and build assets:
 
 ```
 npm install && npm run production
 
 ```
 
-7. Start the application:
+8. Start the application:
 
 ```
 php artisan serve
