@@ -23,6 +23,30 @@
                 </div>
             </div>
         </div>
+
+        <div class="field">
+            <label
+                for="title"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >{{ $t("title") }}</label
+            >
+            <InputText
+                id="title"
+                v-model.trim="user.title"
+                required="true"
+                autofocus
+                type="text"
+                :class="[
+                    { 'p-invalid': submitted && !user.title },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.title">
+                    titleIsRequired
+                </small>
+        </div>
+
+
         <div class="field">
             <label
                 for="name"
@@ -91,11 +115,116 @@
                 </div>
             </div>
         </div>
+
+        <div class="field">
+            <label
+                for="mobile"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >mobile</label
+            >
+            <InputText
+                id="mobile"
+                v-model.trim="user.mobile"
+                required="true"
+                autofocus
+                type="mobile"
+                :class="[
+                    { 'p-invalid': submitted && !user.mobile },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.mobile">
+                    mobileIsRequired
+                </small>
+        </div>
+
+        <div class="field">
+            <label
+                class="mb-3"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            > status</label
+            >
+            <div class="formgrid grid">
+                <div class="field-radiobutton col-6">
+                    <RadioButton
+                        id="status1"
+                        name="status"
+                        value="active"
+                        v-model="user.status"
+                    />
+                    <label for="status1">Active</label>
+                </div>
+                <div class="field-radiobutton col-6">
+                    <RadioButton
+                        id="status2"
+                        name="status"
+                        value="blocked"
+                        v-model="user.status"
+                    />
+                    <label for="status2">blocked</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label
+                for="departments"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >Department</label
+            >
+            <Dropdown v-model="selectedOption" :options="departments" optionLabel="name"
+                      placeholder="Select a Department" class="w-full md:w-14rem"/>
+        </div>
+
+        <div class="field">
+            <label
+                for="score"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >score</label
+            >
+            <InputText
+                id="birth_date"
+                v-model.number="user.score"
+                required="true"
+                type="number"
+                :class="[
+                    { 'p-invalid': submitted && !user.score },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.score">
+                    scoreIsRequired
+                </small>
+        </div>
+
+
+        <div class="field">
+            <label
+                for="birth_date"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >birth_date</label
+            >
+            <InputText
+                id="birth_date"
+                v-model.trim="user.birth_date"
+                required="true"
+                type="date"
+                :class="[
+                    { 'p-invalid': submitted && !user.birth_date },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.birth_date">
+                    birth_dateIsRequired
+            </small>
+        </div>
+
+
         <div class="field">
             <label
                 for="password"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("password") }}</label
+                >password</label
             >
             <InputText
                 id="password"
@@ -112,15 +241,15 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !user.password">{{
-                $t("passwordIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !user.password">
+                passwordIsRequired
+            </small>
         </div>
         <div class="field">
             <label
                 for="password_confirmation"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("passwordConfirmation") }}</label
+                >passwordConfirmation</label
             >
             <InputText
                 id="password_confirmation"
@@ -140,12 +269,12 @@
             <small
                 class="p-invalid"
                 v-if="submitted && !user.password_confirmation"
-                >{{ $t("passwordConfirmationIsRequired") }}</small
+                >passwordConfirmationIsRequired</small
             >
             <small
                 class="p-invalid"
                 v-if="submitted && user.password_confirmation !== user.password"
-                >{{ $t("passwordConfirmationMustMatchPassword") }}</small
+                >passwordConfirmationMustMatchPassword</small
             >
         </div>
 
@@ -176,14 +305,21 @@ import { useToast } from "primevue/usetoast";
 
 export default {
     emits: ["userCreated"],
+    props: ["departments"],
 
     data() {
         return {
             newUserDialog: false,
+            selectedOption: null,
             user: {
+                title: "",
                 name: "",
                 email: "",
                 role: "",
+                score: 0,
+                mobile: "",
+                status: "",
+                birth_date: "",
                 password: "",
                 password_confirmation: "",
                 image: "",
@@ -207,6 +343,12 @@ export default {
             if (
                 this.user.name &&
                 this.user.name.trim() &&
+                this.user.title &&
+                this.user.role &&
+                this.user.score &&
+                this.user.mobile &&
+                this.user.birth_date &&
+                this.selectedOption &&
                 this.user.email &&
                 this.user.password &&
                 this.user.password_confirmation
@@ -216,6 +358,7 @@ export default {
                 for (let key in this.user) {
                     formData.append(key, this.user[key]);
                 }
+                formData.append("department_id", this.selectedOption.id);
                 axios
                     .post("/api/admin/users", formData, {
                         headers: {

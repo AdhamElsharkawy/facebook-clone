@@ -25,6 +25,27 @@ const admin = [
         component: () => import("../pages/admin/users/edit/EditUser.vue"),
         props: true,
     },
+    // Departments
+
+    {
+        name: "admin.departments",
+        path: "departments",
+        component: () => import("../pages/admin/departments/index/DepartmentPage.vue"),
+        props: true,
+    },
+    {
+        name: "admin.departments.create",
+        path: "departments/add",
+        component: () => import("../pages/admin/departments/create/CreateDepartment.vue"),
+        props: true,
+    },
+    {
+        name: "admin.departments.edit",
+        path: "departments/edit",
+        component: () => import("../pages/admin/departments/edit/EditDepartment.vue"),
+        props: true,
+    },
+
     //settings
     {
         name: "admin.settings",
