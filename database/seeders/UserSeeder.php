@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             "birth_date" => "1990-01-01",
             'email_verified_at' => now(),
             'password' => bcrypt('12345678'),
-            'role' => 'admin',
+            'role' => 'super_admin',
             'department_id' => 1,
         ]);
         User::factory(20)->create();
