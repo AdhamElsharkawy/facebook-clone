@@ -13,6 +13,22 @@
             width="150"
             class="mt-0 mx-auto mb-5 block shadow-2"
         />
+        <div class="field text-center">
+            <div class="p-inputgroup">
+                <div class="custom-file">
+                    <FileUpload
+                        mode="basic"
+                        accept="image/*"
+                        customUpload
+                        :maxFileSize="2048000"
+                        :chooseLabel="$t('chooseImage')"
+                        @change="uploadImage"
+                        ref="fileUploader"
+                        class="m-0"
+                    />
+                </div>
+            </div>
+        </div>
 
         <div class="field">
             <label
@@ -235,6 +251,10 @@ export default {
         };
     },
     methods: {
+        uploadImage() {
+            if (!this.$refs.fileUploader.files[0]) return;
+            this.user.image = this.$refs.fileUploader.files[0];
+        }, //end of uploadImage
         updateUser() {
             this.submitted = true;
 
@@ -265,6 +285,7 @@ export default {
                 formData.append("status", this.user.status);
                 formData.append("score", this.user.score);
                 formData.append("role", this.user.role);
+                formData.append("image", this.user.image);
                 // this.user.department.name = this.selectedOption.name;
                 formData.append("department_id", this.selectedOption.id);
                 formData.append("birth_date", convertedDate ?? this.user.birth_date);

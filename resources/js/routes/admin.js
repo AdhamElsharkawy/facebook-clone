@@ -45,6 +45,26 @@ const admin = [
         component: () => import("../pages/admin/departments/edit/EditDepartment.vue"),
         props: true,
     },
+    // Events
+
+    {
+        name: "admin.events",
+        path: "events",
+        component: () => import("../pages/admin/events/index/EventPage.vue"),
+        props: true,
+    },
+    {
+        name: "admin.events.create",
+        path: "events/add",
+        component: () => import("../pages/admin/events/create/CreateEvent.vue"),
+        props: true,
+    },
+    {
+        name: "admin.events.edit",
+        path: "events/edit",
+        component: () => import("../pages/admin/events/edit/EditEvent.vue"),
+        props: true,
+    },
 
     //settings
     {

@@ -54,7 +54,8 @@ class UserController extends Controller
 
         //image uploading
         if ($request->image) {
-            $user->image ? $this->deleteImg($user->image) : '';
+           // check if user image is  user.png
+            $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
             $form_data['image'] = $this->img($request->image, 'images/users/');
         } else {
             $form_data['image'] = $user->image;

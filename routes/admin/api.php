@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\EventController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -16,6 +17,8 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     Route::delete('users/delete/all', [UserController::class, 'destroyAll']);
     Route::resource('departments', DepartmentController::class)->except(['show', 'create']);
     Route::delete('departments/delete/all', [DepartmentController::class, 'destroyAll']);
+    Route::resource('events', EventController::class)->except(['show', 'create']);
+    Route::delete('events/delete/all', [EventController::class, 'destroyAll']);
     //seos
     Route::resource('seos', SeoController::class)->only(['index', 'update']);
 });
