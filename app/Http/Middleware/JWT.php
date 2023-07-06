@@ -5,8 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
-class Admin
+class JWT
 {
     /**
      * Handle an incoming request.
@@ -15,12 +16,9 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = auth()->user();
-        
-        if (!$user || !in_array($user->role, ['admin', 'super_admin'])) {
+        if (!Auth::guard('api')->user()) {
             return response()->json(['message' => 'You are not authorized to access this route'], 401);
         }
-        
         return $next($request);
     }
 }

@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Traits\GeneralTrait;
 use App\Http\Traits\SeoTrait;
 use App\Models\Seo;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -19,13 +16,23 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => 'login']);
+        $this->middleware('jwt:api', ['except' => 'login']);
     } // end of __construct
 
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
+        $rules = [
+            'email' => 'required|email',
+            'password' => 'required|string',
+            'remember_me' => 'boolean',
+        ];
+        try {
+            $request->validate($rules);
+        } catch (\Exception $e) {
+            return $this->apiValidationTrait($request->all(), $rules);
+        }
         // generate token
-        $token = auth('api')->attempt($request->only('email', 'password'));
+        $token = auth('api')->attempt($request->only('email', 'password'), $request->remember_me);
         if (!$token) {
             return response()->json([
                 'status' => 'error',
@@ -33,10 +40,10 @@ class AuthController extends Controller
             ], 401);
         }
         // get user data
-        $user = UserController::getProfileData($request->email);
+        $user = ProfileController::getProfileData($request->email);
         // generate response
         $response = [
-            'posts' => UserController::getPosts($user->id),
+            'posts' => ProfileController::getPosts($user->id),
             'user' => $user,
             'authorisation' => [
                 'token' => $token,

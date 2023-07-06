@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';
 
-Route::group(['as' => 'api.'], function () {
-    
+Route::group(['as' => 'api.', 'middleware'=>'jwt:api'], function () {
+    Route::put("user", [ProfileController::class, 'update'])->name('user.update');
+    Route::put("user/theme", [ProfileController::class, 'updateTheme'])->name('user.update-theme');
+    Route::put("user/experience", [ProfileController::class, 'updateExperience'])->name('user.update-experience');
+    Route::put("user/education", [ProfileController::class, 'updateEducation'])->name('user.update-education');
+    Route::put("user/certification", [ProfileController::class, 'updateCertification'])->name('user.update-certification');
+    Route::put("user/social", [ProfileController::class, 'updateSocial'])->name('user.update-social');
 });
