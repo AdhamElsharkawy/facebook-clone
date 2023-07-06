@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->text('description');
             $table->string('image')->default('assets/images/default.png');
-            $table->string('location', 100);
+            $table->string('location', 100)->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->timestamps();

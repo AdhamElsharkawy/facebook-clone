@@ -27,7 +27,6 @@ class UpdateUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
             'password' => ['string', 'confirmed'],
-            'image' => ['nullable', 'mimes:jpeg,jpg,png,gif', 'image'],
             'role' => ['required', 'in:user,admin'],
             'status' => ['required', 'in:active,blocked'],
             'mobile' => ['required', 'string', 'max:255'],

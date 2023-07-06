@@ -183,7 +183,7 @@
             >score</label
             >
             <InputText
-                id="birth_date"
+                id="score"
                 v-model.number="user.score"
                 required="true"
                 type="number"

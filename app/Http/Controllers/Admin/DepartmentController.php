@@ -15,7 +15,7 @@ class DepartmentController extends Controller
      * Display a listing of the resource.
      */
 
-    public function index(Request $request)
+    public function index()
     {
         $departments = Department::latest()->get();
         return ['departments' => $departments];
