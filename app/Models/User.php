@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use  HasFactory, Notifiable;
+    use  HasFactory, Notifiable, Searchable;
 
     protected $guarded = [];
 
@@ -119,4 +120,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Mention::class);
     } //end of mentions
+
+    public function toSearchableArray()
+    {
+        return [
+            "title" => $this->title,
+            'name' => $this->name,
+            'email' => $this->email,
+            'mobile' => $this->mobile,
+        ];
+    }
 }

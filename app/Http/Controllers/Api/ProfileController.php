@@ -92,15 +92,21 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        $rules = [];
+        $rules = [
+            'title' => 'required|string',
+            'mobile' => 'required|numeric|digits:12',
+            "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
+        ];
         try {
             $request->validate($rules);
         } catch (\Exception $e) {
             return $this->apiValidationTrait($request->all(), $rules);
         }
+        $form_data = $request->only(['title', 'mobile']);
+        $request->image ? $form_data['image'] = $this->img($request->image, 'images/users/') : '';
 
         $user = Auth::guard('api')->user();
-        $user->update(request()->all());
+        $user->update($form_data);
 
         $seo = Seo::first();
         return $this->apiSuccessResponse(

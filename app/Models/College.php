@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class College extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $guarded = [];
 
@@ -34,4 +35,10 @@ class College extends Model
     {
         return $this->hasMany(Certification::class);
     } //end of certifications
+
+    public function toSearchableArray(){
+        return [
+            "name" => $this->name,
+        ];
+    }
 }
