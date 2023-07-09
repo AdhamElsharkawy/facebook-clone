@@ -32,4 +32,5 @@ Route::group(['as' => 'api.', 'middleware'=>'jwt:api'], function () {
 
     // notification apis
     Route::get("notifications", [NotificationController::class, 'getNotifications'])->name('notifications');
+    Route::put("notifications/{id}", [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
 });

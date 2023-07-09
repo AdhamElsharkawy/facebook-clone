@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Traits\GeneralTrait;
+use App\Models\Notification;
 
 class NotificationController extends Controller
 {
@@ -12,8 +12,14 @@ class NotificationController extends Controller
 
     public function getNotifications()
     {
-        $notifications = auth()->user()->notifications;
-        
+        $notifications = Notification::where('user_id', auth('api')->user()->id)->latest()->paginate(10);
         return $this->apiSuccessResponse($notifications);
     } //end of getNotifications
+
+    public function markAsRead($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->update(['read' => true]);
+        return $this->apiSuccessResponse(null, 'Notification marked as read successfully');
+    } //end of markAsRead
 }
