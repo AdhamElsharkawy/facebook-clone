@@ -13,13 +13,38 @@ class LeaderboardController extends Controller
 
     public function getCompanyLeaderboards()
     {
-        $leaderboard = User::where('role', 'user')->orderBy('score', 'desc')->paginate(5);
-        return $this->apiSuccessResponse($leaderboard);
+        $users = User::select("title", "name", "image", "score", "department_id")
+            ->where('role', 'user')
+            ->with(['department' => function ($q) {
+                $q->select('id', 'name');
+            }])
+            ->orderBy('score', 'desc')
+            ->paginate(5);
+
+        foreach ($users as $user) {
+            $user->makeHidden(['department_id', "image"]);
+            $user->department->makeHidden(['id']);
+        }
+
+        return $this->apiSuccessResponse($users);
     } //end of getCompanyLeaderboards
 
     public function getDepartmentLeaderboards()
     {
-        $leaderboard = User::where('role', 'user')->where('department_id', auth('api')->user()->department_id)->orderBy('score', 'desc')->paginate(5);
-        return $this->apiSuccessResponse($leaderboard);
+        $users = User::select("title", "name", "image", "score", "department_id")
+            ->where('role', 'user')
+            ->where('department_id', auth('api')->user()->department_id)
+            ->with(['department' => function ($q) {
+                $q->select('id', 'name');
+            }])
+            ->orderBy('score', 'desc')
+            ->paginate(5);
+
+        foreach ($users as $user) {
+            $user->makeHidden(['department_id', "image"]);
+            $user->department->makeHidden(['id']);
+        }
+
+        return $this->apiSuccessResponse($users);
     } //end of getDepartmentLeaderboards
 }
