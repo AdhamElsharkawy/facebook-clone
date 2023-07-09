@@ -66,6 +66,48 @@ const admin = [
         props: true,
     },
 
+    // Colleges
+
+    {
+        name: "admin.colleges",
+        path: "colleges",
+        component: () => import("../pages/admin/colleges/index/CollegePage.vue"),
+        props: true,
+    },
+    {
+        name: "admin.colleges.create",
+        path: "colleges/add",
+        component: () => import("../pages/admin/colleges/create/CreateCollege.vue"),
+        props: true,
+    },
+    {
+        name: "admin.colleges.edit",
+        path: "colleges/edit",
+        component: () => import("../pages/admin/colleges/edit/EditCollege.vue"),
+        props: true,
+    },
+
+    // Companies
+
+    {
+        name: "admin.companies",
+        path: "companies",
+        component: () => import("../pages/admin/companies/index/CompanyPage.vue"),
+        props: true,
+    },
+    {
+        name: "admin.companies.create",
+        path: "companies/add",
+        component: () => import("../pages/admin/companies/create/CreateCompany.vue"),
+        props: true,
+    },
+    {
+        name: "admin.companies.edit",
+        path: "companies/edit",
+        component: () => import("../pages/admin/companies/edit/EditCompany.vue"),
+        props: true,
+    },
+
     //settings
     {
         name: "admin.settings",

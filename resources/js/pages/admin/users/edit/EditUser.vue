@@ -285,7 +285,9 @@ export default {
                 formData.append("status", this.user.status);
                 formData.append("score", this.user.score);
                 formData.append("role", this.user.role);
-                formData.append("image", this.user.image);
+                if( typeof this.user.image =='object'){
+                    formData.append("image",this.user.image)
+                }
                 // this.user.department.name = this.selectedOption.name;
                 formData.append("department_id", this.selectedOption.id);
                 formData.append("birth_date", convertedDate ?? this.user.birth_date);

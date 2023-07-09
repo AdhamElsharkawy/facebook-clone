@@ -26,7 +26,7 @@
                                     'mr-2': !$store.getters['isRtl'],
                                     'ml-2': $store.getters['isRtl'],
                                 }"
-                                @click="createNewEvent"
+                                @click="createNewCompany"
                             />
                             <Button
                                 :label="$t('delete')"
@@ -34,7 +34,7 @@
                                 class="p-button-danger"
                                 @click="confirmDeleteSelected"
                                 :disabled="
-                                    !selectedEvents || !selectedEvents.length
+                                    !selectedCompanies || !selectedCompanies.length
                                 "
                             />
                         </div>
@@ -45,28 +45,28 @@
                             :label="$t('export')"
                             icon="pi pi-upload"
                             class="p-button-help"
-                            @click="exportCSV($event)"
+                            @click="exportCSV($company)"
                         />
                     </template>
                 </Toolbar>
 
-                <event-list
-                    ref="listEventComponent"
-                    :currentEvents="currentEvents"
-                    @selectEvents="selectEvents"
-                    @editEvent="editEvent"
-                    @deleteEvent="fill"
-                ></event-list>
+                <company-list
+                    ref="listCompanyComponent"
+                    :currentCompanies="currentCompanies"
+                    @selectCompanies="selectCompanies"
+                    @editCompany="editCompany"
+                    @deleteCompany="fill"
+                ></company-list>
 
-                <edit-event ref="editEventComponent" ></edit-event>
+                <edit-company ref="editCompanyComponent" ></edit-company>
 
-                <create-event
-                    ref="createEventComponent"
-                    @eventCreated="fill"
-                ></create-event>
+                <create-company
+                    ref="createCompanyComponent"
+                    @companyCreated="fill"
+                ></create-company>
 
                 <Dialog
-                    v-model:visible="deleteEventsDialog"
+                    v-model:visible="deleteCompaniesDialog"
                     :style="{ width: '450px' }"
                     header="Confirm"
                     :modal="true"
@@ -76,9 +76,9 @@
                             class="pi pi-exclamation-triangle mr-3"
                             style="font-size: 2rem"
                         />
-                        <span v-if="event"
+                        <span v-if="company"
                             >Are you sure you want to delete the selected
-                            events?</span
+                            companies?</span
                         >
                     </div>
                     <template #footer>
@@ -86,13 +86,13 @@
                             label="No"
                             icon="pi pi-times"
                             class="p-button-text"
-                            @click="deleteEventsDialog = false"
+                            @click="deleteCompaniesDialog = false"
                         />
                         <Button
                             label="Yes"
                             icon="pi pi-check"
                             class="p-button-text"
-                            @click="deleteSelectedEvents"
+                            @click="deleteSelectedCompanies"
                         />
                     </template>
                 </Dialog>
@@ -102,18 +102,18 @@
 </template>
 
 <script>
-import EventList from "./EventList.vue";
-import EditEvent from "../edit/EditEvent.vue";
-import CreateEvent from "../create/CreateEvent.vue";
+import CompanyList from "./CompanyList.vue";
+import EditCompany from "../edit/EditCompany.vue";
+import CreateCompany from "../create/CreateCompany.vue";
 import { useToast } from "primevue/usetoast";
 
 export default {
-    components: { EventList, EditEvent, CreateEvent },
+    components: { CompanyList, EditCompany, CreateCompany },
     data() {
         return {
-            currentEvents: [],
-            deleteEventsDialog: false,
-            selectedEvents: null,
+            currentCompanies: [],
+            deleteCompaniesDialog: false,
+            selectedCompanies: null,
             loading: false,
             isEmpty: false,
             errors: null,
@@ -121,24 +121,24 @@ export default {
     }, //end of data
 
     methods: {
-        createNewEvent() {
-            this.event = {};
-            this.$refs.createEventComponent.openDialog();
+        createNewCompany() {
+            this.company = {};
+            this.$refs.createCompanyComponent.openDialog();
         }, //end of openNew
 
-        deleteSelectedEvents() {
+        deleteSelectedCompanies() {
             this.loading = true;
             axios
-                .delete("/api/admin/events/delete/all", {
+                .delete("/api/admin/companies/delete/all", {
                     data: {
-                        events: this.selectedEvents.map((val) => val.id),
+                        companies: this.selectedCompanies.map((val) => val.id),
                     },
                 })
                 .then((response) => {
-                    this.currentEvents = this.currentEvents.filter(
-                        (val) => !this.selectedEvents.includes(val)
+                    this.currentCompanies = this.currentCompanies.filter(
+                        (val) => !this.selectedCompanies.includes(val)
                     );
-                    this.selectedEvents = null;
+                    this.selectedCompanies = null;
                     this.toast.add({
                         severity: "success",
                         summary: "Successful",
@@ -158,24 +158,24 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                    this.deleteEventsDialog = false;
+                    this.deleteCompaniesDialog = false;
                 });
-        }, //end of deleteSelectedEvents
+        }, //end of deleteSelectedCompanies
 
         confirmDeleteSelected() {
-            this.deleteEventsDialog = true;
+            this.deleteCompaniesDialog = true;
         }, //end of confirmDeleteSelected
 
         exportCSV() {
-            this.$refs.listEventComponent.exportCSV();
+            this.$refs.listCompanyComponent.exportCSV();
         }, //end of exportCSV
 
         fill() {
             this.loading = true;
             axios
-                .get("/api/admin/events")
+                .get("/api/admin/companies")
                 .then((response) => {
-                    this.currentEvents = response.data.events;
+                    this.currentCompanies = response.data.companies;
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -185,13 +185,13 @@ export default {
                 }); //end of axios request
         }, //end of fill function
 
-        selectEvents(selectedEvents) {
-            this.selectedEvents = selectedEvents;
-        }, //end of selectEvents
+        selectCompanies(selectedCompanies) {
+            this.selectedCompanies = selectedCompanies;
+        }, //end of selectCompanies
 
-        editEvent(event) {
-            this.$refs.editEventComponent.openDialog(event);
-        }, //end of editEvent
+        editCompany(company) {
+            this.$refs.editCompanyComponent.openDialog(company);
+        }, //end of editCompany
     }, //end of methods
 
     beforeMount() {

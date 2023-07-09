@@ -38,6 +38,19 @@ const model = ref([
                 to: "/admin/events",
                 name: "admin.events",
             },
+            {
+                label: 'Colleges',
+                icon: "pi pi-users",
+                to: "/admin/colleges",
+                name: "admin.colleges",
+            },
+            {
+                label: 'Companies',
+                icon: "pi pi-users",
+                to: "/admin/companies",
+                name: "admin.companies",
+            }
+
         ],
     },
     {
