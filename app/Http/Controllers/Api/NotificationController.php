@@ -15,4 +15,11 @@ class NotificationController extends Controller
         $notifications = Notification::where('user_id', auth('api')->user()->id)->latest()->paginate(10);
         return $this->apiSuccessResponse($notifications);
     } //end of getNotifications
+
+    public function markAsRead($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->update(['read' => true]);
+        return $this->apiSuccessResponse(null, 'Notification marked as read successfully');
+    } //end of markAsRead
 }
