@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +19,7 @@ use App\Http\Controllers\Api\SearchConroller;
 
 require __DIR__ . '/auth.php';
 
-Route::group(['as' => 'api.', 'middleware'=>'jwt:api'], function () {
+Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     // profile apis
     Route::put("user", [ProfileController::class, 'update'])->name('user.update');
     Route::put("user/theme", [ProfileController::class, 'updateTheme'])->name('user.update-theme');
@@ -33,4 +34,8 @@ Route::group(['as' => 'api.', 'middleware'=>'jwt:api'], function () {
     // notification apis
     Route::get("notifications", [NotificationController::class, 'getNotifications'])->name('notifications');
     Route::put("notifications/{id}", [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+
+    // leaderboards apis
+    Route::get("company/leaderboards", [LeaderboardController::class, 'getCompanyLeaderboards'])->name('company.leaderboards');
+    Route::get('department/leaderboards', [LeaderboardController::class, 'getDepartmentLeaderboards'])->name('department.leaderboards');
 });
