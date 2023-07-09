@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\SearchConroller;
+use App\Http\Controllers\Api\BirthDateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +39,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     // leaderboards apis
     Route::get("company/leaderboards", [LeaderboardController::class, 'getCompanyLeaderboards'])->name('company.leaderboards');
     Route::get('department/leaderboards', [LeaderboardController::class, 'getDepartmentLeaderboards'])->name('department.leaderboards');
+
+    // birthdates apis
+    Route::get("birthdates", [BirthDateController::class, 'getBirthDates'])->name('birthdates');
 });
