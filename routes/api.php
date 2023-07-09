@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\SearchConroller;
 use App\Http\Controllers\Api\BirthDateController;
+use App\Http\Controllers\Api\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,4 +43,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // birthdates apis
     Route::get("birthdates", [BirthDateController::class, 'getBirthDates'])->name('birthdates');
+
+    // events apis
+    Route::get("events", [EventController::class, 'getEvents'])->name('events');
 });

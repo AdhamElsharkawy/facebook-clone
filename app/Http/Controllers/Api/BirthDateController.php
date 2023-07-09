@@ -24,5 +24,5 @@ class BirthDateController extends Controller
             }
         }
         return $this->apiSuccessResponse(["users" => $users]);
-    }
+    } // end of getBirthDates
 }
