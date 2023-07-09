@@ -2,15 +2,15 @@
     <Loading v-if="loading" />
     <DataTable
         ref="dt"
-        :value="events"
-        v-model:selection="selectedEvents"
+        :value="companies"
+        v-model:selection="selectedCompanies"
         dataKey="id"
         :paginator="true"
         :rows="10"
         :filters="filters"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         :rowsPerPageOptions="[5, 10, 25]"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} events"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} companies"
         responsiveLayout="scroll"
     >
         <template #header>
@@ -18,7 +18,7 @@
                 class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
                 :class="{ 'md:flex-row-reverse': $store.getters['isRtl'] }"
             >
-                <h5 class="m-0">{{ $t("manage") + " " + "events" }}</h5>
+                <h5 class="m-0">{{ $t("manage") + " " + "companies" }}</h5>
                 <span class="block mt-2 md:mt-0 p-input-icon-left">
                     <i class="pi pi-search" />
                     <InputText
@@ -38,7 +38,6 @@
 
 
 
-
         <Column
             field="name"
             header="name"
@@ -49,43 +48,6 @@
             <template #body="slotProps">
                 <span class="p-column-title">Name</span>
               {{ slotProps.data.name }}
-            </template>
-        </Column>
-        <Column
-            field="description"
-            header="description"
-            :sortable="true"
-            headerStyle="width:16%; min-width:10rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">description</span>
-               <div class="description">{{ slotProps.data.description }}</div>
-            </template>
-        </Column>
-
-        <Column
-            field="start_date"
-            header="start_date"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">Start Date</span>
-                {{ slotProps.data.start_date }}
-            </template>
-        </Column>
-        <Column
-            field="end_date"
-            header="end_date"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">End Date</span>
-                {{ slotProps.data.end_date }}
             </template>
         </Column>
 
@@ -116,18 +78,18 @@
                 <Button
                     icon="pi pi-pencil"
                     class="p-button-rounded p-button-success mx-2"
-                    @click="editEvent(slotProps.data)"
+                    @click="editCompany(slotProps.data)"
                 />
                 <Button
                     icon="pi pi-trash"
                     class="p-button-rounded p-button-warning mx-2"
-                    @click="confirmDeleteEvent(slotProps.data)"
+                    @click="confirmDeleteCompany(slotProps.data)"
                 />
             </template>
         </Column>
     </DataTable>
     <Dialog
-        v-model:visible="deleteEventDialog"
+        v-model:visible="deleteCompanyDialog"
         :style="{ width: '450px' }"
         header="Confirm"
         :modal="true"
@@ -137,8 +99,8 @@
                 class="pi pi-exclamation-triangle mr-3"
                 style="font-size: 2rem"
             />
-            <span v-if="event"
-                >Are you sure you want to delete <b>{{ event.name }}</b
+            <span v-if="company"
+                >Are you sure you want to delete <b>{{ company.name }}</b
                 >?</span
             >
         </div>
@@ -147,13 +109,13 @@
                 label="No"
                 icon="pi pi-times"
                 class="p-button-text"
-                @click="deleteEventDialog = false"
+                @click="deleteCompanyDialog = false"
             />
             <Button
                 label="Yes"
                 icon="pi pi-check"
                 class="p-button-text"
-                @click="deleteEvent"
+                @click="deleteCompany"
             />
         </template>
     </Dialog>
@@ -165,24 +127,24 @@ import { useToast } from "primevue/usetoast";
 
 export default {
     props: {
-        currentEvents: {
+        currentCompanies: {
             type: Array,
             required: true,
         },
 
     }, //end of props
 
-    emits: ["selectEvents", "deleteEvent", "editEvent"],
+    emits: ["selectCompanies", "deleteCompany", "editCompany"],
 
     data() {
         return {
             toast: null,
             loading: false,
-            eventDialog: false,
-            deleteEventDialog: false,
-            event: {},
-            events: this.currentEvents,
-            selectedEvents: null,
+            companyDialog: false,
+            deleteCompanyDialog: false,
+            company: {},
+            companies: this.currentCompanies,
+            selectedCompanies: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
             },
@@ -190,27 +152,26 @@ export default {
     }, //end of data
 
     watch: {
-        selectedEvents(val) {
-            this.$emit("selectEvents", val);
+        selectedCompanies(val) {
+            this.$emit("selectCompanies", val);
         },
     }, //end of watch
 
     beforeMount() {
         this.initFilters();
         this.toast = useToast();
-        console.log(this.events);
     }, //end of beforeMount
 
     methods: {
-        confirmDeleteEvent(event) {
-            this.event = event;
-            this.deleteEventDialog = true;
-        }, //end of confirmDeleteEvent
+        confirmDeleteCompany(company) {
+            this.company = company;
+            this.deleteCompanyDialog = true;
+        }, //end of confirmDeleteCompany
 
-        deleteEvent() {
+        deleteCompany() {
             this.loading = true;
             axios
-                .delete("/api/admin/events/" + this.event.id)
+                .delete("/api/admin/companies/" + this.company.id)
                 .then((response) => {
                     this.toast.add({
                         severity: "success",
@@ -218,9 +179,9 @@ export default {
                         detail: response.data.message,
                         life: 3000,
                     });
-                    this.$emit("deleteEvent");
-                    this.deleteEventDialog = false;
-                    this.event = {};
+                    this.$emit("deleteCompany");
+                    this.deleteCompanyDialog = false;
+                    this.company = {};
                 })
                 .catch((errors) => {
                     if (errors.response) {
@@ -234,9 +195,9 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                    this.deleteEventDialog = false;
+                    this.deleteCompanyDialog = false;
                 });
-        }, //end of deleteEvent
+        }, //end of deleteCompany
 
         initFilters() {
             this.filters = {
@@ -248,21 +209,14 @@ export default {
             this.$refs.dt.exportCSV();
         }, //end of exportCSV
 
-        editEvent(event) {
-            this.$emit("editEvent", event);
-        }, //end of editEvent
+        editCompany(company) {
+            this.$emit("editCompany", company);
+        }, //end of editCompany
     }, //end of methods
 };
 </script>
 
 <style scoped lang="scss">
-.description{
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 4;
-        white-space: pre-wrap;
-}
 @import "../../../../assets/demo/styles/badges.scss";
 </style>
 

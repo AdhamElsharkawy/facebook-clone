@@ -3,7 +3,7 @@
     <Dialog
         v-model:visible="newEventDialog"
         :style="{ width: '450px' }"
-        :header="$t('newEvent')"
+        header="newEvent"
         :modal="true"
         class="p-fluid"
     >

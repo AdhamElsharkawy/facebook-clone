@@ -4,50 +4,45 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
+use App\Http\Traits\ImageTrait;
 use App\Models\College;
 use App\Http\Requests\Admin\College\StoreCollegeRequest;
 use App\Http\Requests\Admin\College\UpdateCollegeRequest;
+use Illuminate\Http\Request;
 
 class CollegeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    use ImageTrait;
+
     public function index()
     {
-        //
+        $colleges = College::latest()->get();
+        return ['colleges' => $colleges];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCollegeRequest $request)
     {
-        //
+        $form_data = $request->validated();
+        //image uploading
+        $request->image ? $form_data['image'] = $this->img($request->image, 'images/colleges/') : '';
+
+        College::create($form_data);
+
+        return response()->json(['message' => __('College Created Successfully')]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(College $college)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(College $college)
     {
-        //
+        return response()->json(['college' => $college]);
     }
 
     /**
@@ -55,7 +50,17 @@ class CollegeController extends Controller
      */
     public function update(UpdateCollegeRequest $request, College $college)
     {
-        //
+        $form_data = $request->validated();
+        //image uploading
+        if ($request->image) {
+            $college->image !=  'assets/images/default.png' ? $this->deleteImg($college->image) : '';
+            $form_data['image'] = $this->img($request->image, 'images/colleges/');
+        } else {
+            $form_data['image'] = $college->image;
+        }
+        $college->update($form_data);
+
+        return response()->json(['message' => __('College Updated Successfully')]);
     }
 
     /**
@@ -63,6 +68,19 @@ class CollegeController extends Controller
      */
     public function destroy(College $college)
     {
-        //
+        $college->image != 'assets/images/default.png' ? $this->deleteImg($college->image) : '';
+        $college->delete();
+
+        return response()->json(['message' => __('College Deleted Successfully')], 200);
     }
+    public function destroyAll(Request $request)
+    {
+        $colleges = College::whereIn('id', $request->colleges)->get();
+        foreach ($colleges as $college) {
+            $college->image != 'assets/images/default.png' ? $this->deleteImg($college->image) : '';
+            $college->delete();
+        }
+        return response()->json(['message' => __('Colleges Deleted Successfully')]);
+    } //end of destroyAll
+
 }

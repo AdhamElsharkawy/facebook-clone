@@ -2,7 +2,7 @@
     <Dialog
         v-model:visible="eventDialog"
         :style="{ width: '450px' }"
-        :header="$t('editEvent')"
+        header="editEvent"
         :modal="true"
         class="p-fluid"
     >
@@ -177,8 +177,10 @@ export default {
                 formData.append("description", this.event.description);
                 formData.append("start_date", convertedStartDateString ?? this.event.start_date);
                 formData.append("end_date", convertedEndDateString ?? this.event.end_date);
-                formData.append("image", this.event.image);
-
+                console.log(this.event.image);
+                if( typeof this.event.image =='object'){
+                    formData.append("image",this.event.image)
+                }
 
                 formData.append("_method", "PUT");
                 axios

@@ -26,7 +26,7 @@
                                     'mr-2': !$store.getters['isRtl'],
                                     'ml-2': $store.getters['isRtl'],
                                 }"
-                                @click="createNewEvent"
+                                @click="createNewCollege"
                             />
                             <Button
                                 :label="$t('delete')"
@@ -34,7 +34,7 @@
                                 class="p-button-danger"
                                 @click="confirmDeleteSelected"
                                 :disabled="
-                                    !selectedEvents || !selectedEvents.length
+                                    !selectedColleges || !selectedColleges.length
                                 "
                             />
                         </div>
@@ -45,28 +45,28 @@
                             :label="$t('export')"
                             icon="pi pi-upload"
                             class="p-button-help"
-                            @click="exportCSV($event)"
+                            @click="exportCSV($college)"
                         />
                     </template>
                 </Toolbar>
 
-                <event-list
-                    ref="listEventComponent"
-                    :currentEvents="currentEvents"
-                    @selectEvents="selectEvents"
-                    @editEvent="editEvent"
-                    @deleteEvent="fill"
-                ></event-list>
+                <college-list
+                    ref="listCollegeComponent"
+                    :currentColleges="currentColleges"
+                    @selectColleges="selectColleges"
+                    @editCollege="editCollege"
+                    @deleteCollege="fill"
+                ></college-list>
 
-                <edit-event ref="editEventComponent" ></edit-event>
+                <edit-college ref="editCollegeComponent" ></edit-college>
 
-                <create-event
-                    ref="createEventComponent"
-                    @eventCreated="fill"
-                ></create-event>
+                <create-college
+                    ref="createCollegeComponent"
+                    @collegeCreated="fill"
+                ></create-college>
 
                 <Dialog
-                    v-model:visible="deleteEventsDialog"
+                    v-model:visible="deleteCollegesDialog"
                     :style="{ width: '450px' }"
                     header="Confirm"
                     :modal="true"
@@ -76,9 +76,9 @@
                             class="pi pi-exclamation-triangle mr-3"
                             style="font-size: 2rem"
                         />
-                        <span v-if="event"
+                        <span v-if="college"
                             >Are you sure you want to delete the selected
-                            events?</span
+                            colleges?</span
                         >
                     </div>
                     <template #footer>
@@ -86,13 +86,13 @@
                             label="No"
                             icon="pi pi-times"
                             class="p-button-text"
-                            @click="deleteEventsDialog = false"
+                            @click="deleteCollegesDialog = false"
                         />
                         <Button
                             label="Yes"
                             icon="pi pi-check"
                             class="p-button-text"
-                            @click="deleteSelectedEvents"
+                            @click="deleteSelectedColleges"
                         />
                     </template>
                 </Dialog>
@@ -102,18 +102,18 @@
 </template>
 
 <script>
-import EventList from "./EventList.vue";
-import EditEvent from "../edit/EditEvent.vue";
-import CreateEvent from "../create/CreateEvent.vue";
+import CollegeList from "./CollegeList.vue";
+import EditCollege from "../edit/EditCollege.vue";
+import CreateCollege from "../create/CreateCollege.vue";
 import { useToast } from "primevue/usetoast";
 
 export default {
-    components: { EventList, EditEvent, CreateEvent },
+    components: { CollegeList, EditCollege, CreateCollege },
     data() {
         return {
-            currentEvents: [],
-            deleteEventsDialog: false,
-            selectedEvents: null,
+            currentColleges: [],
+            deleteCollegesDialog: false,
+            selectedColleges: null,
             loading: false,
             isEmpty: false,
             errors: null,
@@ -121,24 +121,24 @@ export default {
     }, //end of data
 
     methods: {
-        createNewEvent() {
-            this.event = {};
-            this.$refs.createEventComponent.openDialog();
+        createNewCollege() {
+            this.college = {};
+            this.$refs.createCollegeComponent.openDialog();
         }, //end of openNew
 
-        deleteSelectedEvents() {
+        deleteSelectedColleges() {
             this.loading = true;
             axios
-                .delete("/api/admin/events/delete/all", {
+                .delete("/api/admin/colleges/delete/all", {
                     data: {
-                        events: this.selectedEvents.map((val) => val.id),
+                        colleges: this.selectedColleges.map((val) => val.id),
                     },
                 })
                 .then((response) => {
-                    this.currentEvents = this.currentEvents.filter(
-                        (val) => !this.selectedEvents.includes(val)
+                    this.currentColleges = this.currentColleges.filter(
+                        (val) => !this.selectedColleges.includes(val)
                     );
-                    this.selectedEvents = null;
+                    this.selectedColleges = null;
                     this.toast.add({
                         severity: "success",
                         summary: "Successful",
@@ -158,24 +158,24 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                    this.deleteEventsDialog = false;
+                    this.deleteCollegesDialog = false;
                 });
-        }, //end of deleteSelectedEvents
+        }, //end of deleteSelectedColleges
 
         confirmDeleteSelected() {
-            this.deleteEventsDialog = true;
+            this.deleteCollegesDialog = true;
         }, //end of confirmDeleteSelected
 
         exportCSV() {
-            this.$refs.listEventComponent.exportCSV();
+            this.$refs.listCollegeComponent.exportCSV();
         }, //end of exportCSV
 
         fill() {
             this.loading = true;
             axios
-                .get("/api/admin/events")
+                .get("/api/admin/colleges")
                 .then((response) => {
-                    this.currentEvents = response.data.events;
+                    this.currentColleges = response.data.colleges;
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -185,13 +185,13 @@ export default {
                 }); //end of axios request
         }, //end of fill function
 
-        selectEvents(selectedEvents) {
-            this.selectedEvents = selectedEvents;
-        }, //end of selectEvents
+        selectColleges(selectedColleges) {
+            this.selectedColleges = selectedColleges;
+        }, //end of selectColleges
 
-        editEvent(event) {
-            this.$refs.editEventComponent.openDialog(event);
-        }, //end of editEvent
+        editCollege(college) {
+            this.$refs.editCollegeComponent.openDialog(college);
+        }, //end of editCollege
     }, //end of methods
 
     beforeMount() {
