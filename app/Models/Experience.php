@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Experience extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $guarded = [];
 
@@ -50,4 +51,13 @@ class Experience extends Model
     {
         return $this->belongsTo(User::class);
     } // end user
+
+    public function toSearchableArray()
+    {
+        return [
+            "title" => $this->title,
+            "description" => $this->description,
+            "type" => $this->type,
+        ];
+    }
 }

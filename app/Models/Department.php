@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Department extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $guarded = [];
 
@@ -15,4 +16,10 @@ class Department extends Model
     {
         return $this->hasMany(User::class);
     } //end of users
+
+    public function toSearchableArray(){
+        return [
+            "name" => $this->name,
+        ];
+    }
 }
