@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\GeneralTrait;
 use App\Http\Traits\SeoTrait;
 use App\Models\Seo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -32,7 +34,7 @@ class AuthController extends Controller
             return $this->apiValidationTrait($request->all(), $rules);
         }
         // generate token
-        $token = auth('api')->attempt($request->only('email', 'password'), $request->remember_me);
+        $token = auth('api')->attempt($request->only('email', 'password'));
         if (!$token) {
             return response()->json([
                 'status' => 'error',
@@ -77,4 +79,32 @@ class AuthController extends Controller
             ]
         ]);
     } // end of refresh
+
+
+    public function register(Request $request){
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $token = auth('api')::login($user);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User created successfully',
+            'user' => $user,
+            'authorisation' => [
+                'token' => $token,
+                'type' => 'bearer',
+            ]
+        ]);
+    }
+
+
 }

@@ -20,14 +20,14 @@ return new class extends Migration
             $table->boolean('is_current')->default(0);
             $table->string('location')->nullable();
             $table->bigInteger('college_id')->unsigned()->nullable();
-            
+
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('college_id')->references('id')->on('colleges')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }
 
-    /**
+    /**-
      * Reverse the migrations.
      */
     public function down(): void

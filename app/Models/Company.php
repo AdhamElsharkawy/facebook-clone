@@ -4,18 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 
 class Company extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory;
 
     protected $guarded = [];
 
     protected $appends = [
         'image_path'
     ]; //end of appends
-    
+
     public function getImagePathAttribute()
     {
         return asset($this->image);
@@ -30,10 +29,4 @@ class Company extends Model
     {
         return $this->belongsToMany(User::class, 'experiences')->withPivot('title', 'start_date', 'end_date', 'description', 'is_current', 'type');
     } //end of users
-
-    public function toSearchableArray(){
-        return [
-            "name" => $this->name,
-        ];
-    }
 }
