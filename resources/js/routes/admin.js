@@ -108,6 +108,27 @@ const admin = [
         props: true,
     },
 
+    // educations
+
+    {
+        name: "admin.educations",
+        path: "educations",
+        component: () => import("../pages/admin/educations/index/EducationPage.vue"),
+        props: true,
+    },
+    {
+        name: "admin.educations.create",
+        path: "educations/add",
+        component: () => import("../pages/admin/educations/create/CreateEducation.vue"),
+        props: true,
+    },
+    {
+        name: "admin.educations.edit",
+        path: "educations/edit",
+        component: () => import("../pages/admin/educations/edit/EditEducation.vue"),
+        props: true,
+    },
+
     //settings
     {
         name: "admin.settings",

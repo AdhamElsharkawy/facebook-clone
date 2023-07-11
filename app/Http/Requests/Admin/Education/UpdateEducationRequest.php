@@ -11,7 +11,7 @@ class UpdateEducationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class UpdateEducationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'degree' => 'required|string',
+            'major' => 'required|string',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'is_current' => 'required|boolean',
+            'location' => 'required|string',
+            'college_id' => 'required|exists:colleges,id',
+            'user_id' => 'required|exists:users,id',
         ];
     }
 }
