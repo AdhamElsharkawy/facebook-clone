@@ -11,7 +11,7 @@ class UpdateCertificationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class UpdateCertificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => 'required|exists:users,id',
+            'college_id' => 'required|exists:colleges,id',
+            'major' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'valid_until' => 'required|date',
+            'is_current' => 'required|boolean',
+            'location' => 'required|string',
+            'confirmation_link' => 'required|string',
         ];
     }
 }

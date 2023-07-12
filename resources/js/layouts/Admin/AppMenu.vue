@@ -55,6 +55,18 @@ const model = ref([
                 icon: "pi pi-users",
                 to: "/admin/educations",
                 name: "admin.educations",
+            },
+            {
+                label: 'Experiences',
+                icon: "pi pi-users",
+                to: "/admin/experiences",
+                name: "admin.experiences",
+            },
+            {
+                label: 'Certifications',
+                icon: "pi pi-users",
+                to: "/admin/certifications",
+                name: "admin.certifications",
             }
 
         ],
