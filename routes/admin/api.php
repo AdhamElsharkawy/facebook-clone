@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\CertificationController;
 use App\Http\Controllers\Admin\CollegeController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\EducationController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\ExperienceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -28,6 +30,10 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     Route::delete('companies/delete/all', [CompanyController::class, 'destroyAll']);
     Route::resource('educations', EducationController::class)->except(['show', 'create']);
     Route::delete('educations/delete/all', [EducationController::class, 'destroyAll']);
+    Route::resource('experiences', ExperienceController::class)->except(['show', 'create']);
+    Route::delete('experiences/delete/all', [ExperienceController::class, 'destroyAll']);
+    Route::resource('certifications', CertificationController::class)->except(['show', 'create']);
+    Route::delete('certifications/delete/all', [CertificationController::class, 'destroyAll']);
 
     //seos
     Route::resource('seos', SeoController::class)->only(['index', 'update']);

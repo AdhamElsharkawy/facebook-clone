@@ -129,6 +129,49 @@ const admin = [
         props: true,
     },
 
+    // experiences
+
+    {
+        name: "admin.experiences",
+        path: "experiences",
+        component: () => import("../pages/admin/experiences/index/ExperiencePage.vue"),
+        props: true,
+    },
+    {
+        name: "admin.experiences.create",
+        path: "experiences/add",
+        component: () => import("../pages/admin/experiences/create/CreateExperience.vue"),
+        props: true,
+    },
+    {
+        name: "admin.experiences.edit",
+        path: "experiences/edit",
+        component: () => import("../pages/admin/experiences/edit/EditExperience.vue"),
+        props: true,
+    },
+
+
+    // certifications
+
+    {
+        name: "admin.certifications",
+        path: "certifications",
+        component: () => import("../pages/admin/certifications/index/CertificationPage.vue"),
+        props: true,
+    },
+    {
+        name: "admin.certifications.create",
+        path: "certifications/add",
+        component: () => import("../pages/admin/certifications/create/CreateCertification.vue"),
+        props: true,
+    },
+    {
+        name: "admin.certifications.edit",
+        path: "certifications/edit",
+        component: () => import("../pages/admin/certifications/edit/EditCertification.vue"),
+        props: true,
+    },
+
     //settings
     {
         name: "admin.settings",
