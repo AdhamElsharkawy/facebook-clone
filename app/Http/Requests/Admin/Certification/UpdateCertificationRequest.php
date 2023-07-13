@@ -23,7 +23,7 @@ class UpdateCertificationRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
-            'college_id' => 'required|exists:colleges,id',
+            'college_id' => 'required|nullable',
             'major' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date',

@@ -79,7 +79,7 @@
             >Users</label
             >
             <Dropdown v-model="userOption" :options="users" optionLabel="name"
-                      placeholder="Select a College" class="w-full md:w-14rem"/>
+                      placeholder="Select a User" class="w-full md:w-14rem"/>
         </div>
 
 
@@ -193,7 +193,10 @@ export default {
     props:["colleges","users"],
     data() {
         return {
-            certification: {},
+            certification: [{
+                // college: null,
+                // college_id: null,
+            }],
             certificationDialog: false,
             submitted: false,
             selectedOption: null,
@@ -263,6 +266,12 @@ export default {
                 formData.append('college_id',this.selectedOption.id);
                 formData.append('user_id',this.userOption.id);
 
+
+
+                // this.certification.college = this.selectedOption;
+                console.log(this.selectedOption);
+
+
                 formData.append("_method", "PUT");
                 axios
                     .post("/api/admin/certifications/" + this.certification.id, formData)
@@ -300,7 +309,11 @@ export default {
             this.certification = certification;
             this.certificationDialog = true;
              this.selectedOption = this.certification.college;
+             if( this.selectedOption == null){
+                 this.selectedOption = {"id": null, "name": "No College"};
+             }
              this.userOption = this.certification.user;
+
         }, //end of openDialog
 
         hideDialog() {
