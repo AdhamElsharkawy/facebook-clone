@@ -234,7 +234,7 @@ export default {
     beforeMount() {
         this.initFilters();
         this.toast = useToast();
-        console.log(this.certifications);
+        // console.log(this.certifications);
     }, //end of beforeMount
 
     methods: {

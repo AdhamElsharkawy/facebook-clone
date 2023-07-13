@@ -21,9 +21,9 @@ return new class extends Migration
             $table->dateTime('valid_until')->nullable();
             $table->string('confirmation_link')->nullable();
             $table->bigInteger('college_id')->unsigned()->nullable();
-            
+
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('college_id')->references('id')->on('colleges')->onDelete('set null')->onUpdate('cascade');       
+            $table->foreign('college_id')->references('id')->on('colleges')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }

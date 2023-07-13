@@ -113,13 +113,14 @@ export default {
     components: { CertificationList, EditCertification, CreateCertification },
     data() {
         return {
-            currentCertifications: [],
+            currentCertifications: [
+            ],
             deleteCertificationsDialog: false,
             selectedCertifications: null,
             loading: false,
             isEmpty: false,
             errors: null,
-            colleges: [],
+            colleges: [{"id": null, "name": "No College"}],
             users: [],
         };
     }, //end of data
@@ -180,9 +181,10 @@ export default {
                 .get("/api/admin/certifications")
                 .then((response) => {
                     this.currentCertifications = response.data.certifications;
-                    this.colleges = response.data.colleges;
+                     this.colleges = [...this.colleges,...response.data.colleges];
+                    // this.colleges = response.data.colleges;
+                    // console.log('currentCertifications',this.currentCertifications);
                     this.users = response.data.users;
-                    console.log('currentCertifications',this.currentCertifications);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;

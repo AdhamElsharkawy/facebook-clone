@@ -57,6 +57,10 @@ class CertificationController extends Controller
     public function update(UpdateCertificationRequest $request, Certification $certification)
     {
         $form_data = $request->validated();
+//        dd($form_data);
+
+        $request->college_id == "null"? $form_data['college_id'] = null : $form_data['college_id'];
+
         $form_data['start_date'] = Carbon::parse($request->start_date);
         $form_data['end_date'] = Carbon::parse($request->end_date);
         $form_data['valid_until'] = Carbon::parse($request->valid_until);
