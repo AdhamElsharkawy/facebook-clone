@@ -15,40 +15,38 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::with(['user'=> function ($query){
+            $query->select('id', 'name');
+        },'comments.user:id,name','polls'])->latest()->get();
+
+
+        return ['posts' => $posts];
+
+//        ['comments' => function ($query){
+//            $query->select('user_id');
+//        }]
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePostRequest $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
-    {
-        //
-    }
+//    /**
+//     * Display the specified resource.
+//     */
+//    public function show(Post $post)
+//    {
+//        //
+//    }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Post $post)
     {
-        //
+        return response()->json([
+            'post' => $post
+        ]);
     }
+
 
     /**
      * Update the specified resource in storage.

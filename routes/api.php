@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
@@ -46,4 +47,6 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // events apis
     Route::get("events", [EventController::class, 'getEvents'])->name('events');
+    Route::resource('posts', PostController::class)->except(['show', 'create','store']);
+
 });
