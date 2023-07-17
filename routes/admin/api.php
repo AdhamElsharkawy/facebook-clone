@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\EducationController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\ExperienceController;
+use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -34,6 +35,7 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     Route::delete('experiences/delete/all', [ExperienceController::class, 'destroyAll']);
     Route::resource('certifications', CertificationController::class)->except(['show', 'create']);
     Route::delete('certifications/delete/all', [CertificationController::class, 'destroyAll']);
+    Route::resource('posts', PostController::class)->except(['show', 'create','store']);
 
     //seos
     Route::resource('seos', SeoController::class)->only(['index', 'update']);

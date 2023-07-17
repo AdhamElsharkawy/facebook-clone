@@ -172,6 +172,20 @@ const admin = [
         props: true,
     },
 
+    // posts
+    {
+        name: "admin.posts",
+        path: "posts",
+        component: () => import("../pages/admin/posts/index/PostPage.vue"),
+        props: true,
+    },
+    {
+        name: "admin.posts.edit",
+        path: "posts/edit",
+        component: () => import("../pages/admin/posts/edit/EditPost.vue"),
+        props: true,
+    },
+
     //settings
     {
         name: "admin.settings",

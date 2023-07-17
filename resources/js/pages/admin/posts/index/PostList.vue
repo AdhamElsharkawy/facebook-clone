@@ -1,0 +1,242 @@
+<template>
+    <Loading v-if="loading" />
+    <div class="card">
+        <DataView :value="posts" :layout="layout">
+            <template #header>
+                <div class="flex justify-content-end">
+                    <DataViewLayoutOptions v-model="layout" />
+                </div>
+            </template>
+
+            <template #list="slotProps">
+                <div class="col-12">
+                    <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
+                        <img v-for="img_path in slotProps.data.images_paths" :key="img_path" class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" :src="img_path" :alt="slotProps.data.name" />
+                        <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                            <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                <div class="text-2xl font-bold text-900">{{ slotProps.data.thread }}</div>
+                                <Rating :modelValue="slotProps.data.likes_count" readonly :cancel="false"></Rating>
+                                <div class="flex align-items-center gap-3">
+                                    <span class="flex align-items-center gap-2">
+                                        <i class="pi pi-tag"></i>
+                                        <span class="font-semibold">{{ slotProps.data.user.name }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
+                                <Button
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mx-2"
+                                    @click="editPost(slotProps.data)"
+                                />
+                                <Button
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-warning mx-2"
+                                    @click="confirmDeletePost(slotProps.data)"
+                                />
+                                <Button icon="pi pi-eye" @click="visible = true" class="p-button-rounded mx-2" />
+
+                                <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50vw' }">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                </Dialog>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template #grid="slotProps">
+                <div class="col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
+                    <div class="p-4 border-1 surface-border surface-card border-round">
+                        <div class="flex flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="flex align-items-center gap-2">
+                                <i class="pi pi-tag"></i>
+                                <span class="font-semibold">{{ slotProps.data.user.name }}</span>
+                            </div>
+<!--                            <Tag :value="slotProps.data.inventoryStatus" :severity="getSeverity(slotProps.data)"></Tag>-->
+                        </div>
+                        <div class="flex flex-column align-items-center gap-3 py-5">
+                                <img v-for="img_path in slotProps.data.images_paths" :key="img_path" class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" :src="img_path" :alt="slotProps.data.name" />
+                            <div class="text-2xl font-bold">{{ slotProps.data.thread }}</div>
+                            <Rating :modelValue="slotProps.data.likes_count" readonly :cancel="false"></Rating>
+                        </div>
+                        <div class="flex align-items-center justify-content-between">
+
+                                <Button
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mx-2"
+                                    @click="editPost(slotProps.data)"
+                                />
+                                <Button
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-warning mx-2"
+                                    @click="confirmDeletePost(slotProps.data)"
+                                />
+
+                        </div>
+                    </div>
+
+                </div>
+            </template>
+        </DataView>
+    </div>
+</template>
+
+<Dialog
+    v-model:visible="deletePostDialog"
+    :style="{ width: '450px' }"
+    header="Confirm"
+    :modal="true"
+>
+<div class="flex align-items-center justify-content-center">
+    <i
+        class="pi pi-exclamation-triangle mr-3"
+        style="font-size: 2rem"
+    />
+    <span v-if="post"
+    >Are you sure you want to delete <b>{{ post.name }}</b
+    >?</span
+    >
+</div>
+<template #footer>
+    <Button
+        label="No"
+        icon="pi pi-times"
+        class="p-button-text"
+        @click="deletePostDialog = false"
+    />
+    <Button
+        label="Yes"
+        icon="pi pi-check"
+        class="p-button-text"
+        @click="deletePost"
+    />
+</template>
+</Dialog>
+
+<script>
+import { FilterMatchMode } from "primevue/api";
+import { useToast } from "primevue/usetoast";
+import {data} from "autoprefixer";
+
+export default {
+    computed: {
+        data() {
+            return data
+        }
+    },
+    props: {
+        currentPosts: {
+            type: Array,
+            required: true,
+        },
+
+    }, //end of props
+
+    emits: ["selectPosts", "deletePost", "editPost"],
+
+    data() {
+        return {
+            layout: 'grid',
+            toast: null,
+            loading: false,
+            postDialog: false,
+            deletePostDialog: false,
+            post: {},
+            posts: this.currentPosts,
+            selectedPosts: null,
+            filters: {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            },
+        };
+    }, //end of data
+
+    watch: {
+        selectedPosts(val) {
+            this.$emit("selectPosts", val);
+        },
+    }, //end of watch
+
+    beforeMount() {
+        this.initFilters();
+        this.toast = useToast();
+    }, //end of beforeMount
+    mounted() {
+        console.log(this.posts[0].images_paths[0])
+
+    },
+    methods: {
+        confirmDeletePost(post) {
+            this.post = post;
+            this.deletePostDialog = true;
+        }, //end of confirmDeletePost
+
+        deletePost() {
+            this.loading = true;
+            axios
+                .delete("/api/admin/posts/" + this.post.id)
+                .then((response) => {
+                    this.toast.add({
+                        severity: "success",
+                        summary: "Successful",
+                        detail: response.data.message,
+                        life: 3000,
+                    });
+                    this.$emit("deletePost");
+                    this.deletePostDialog = false;
+                    this.post = {};
+                })
+                .catch((errors) => {
+                    if (errors.response) {
+                        this.toast.add({
+                            severity: "error",
+                            summary: "Error",
+                            detail: errors.response.data.message,
+                            life: 15000,
+                        });
+                    }
+                })
+                .then(() => {
+                    this.loading = false;
+                    this.deletePostDialog = false;
+                });
+        }, //end of deletePost
+
+        initFilters() {
+            this.filters = {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            };
+        }, //end of initFilters
+
+        exportCSV() {
+            this.$refs.dt.exportCSV();
+        }, //end of exportCSV
+
+        editPost(post) {
+            this.$emit("editPost", post);
+        }, //end of editPost
+    }, //end of methods
+};
+</script>
+
+<style scoped lang="scss">
+@import "../../../../assets/demo/styles/badges.scss";
+</style>
+
+<style lang="scss">
+.text-right {
+    .p-datatable {
+        .p-column-header-content {
+            display: flex;
+            gap: 0.5rem;
+        }
+    }
+    table {
+        direction: rtl;
+    }
+}
+</style>
