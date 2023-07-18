@@ -49,6 +49,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     Route::get("events", [EventController::class, 'getEvents'])->name('events');
     // Route::resource('posts', PostController::class)->except(['show', 'create','store']);
 
-    Route::resource("posts", PostController::class)->except(['create']);
+    Route::resource("posts", PostController::class)->except(['create', 'edit']);
+    Route::put("posts/{post}/like", [PostController::class, 'reactLike'])->name('posts.like');
 
 });
