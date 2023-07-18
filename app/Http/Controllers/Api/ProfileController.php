@@ -30,7 +30,7 @@ class ProfileController extends Controller
                         $query->select('id', 'name', 'image');
                     }]);
             }])
-            ->orderBy('created_at', 'desc')
+            ->latest()
             ->paginate(10);
 
         foreach ($posts as $post) {
