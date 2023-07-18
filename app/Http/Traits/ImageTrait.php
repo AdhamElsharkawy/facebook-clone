@@ -53,4 +53,13 @@ trait ImageTrait
         file_put_contents(public_path($path . $filename), $file);
         return $path . $filename;
     }
+
+    public function uploadImages($images, $path = 'images/')
+    {
+        $images_paths = [];
+        foreach ($images as $image) {
+            $images_paths[] = $this->img($image, $path);
+        }
+        return json_encode($images_paths);
+    }
 }

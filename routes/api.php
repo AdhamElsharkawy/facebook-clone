@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\SearchConroller;
 use App\Http\Controllers\Api\BirthDateController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,4 +53,8 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     Route::resource("posts", PostController::class)->except(['create', 'edit']);
     Route::put("posts/{post}/like", [PostController::class, 'reactLike'])->name('posts.like');
 
+    Route::post("comments/{post}", [CommentController::class, 'store'])->name('comments.store');
+    Route::put("comments/{comment}", [CommentController::class, 'update'])->name('comments.update');
+    Route::put("comments/{comment}/like", [CommentController::class, 'reactLike'])->name('comments.like');
+    Route::delete("comments/{comment}", [CommentController::class, 'destroy'])->name('comments.destroy');
 });

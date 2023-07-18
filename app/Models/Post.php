@@ -21,12 +21,16 @@ class Post extends Model
         "pending"
     ]; //end of appends
 
+    public function getImagesAttribute($value)
+    {
+        return json_decode($value);
+    } //end of getImagesAttribute
+
     public function getImagesPathsAttribute()
     {
         if (!$this->images) return [];
-        $images = json_decode($this->images);
         $images_paths = [];
-        foreach ($images as $image) {
+        foreach ($this->images as $image) {
             array_push($images_paths, asset($image));
         }
         return $images_paths;

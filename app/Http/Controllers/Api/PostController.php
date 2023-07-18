@@ -140,7 +140,7 @@ class PostController extends Controller
         $validation = $this->apiValidationTrait($request->all(), [
             'thread' => 'required|string|max:255',
             "created_at" => "nullable|date",
-            'old_images' => 'nullable|array',  // only old image names that will remain --- without path ---
+            'old_images' => 'nullable|array',  // only old image path that will remain --- without url ---
             'images' => 'nullable|array',     // only new images
             'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'polls' => 'nullable|array',
@@ -204,22 +204,27 @@ class PostController extends Controller
 
     public function reactLike(Request $request, string $id)
     {
-        $this->apiValidationTrait($request->all(), [
+        $validation = $this->apiValidationTrait($request->all(), [
             "reaction" => "required|numeric|in:1,2,3",
         ]);
+        if ($validation) return $validation;
 
         $post = Post::find($id);
         if (!$post) {
             return $this->notFound();
         }
 
-        $post->likes()->updateOrCreate(
-            ['user_id' => auth('api')->user()->id],
-            ['reaction' => $request->reaction]
-        );
+        if ($request->reaction == 0) {
+            $post->likes()->where('user_id', auth('api')->user()->id)->delete();
+        } else {
+            $post->likes()->updateOrCreate(
+                ['user_id' => auth('api')->user()->id],
+                ['reaction' => $request->reaction]
+            );
+        }
 
         return $this->apiSuccessResponse(
-            [],
+            ['post' => $post->load('likes')],
             $this->seo('react like', 'home-page'),
             'post reacted successfully',
         );
@@ -240,7 +245,7 @@ class PostController extends Controller
                 $this->deleteImg($image, 'images/posts/');
             }
         }
-        
+
         $post->polls()->delete();
         $post->delete();
 
