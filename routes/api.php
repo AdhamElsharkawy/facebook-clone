@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
@@ -8,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\SearchConroller;
 use App\Http\Controllers\Api\BirthDateController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +47,8 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // events apis
     Route::get("events", [EventController::class, 'getEvents'])->name('events');
-    Route::resource('posts', PostController::class)->except(['show', 'create','store']);
+    // Route::resource('posts', PostController::class)->except(['show', 'create','store']);
+
+    Route::resource("posts", PostController::class);
 
 });
