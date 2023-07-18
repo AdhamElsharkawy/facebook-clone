@@ -17,11 +17,13 @@ class Post extends Model
         'likes_count',
         'loves_count',
         'celebrate_count',
-        'total_reactions'
+        'total_reactions',
+        "pending"
     ]; //end of appends
 
     public function getImagesPathsAttribute()
     {
+        if (!$this->images) return [];
         $images = json_decode($this->images);
         $images_paths = [];
         foreach ($images as $image) {
@@ -54,6 +56,11 @@ class Post extends Model
     {
         return $this->likes->count();
     } //end of getTotalReactionsAttribute
+
+    public function getPendingAttribute()
+    {
+        return $this->created_at > now();
+    } //end of getPendingAttribute
 
     public function user()
     {
