@@ -20,6 +20,7 @@ class Post extends Model
         'total_reactions',
         "pending",
         "my_post",
+        "votes",
     ]; //end of appends
 
     public function getImagesAttribute($value)
@@ -71,6 +72,11 @@ class Post extends Model
     {
         return $this->user_id == auth('api')->id();
     } //end of getMyPostAttribute
+
+    public function getVotesAttribute()
+    {
+        return $this->polls->sum('votes');
+    } //end of getVotesAttribute
 
     public function user()
     {

@@ -5,12 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use Carbon\Carbon;
 
 class Experience extends Model
 {
     use HasFactory, Searchable;
 
     protected $guarded = [];
+
+    protected $appends = ['duration'];
+
+    public function getDurationAttribute()
+    {
+        if ($this->is_current) {
+            $startDate = Carbon::parse($this->start_date);
+            return $startDate->diffForHumans();
+        } else {
+            $startDate = Carbon::parse($this->start_date);
+            $endDate = Carbon::parse($this->end_date);
+            return $startDate->diff($endDate)->format('%y yrs, %m mos');
+        }
+        
+    } //end of getDurationAttribute
 
     public function getTypeAttribute($value)
     {
@@ -39,7 +55,11 @@ class Experience extends Model
 
     public function getEndDateAttribute($value)
     {
-        return date('Y-m-d', strtotime($value));
+        if ($this->is_current) {
+            return "Present";
+        } else {
+            return date('Y-m-d', strtotime($value));
+        }
     } //end of getEndDateAttribute
 
     public function company()

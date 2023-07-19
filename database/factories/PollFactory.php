@@ -18,7 +18,6 @@ class PollFactory extends Factory
     {
         return [
             "poll" => $this->faker->sentence(3),
-
             "post_id" => $this->faker->numberBetween(1, 80),
         ];
     }
