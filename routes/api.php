@@ -1,9 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LeaderboardController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\SearchConroller;
 use App\Http\Controllers\Api\BirthDateController;
 use App\Http\Controllers\Api\EventController;
@@ -11,6 +11,10 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MentionController;
+use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\CollegeController;
+use App\Http\Controllers\Api\CertificationController;
+use App\Http\Controllers\Api\ExperienceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,10 +33,20 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     // profile apis
     Route::put("profile", [ProfileController::class, 'update'])->name('user.update');
     Route::put("profile/theme", [ProfileController::class, 'updateTheme'])->name('user.update-theme');
-    Route::put("profile/experience", [ProfileController::class, 'updateExperience'])->name('user.update-experience');
-    Route::put("profile/education", [ProfileController::class, 'updateEducation'])->name('user.update-education');
-    Route::put("profile/certification", [ProfileController::class, 'updateCertification'])->name('user.update-certification');
     Route::put("profile/social", [ProfileController::class, 'updateSocial'])->name('user.update-social');
+    
+    Route::get("companies", [CompanyController::class, 'index'])->name('companies');
+
+    Route::post("experiences", [ExperienceController::class, 'store'])->name('experience.store');
+    Route::put("experiences/{experience}", [ExperienceController::class, 'update'])->name('experience.update');
+
+    Route::get("colleges", [CollegeController::class, 'index'])->name('college.index');
+
+    Route::post("educations", [EducationController::class, 'store'])->name('education.store');
+    Route::put("educations/{education}", [EducationController::class, 'update'])->name('education.update');
+
+    Route::post("certifications", [CertificationController::class, 'store'])->name('certification.store');
+    Route::put("certifications/{certification}", [CertificationController::class, 'update'])->name('certification.update');
 
     // user apis
     Route::get("users", [UserController::class, 'index'])->name('users');

@@ -17,9 +17,9 @@ class Poll extends Model
         return $this->belongsTo(Post::class);
     } //end of post
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'votes');
     } //end of user
 
     public function toSearchableArray(){
