@@ -22,6 +22,4 @@ yarn-error.log
 /public/node_modules/images/**
 composer.lock
 composer.lock
-/public/js/app.js
-/public/js/app.js.map
-/public/js/app.js.LICENSE.txt
+/public/js/*.js
