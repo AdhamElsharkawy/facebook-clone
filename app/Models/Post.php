@@ -18,7 +18,8 @@ class Post extends Model
         'loves_count',
         'celebrate_count',
         'total_reactions',
-        "pending"
+        "pending",
+        "my_post",
     ]; //end of appends
 
     public function getImagesAttribute($value)
@@ -65,6 +66,11 @@ class Post extends Model
     {
         return $this->created_at > now();
     } //end of getPendingAttribute
+
+    public function getMyPostAttribute()
+    {
+        return $this->user_id == auth('api')->id();
+    } //end of getMyPostAttribute
 
     public function user()
     {
