@@ -18,9 +18,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'votes', 'created_at')
+        $posts = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'created_at')
             ->with(['polls' => function ($query) {
-                $query->select('id', 'post_id', 'poll', 'votes', 'user_id');
+                $query->select('id', 'post_id', 'poll', 'votes')->with(['users:id,name,image']);
             }])
             ->with(['comments' => function ($query) {
                 $query->select('id', 'post_id', 'user_id', 'thread', "images", 'created_at')
@@ -104,9 +104,9 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $post = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'votes', 'created_at')
+        $post = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'created_at')
             ->with(['polls' => function ($query) {
-                $query->select('id', 'post_id', 'poll', 'votes', 'user_id');
+                $query->select('id', 'post_id', 'poll', 'votes')->with(['users:id,name,image']);
             }])
             ->with(['comments' => function ($query) {
                 $query->select('id', 'post_id', 'user_id', 'thread', "images", 'created_at')
@@ -202,6 +202,32 @@ class PostController extends Controller
         );
     } // end of update
 
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $post = Post::find($id);
+        if (!$post) {
+            return $this->notFound();
+        }
+
+        if ($post->images) {
+            foreach (json_decode($post->images) as $image) {
+                $this->deleteImg($image, 'images/posts/');
+            }
+        }
+
+        $post->polls()->delete();
+        $post->delete();
+
+        return $this->apiSuccessResponse(
+            [],
+            $this->seo('delete post', 'home-page'),
+            'post deleted successfully',
+        );
+    } // end of destroy
+
     public function reactLike(Request $request, string $id)
     {
         $validation = $this->apiValidationTrait($request->all(), [
@@ -230,29 +256,40 @@ class PostController extends Controller
         );
     } // end of reactLike
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function vote(Request $request, string $id)
     {
+        $validation = $this->apiValidationTrait($request->all(), [
+            "poll_id" => "required|numeric|exists:polls,id",
+        ]);
+        if ($validation) return $validation;
+
         $post = Post::find($id);
         if (!$post) {
             return $this->notFound();
         }
 
-        if ($post->images) {
-            foreach (json_decode($post->images) as $image) {
-                $this->deleteImg($image, 'images/posts/');
-            }
+        $poll = $post->polls()->find($request->poll_id);
+        if (!$poll) {
+            return $this->notFound();
         }
 
-        $post->polls()->delete();
-        $post->delete();
+        // check if the user already voted
+        if ($poll->users()->where('user_id', auth('api')->user()->id)->first()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'you already voted',
+            ], 422);
+        }
+
+        $poll->update([
+            'votes' => $poll->votes + 1,
+        ]);
+        $poll->users()->syncWithoutDetaching(auth('api')->user()->id);
 
         return $this->apiSuccessResponse(
-            [],
-            $this->seo('delete post', 'home-page'),
-            'post deleted successfully',
+            ['post' => $post->load('polls')],
+            $this->seo('vote', 'home-page'),
+            'post voted successfully',
         );
-    } // end of destroy
+    } // end of vote
 }

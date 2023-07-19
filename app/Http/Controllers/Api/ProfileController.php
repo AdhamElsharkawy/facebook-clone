@@ -20,9 +20,10 @@ class ProfileController extends Controller
     public static function getPosts($user_id)
     {
         $posts = Post::where('user_id', $user_id)
-            ->select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'votes', 'created_at')
+            ->select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'created_at')
             ->with(['polls' => function ($query) {
-                $query->select('id', 'post_id', 'poll', 'votes', 'user_id');
+                // select only name and image for the user
+                $query->select('id', 'post_id', 'poll', 'votes')->with(['users:id,name,image']);
             }])
             ->with(['comments' => function ($query) {
                 $query->select('id', 'post_id', 'user_id', 'thread', "images", 'created_at')
