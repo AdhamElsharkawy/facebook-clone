@@ -32,9 +32,9 @@ class PostController extends Controller
             ->paginate(10);
 
         foreach ($posts as $post) {
-            $post->makeHidden(['id', 'user_id', 'likes', 'images']);
+            $post->makeHidden(['user_id', 'likes', 'images']);
             foreach ($post->comments as $comment) {
-                $comment->makeHidden(['id', 'post_id', 'user_id', 'likes', 'images']);
+                $comment->makeHidden(['post_id', 'user_id', 'likes', 'images']);
                 $comment->user->makeHidden('id');
             }
             // remove the post that has a date didn't come yet
@@ -119,9 +119,9 @@ class PostController extends Controller
             return $this->notFound();
         }
 
-        $post->makeHidden(['id', 'user_id', 'likes']);
+        $post->makeHidden(['user_id', 'likes']);
         foreach ($post->comments as $comment) {
-            $comment->makeHidden(['id', 'post_id', 'user_id', 'likes', 'images']);
+            $comment->makeHidden(['post_id', 'user_id', 'likes', 'images']);
             $comment->user->makeHidden('id');
         }
 
