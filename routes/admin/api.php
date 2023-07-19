@@ -36,6 +36,8 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     Route::resource('certifications', CertificationController::class)->except(['show', 'create']);
     Route::delete('certifications/delete/all', [CertificationController::class, 'destroyAll']);
     Route::resource('posts', PostController::class)->except(['show', 'create','store']);
+    Route::delete('posts/delete/comment/{commentId}', [PostController::class, 'destroyComment']);
+
 
     //seos
     Route::resource('seos', SeoController::class)->only(['index', 'update']);

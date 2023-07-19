@@ -11,11 +11,14 @@
             <template #list="slotProps">
                 <div class="col-12">
                     <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-                        <img v-for="img_path in slotProps.data.images_paths" :key="img_path" class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" :src="img_path" :alt="slotProps.data.name" />
+                        <img v-if="slotProps.data.images_paths.length > 0" v-for="img_path in slotProps.data.images_paths" :key="img_path" class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" :src="img_path" :alt="slotProps.data.name" />
                         <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
                             <div class="flex flex-column align-items-center sm:align-items-start gap-3">
-                                <div class="text-2xl font-bold text-900">{{ slotProps.data.thread }}</div>
-                                <Rating :modelValue="slotProps.data.likes_count" readonly :cancel="false"></Rating>
+                                <div class="text-2xl font-bold text-900">Thread : {{ slotProps.data.thread }}</div>
+<!--                                <p>Total Likes : {{ slotProps.data.likes_count }}</p>-->
+<!--                                <p>Total celebrates : {{ slotProps.data.celebrate_count }}</p>-->
+<!--                                <p>Total loves : {{ slotProps.data.loves_count }}</p>-->
+                                <p>Total Reactions : {{ slotProps.data.total_reactions }}</p>
                                 <div class="flex align-items-center gap-3">
                                     <span class="flex align-items-center gap-2">
                                         <i class="pi pi-tag"></i>
@@ -36,12 +39,13 @@
                                 />
                                 <Button icon="pi pi-eye" @click="visible = true" class="p-button-rounded mx-2" />
 
-                                <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50vw' }">
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                    </p>
-                                </Dialog>
+
+<!--                                <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50vw' }">-->
+<!--                                    <p>-->
+<!--                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.-->
+<!--                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
+<!--                                    </p>-->
+<!--                                </Dialog>-->
 
                             </div>
                         </div>
@@ -62,7 +66,9 @@
                         <div class="flex flex-column align-items-center gap-3 py-5">
                                 <img v-for="img_path in slotProps.data.images_paths" :key="img_path" class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" :src="img_path" :alt="slotProps.data.name" />
                             <div class="text-2xl font-bold">{{ slotProps.data.thread }}</div>
-                            <Rating :modelValue="slotProps.data.likes_count" readonly :cancel="false"></Rating>
+                            <p>Total Likes : {{ slotProps.data.likes_count }}</p>
+
+<!--                            <Rating :modelValue="slotProps.data.likes_count" readonly :cancel="false"></Rating>-->
                         </div>
                         <div class="flex align-items-center justify-content-between">
 
@@ -71,6 +77,7 @@
                                     class="p-button-rounded p-button-success mx-2"
                                     @click="editPost(slotProps.data)"
                                 />
+                            <h2>asd</h2>
                                 <Button
                                     icon="pi pi-trash"
                                     class="p-button-rounded p-button-warning mx-2"
@@ -83,6 +90,37 @@
                 </div>
             </template>
         </DataView>
+        <Dialog
+            v-model:visible="deletePostDialog"
+            :style="{ width: '450px' }"
+            header="Confirm"
+            :modal="true"
+        >
+            <div class="flex align-items-center justify-content-center">
+                <i
+                    class="pi pi-exclamation-triangle mr-3"
+                    style="font-size: 2rem"
+                />
+                <span v-if="post"
+                >Are you sure you want to delete <b>{{ post.name }}</b
+                >?</span
+                >
+            </div>
+            <template #footer>
+                <Button
+                    label="No"
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    @click="deletePostDialog = false"
+                />
+                <Button
+                    label="Yes"
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    @click="deletePost"
+                />
+            </template>
+        </Dialog>
     </div>
 </template>
 
@@ -165,10 +203,6 @@ export default {
         this.initFilters();
         this.toast = useToast();
     }, //end of beforeMount
-    mounted() {
-        console.log(this.posts[0].images_paths[0])
-
-    },
     methods: {
         confirmDeletePost(post) {
             this.post = post;
