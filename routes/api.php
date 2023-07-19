@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\CollegeController;
 use App\Http\Controllers\Api\CertificationController;
 use App\Http\Controllers\Api\ExperienceController;
+use App\Http\Controllers\Api\EducationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +74,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     Route::resource("posts", PostController::class)->except(['create', 'edit']);
     Route::put("posts/{post}/like", [PostController::class, 'reactLike'])->name('posts.like');
+    Route::put("posts/{post}/vote", [PostController::class, 'vote'])->name('posts.poll');
 
     Route::post("comments/{post}", [CommentController::class, 'store'])->name('comments.store');
     Route::put("comments/{comment}", [CommentController::class, 'update'])->name('comments.update');

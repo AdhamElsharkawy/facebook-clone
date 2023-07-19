@@ -41,10 +41,48 @@ class ExperienceController extends Controller
         $seo = Seo::first();
         return $this->apiSuccessResponse(
             [
-                'experience' => $experience,
+                'experience' => $experience->load('company'),
             ],
             $this->seo('Experience', 'experience', $seo->description, $seo->keywords),
             "Experience created successfully."
         );
     } //end of store
+
+    public function update(Request $request, $id)
+    {
+        $validations = $this->apiValidationTrait($request->all(), [
+            "title" => "required|string",
+            "description" => "nullable|string",
+            "type" => "required|integer|in:1,2,3",
+            "start_date" => "required|date",
+            "end_date" => "nullable|date|after_or_equal:start_date",
+            "is_current" => "nullable|integer|in:0,1",
+            "company_id" => "nullable|integer|exists:companies,id",
+            "company_name" => "nullable|string",
+        ]);
+        if ($validations) return $validations;
+
+        $experience = auth('api')->user()->experiences()->find($id);
+        if (!$experience) return response()->json(['error' => 'Experience not found.'], 404);
+
+        if ($request->company_id) {
+            $experience->update($request->all());
+        } else {
+            $company = Company::create([
+                'name' => $request->company_name,
+            ]);
+            $formData = $request->except('company_name');
+            $formData['company_id'] = $company->id;
+            $experience->update($formData);
+        }
+
+        $seo = Seo::first();
+        return $this->apiSuccessResponse(
+            [
+                'experience' => $experience->load('company'),
+            ],
+            $this->seo('Experience', 'experience', $seo->description, $seo->keywords),
+            "Experience updated successfully."
+        );
+    } //end of update
 }
