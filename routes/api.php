@@ -35,7 +35,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     Route::put("profile", [ProfileController::class, 'update'])->name('user.update');
     Route::put("profile/theme", [ProfileController::class, 'updateTheme'])->name('user.update-theme');
     Route::put("profile/social", [ProfileController::class, 'updateSocial'])->name('user.update-social');
-    
+
     Route::get("companies", [CompanyController::class, 'index'])->name('companies');
 
     Route::post("experiences", [ExperienceController::class, 'store'])->name('experience.store');
@@ -71,9 +71,9 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // events apis
     Route::get("events", [EventController::class, 'getEvents'])->name('events');
-
     Route::resource("posts", PostController::class)->except(['create', 'edit']);
     Route::put("posts/{post}/like", [PostController::class, 'reactLike'])->name('posts.like');
+
     Route::put("posts/{post}/vote", [PostController::class, 'vote'])->name('posts.poll');
 
     Route::post("comments/{post}", [CommentController::class, 'store'])->name('comments.store');
