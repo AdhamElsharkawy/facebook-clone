@@ -4,41 +4,7 @@
     <div class="grid" v-else>
         <div class="col-12">
             <div class="card">
-                <Toolbar
-                    class="mb-4"
-                    :class="{
-                        'flex flex-row-reverse': $store.getters['isRtl'],
-                    }"
-                >
-                    <template v-slot:start>
-                        <div
-                            class="my-2"
-                            :class="{
-                                'flex flex-row-reverse':
-                                    $store.getters['isRtl'],
-                            }"
-                        >
-                            <Button
-                                :label="$t('delete')"
-                                icon="pi pi-trash"
-                                class="p-button-danger"
-                                @click="confirmDeleteSelected"
-                                :disabled="
-                                    !selectedPosts || !selectedPosts.length
-                                "
-                            />
-                        </div>
-                    </template>
 
-                    <template v-slot:end>
-                        <Button
-                            :label="$t('export')"
-                            icon="pi pi-upload"
-                            class="p-button-help"
-                            @click="exportCSV($event)"
-                        />
-                    </template>
-                </Toolbar>
 
                 <post-list
                     ref="listPostComponent"
@@ -157,7 +123,7 @@ export default {
                 .then((response) => {
                     this.currentPosts = response.data.posts;
                     this.posts = response.data.posts;
-                    console.log(this.posts);
+                    console.log('posstttttt',this.posts);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;

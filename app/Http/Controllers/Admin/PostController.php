@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
+use App\Http\Traits\ImageTrait;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Http\Requests\Admin\Post\StorePostRequest;
 use App\Http\Requests\Admin\Post\UpdatePostRequest;
+use Carbon\Carbon;
 
 class PostController extends Controller
 {
+    use ImageTrait;
     /**
      * Display a listing of the resource.
      */
@@ -53,7 +57,24 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $form_data = $request->validated();
+        if ($request->images) {
+            for($i = 0; $i < count($request->images); $i++){
+                $post->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($post->images[$i]) : '';
+                $form_data['images'][$i] = $this->img($request->images[$i], 'images/posts/');
+            }
+        } else {
+            $form_data['images'] = $post->images;
+        }
+        if($request->poll_end_date){
+            $form_data['poll_end_date'] = $form_data['poll_end_date']??Carbon::parse($request->poll_end_date);
+        }
+        $comment = Comment::find($form_data['comments'][$i]);
+        $comment->update([
+           ...$form_data['comments'][$i]
+        ]);
+
+        $post->update($form_data);
     }
 
     /**
@@ -61,6 +82,19 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if ($post->images) {
+            for($i = 0; $i < count(($post->images)); $i++){
+                $post->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($post->images[$i]) : '';
+            }
+        }
+        $post->polls()->delete();
+        $post->delete();
+
     }
+    public function destroyComment($commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+        $comment->delete();
+    }
+
 }

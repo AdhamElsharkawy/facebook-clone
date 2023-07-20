@@ -18,7 +18,7 @@ class Comment extends Model
         'loves_count',
         'celebrate_count',
         'total_reactions',
-        "my_comment"
+//        "my_comment"
     ]; //end of appends
 
     public function getImagesAttribute($value)
@@ -61,10 +61,10 @@ class Comment extends Model
         return $this->likes->count();
     } //end of getTotalReactionsAttribute
 
-    public function getMyCommentAttribute()
-    {
-        return $this->user_id == auth("api")->user()->id;
-    } //end of getMyCommentAttribute
+//    public function getMyCommentAttribute()
+//    {
+//        return $this->user_id == auth("api")->user()->id;
+//    } //end of getMyCommentAttribute
 
     public function post()
     {
