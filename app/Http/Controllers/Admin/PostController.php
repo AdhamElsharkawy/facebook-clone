@@ -19,27 +19,27 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['user'=> function ($query){
+        $posts = Post::with(['user' => function ($query) {
             $query->select('id', 'name');
-        },'comments.user:id,name','polls'])->latest()->get();
+        }, 'comments.user:id,name', 'polls'])->latest()->get();
 
 
         return ['posts' => $posts];
 
-//        ['comments' => function ($query){
-//            $query->select('user_id');
-//        }]
+        //        ['comments' => function ($query){
+        //            $query->select('user_id');
+        //        }]
     }
 
 
 
-//    /**
-//     * Display the specified resource.
-//     */
-//    public function show(Post $post)
-//    {
-//        //
-//    }
+    //    /**
+    //     * Display the specified resource.
+    //     */
+    //    public function show(Post $post)
+    //    {
+    //        //
+    //    }
 
     /**
      * Show the form for editing the specified resource.
@@ -57,22 +57,22 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $form_data = $request->validated();
-        if ($request->images) {
-            for($i = 0; $i < count($request->images); $i++){
+        // $form_data = $request->validated();
+        $form_data = $request->all();
+        if ($form_data['images']) {
+            for ($i = 0; $i < count($request->images); $i++) {
                 $post->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($post->images[$i]) : '';
                 $form_data['images'][$i] = $this->img($request->images[$i], 'images/posts/');
             }
         } else {
             $form_data['images'] = $post->images;
         }
-        if($request->poll_end_date){
-            $form_data['poll_end_date'] = $form_data['poll_end_date']??Carbon::parse($request->poll_end_date);
+        if ($request->poll_end_date) {
+            $form_data['poll_end_date'] = $form_data['poll_end_date'] ?? Carbon::parse($request->poll_end_date);
         }
-        $comment = Comment::find($form_data['comments'][$i]);
-        $comment->update([
-           ...$form_data['comments'][$i]
-        ]);
+        if ($request->comments) {
+            $post->comments = json_decode($request->comments);
+        }
 
         $post->update($form_data);
     }
@@ -83,18 +83,16 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         if ($post->images) {
-            for($i = 0; $i < count(($post->images)); $i++){
+            for ($i = 0; $i < count(($post->images)); $i++) {
                 $post->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($post->images[$i]) : '';
             }
         }
         $post->polls()->delete();
         $post->delete();
-
     }
     public function destroyComment($commentId)
     {
         $comment = Comment::findOrFail($commentId);
         $comment->delete();
     }
-
 }

@@ -181,9 +181,11 @@ export default {
     data() {
         return {
             images:[],
-            imagesArray:[],
             post: {},
             polls: [],
+            // comments: [
+            //     ...this.post.comments,
+            // ],
             postDialog: false,
             submitted: false,
             selectedOption: null,
@@ -191,6 +193,7 @@ export default {
     },
     methods: {
         addMore() {
+            // console.log(this.comments);
             this.polls.push({
                 poll: "",
                 post_id: this.post.id,
@@ -202,12 +205,6 @@ export default {
         handleFileChange() {
             if (!this.$refs.fileUploader.files.length) return;
             this.post.images = this.$refs.fileUploader.files;
-            // this.post.images.forEach((image) => {
-            //     this.imagesArray.push(image);
-            //     // this.post.images.push(image.name);
-            // });
-            // this.post.images = this.imagesArray;
-            // console.log('imagessss',this.post.images);
             console.log('comments', this.post.comments);
 
 
@@ -243,7 +240,7 @@ export default {
                     formData.append("poll_end_date", this.post.poll_end_date);
                 }
                 if (this.post.comments.length > 0) {
-                    formData.append("comments", this.post.comments);
+                    formData.append("comments", JSON.stringify(this.post.comments));
                 }
                 formData.append("_method", "PUT");
                 axios
