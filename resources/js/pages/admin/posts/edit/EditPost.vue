@@ -7,6 +7,26 @@
         class="p-fluid"
     >
 
+
+        <div v-if="post.images" class="field text-center mb-4">
+            <div class="p-inputgroup">
+                <div class="custom-file ">
+                    <FileUpload
+                        mode="basic"
+                        accept="image/*"
+                        customUpload
+                        :multiple="true"
+                        :maxFileSize="2048000"
+                        :chooseLabel="$t('chooseImage')"
+                        @change="handleFileChange"
+                        ref="fileUploader"
+                        class="m-0"
+                    />
+                </div>
+            </div>
+        </div>
+
+
         <div class="field">
             <label
                 for="thread"
@@ -51,6 +71,16 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
                 />
+                <input type="hidden" name="_method" value="DELETE">
+                <Button
+                    :label="$t('delete comment')"
+                    icon="pi pi-trash"
+                    class="p-button-danger mt-2"
+                    @click="deleteComment(comment.id)"
+                    :disabled="
+                                    !post.comments || !post.comments.length
+                                "
+                />
             </div>
 
             <small class="p-invalid" v-if="submitted && !comment">{{
@@ -60,13 +90,27 @@
 
         <div v-if="post.polls.length > 0">
             <div class="w-full mt-4 p-10">
-                <button
+                <Button
                     type="button"
-                    class="flex justify-start ml-2 rounded-md border px-3 py-2 bg-pink-600 text-white"
+                    class="p-button-success mt-2"
                     @click="addMore()"
-                >
-                    Add or Edit More Polls if needed
-                </button>
+                    label="Add More Polls"
+                />
+                <div v-if="post.pending">
+                <div class="field mt-2">
+                    <label
+                        for="poll_end_date"
+                        :class="[{ 'float-right': $store.getters.isRtl }]"
+                    >Poll End Date</label
+                    >
+                    <Calendar showTime hourFormat="24" id="poll_end_date" v-model="post.poll_end_date" :class="[{ 'p-invalid': submitted && !post.poll_end_date },]" dateFormat="yy-mm-dd" />
+
+                </div>
+                    <small class="p-invalid" v-if="submitted && !post.poll_end_date">{{
+                            threadIsRequired
+                        }}</small>
+                </div>
+
                 <div v-for="(poll, index) in polls" :key="index">
                     <div class=" ml-2 mt-4">
                         <div class="col">
@@ -94,14 +138,13 @@
                             class="w-full pl-3 py-2 border border-indigo-500 rounded"
                         />
                         </div>
-                        <button
+                        <Button
                             type="button"
-                            class="ml-2 rounded-md border px-3 py-2 bg-red-600 text-white"
+                            class="p-button-danger mt-2"
                             @click="remove(index)"
                             v-show="polls.length > 0"
-                        >
-                            Remove
-                        </button>
+                            label="Remove"
+                        />
 
                     </div>
                 </div>
@@ -137,6 +180,8 @@ import {useToast} from "primevue/usetoast";
 export default {
     data() {
         return {
+            images:[],
+            imagesArray:[],
             post: {},
             polls: [],
             postDialog: false,
@@ -154,18 +199,59 @@ export default {
         remove(index) {
             this.polls.splice(index, 1);
         },
-        updatePost() {
-            console.log(this.polls);
-            this.submitted = true;
+        handleFileChange() {
+            if (!this.$refs.fileUploader.files.length) return;
+            this.post.images = this.$refs.fileUploader.files;
+            // this.post.images.forEach((image) => {
+            //     this.imagesArray.push(image);
+            //     // this.post.images.push(image.name);
+            // });
+            // this.post.images = this.imagesArray;
+            // console.log('imagessss',this.post.images);
+            console.log('comments', this.post.comments);
 
+
+        },
+        updatePost() {
+            this.submitted = true;
             if (this.post.thread && this.post.thread.trim()) {
                 this.loading = true;
                 const formData = new FormData();
+                let regEx = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
+                let convertedEndPollDateString;
+                if(this.post.poll_end_date != regEx && typeof this.post.poll_end_date == 'object'){
+                    const year = this.post.poll_end_date.getFullYear();
+                    const month = ('0' + (this.post.poll_end_date.getMonth() + 1)).slice(-2);
+                    const day = ('0' + this.post.poll_end_date.getDate()).slice(-2);
+                    const hours = ('0' + this.post.poll_end_date.getHours()).slice(-2);
+                    const minutes = ('0' + this.post.poll_end_date.getMinutes()).slice(-2);
+                    const seconds = ('0' + this.post.poll_end_date.getSeconds()).slice(-2);
+                    convertedEndPollDateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                    this.post.poll_end_date = convertedEndPollDateString;
+                }
                 formData.append("thread", this.post.thread);
+                console.log('images',this.post.images);
+                if( typeof this.post.images =='object' && this.post.images.length > 0){
+                    for (let i = 0; i < this.post.images.length; i++) {
+                        formData.append('images[]', this.post.images[i]);
+                    }
+                }
+                if(this.post.polls.length > 0){
+                    formData.append("polls", JSON.stringify(this.post.polls));
+                }
+                if(this.post.poll_end_date){
+                    formData.append("poll_end_date", this.post.poll_end_date);
+                }
+                if (this.post.comments.length > 0) {
+                    formData.append("comments", this.post.comments);
+                }
                 formData.append("_method", "PUT");
                 axios
-                    .post("/api/admin/posts/" + this.post.id, formData)
-                    .then((response) => {
+                    .post("/api/admin/posts/" + this.post.id, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then((response) => {
                         this.toast.add({
                             severity: "success",
                             summary: "Successful",
@@ -194,6 +280,41 @@ export default {
             this.post = {...editPost};
             this.postDialog = true;
         }, //end of editPost
+        deleteComment(commentId) {
+            this.loading = true;
+            const formData = new FormData();
+            formData.append("_method", "DELETE");
+            axios
+                    .post(`/api/admin/posts/delete/comment/${commentId}`,formData)
+                .then((response) => {
+                    this.toast.add({
+                        severity: "success",
+                        summary: "Successful",
+                        detail: response.data.message,
+                        life: 3000,
+                    });
+                    this.removeCommentFromList(commentId);
+                    // this.hideDialog();
+                })
+                .catch((errors) => {
+                    if (errors.response) {
+                        this.toast.add({
+                            severity: "error",
+                            summary: "Error",
+                            detail: errors.response.data.message,
+                            life: 15000,
+                        });
+                    }
+                })
+                .then(() => {
+                    this.loading = false;
+                });
+        }, //end of deleteComment
+        removeCommentFromList(commentId) {
+            this.post.comments = this.post.comments.filter(
+                (comment) => comment.id !== commentId
+            );
+        }, //end of removeCommentFromList
 
         openDialog(post) {
             this.post = post;

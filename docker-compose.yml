@@ -1,6 +1,7 @@
 version: '3'
 services:
     blue-intranet:
+        container_name: 'blue-intranet'
         build:
             context: .
             dockerfile: Dockerfile
@@ -24,6 +25,7 @@ services:
             - blue-intranetDB
 
     blue-intranetDB:
+        container_name: 'blue-intranetDB'
         image: 'mysql/mysql-server:8.0'
         ports:
             - '3311:3306'
