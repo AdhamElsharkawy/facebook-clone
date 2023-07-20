@@ -1,32 +1,52 @@
 <template>
     <Loading v-if="loading" />
     <div class="card">
-        <DataView :value="posts" :layout="layout">
-            <template #header>
-                <div class="flex justify-content-end">
-                    <DataViewLayoutOptions v-model="layout" />
-                </div>
-            </template>
-
+        <DataView :value="posts" paginator :rows="5">
             <template #list="slotProps">
                 <div class="col-12">
-                    <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-                        <img v-if="slotProps.data.images_paths.length > 0" v-for="img_path in slotProps.data.images_paths" :key="img_path" class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" :src="img_path" :alt="slotProps.data.name" />
-                        <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-                            <div class="flex flex-column align-items-center sm:align-items-start gap-3">
-                                <div class="text-2xl font-bold text-900">Thread : {{ slotProps.data.thread }}</div>
-<!--                                <p>Total Likes : {{ slotProps.data.likes_count }}</p>-->
-<!--                                <p>Total celebrates : {{ slotProps.data.celebrate_count }}</p>-->
-<!--                                <p>Total loves : {{ slotProps.data.loves_count }}</p>-->
-                                <p>Total Reactions : {{ slotProps.data.total_reactions }}</p>
+                    <div
+                        class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4"
+                    >
+                        <img
+                            v-if="slotProps.data.images_paths.length > 0"
+                            v-for="img_path in slotProps.data.images_paths"
+                            :key="img_path"
+                            class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
+                            style="width: 140px; height: 140px;"
+                            :src="img_path"
+                            :alt="slotProps.data.name"
+                        />
+                        <div
+                            class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4"
+                        >
+                            <div
+                                class="flex flex-column align-items-center sm:align-items-start gap-3"
+                            >
+                                <div class="text-2xl font-bold text-900">
+                                    ID : {{ slotProps.data.id }}
+                                </div>
+                                <div class="text-2xl font-bold text-900">
+                                    Thread : {{ slotProps.data.thread }}
+                                </div>
+                                <!--                                <p>Total Likes : {{ slotProps.data.likes_count }}</p>-->
+                                <!--                                <p>Total celebrates : {{ slotProps.data.celebrate_count }}</p>-->
+                                <!--                                <p>Total loves : {{ slotProps.data.loves_count }}</p>-->
+                                <p>
+                                    Total Reactions :
+                                    {{ slotProps.data.total_reactions }}
+                                </p>
                                 <div class="flex align-items-center gap-3">
                                     <span class="flex align-items-center gap-2">
                                         <i class="pi pi-tag"></i>
-                                        <span class="font-semibold">{{ slotProps.data.user.name }}</span>
+                                        <span class="font-semibold"> User : {{
+                                            slotProps.data.user.name
+                                        }}</span>
                                     </span>
                                 </div>
                             </div>
-                            <div class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
+                            <div
+                                class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2"
+                            >
                                 <Button
                                     icon="pi pi-pencil"
                                     class="p-button-rounded p-button-success mx-2"
@@ -37,56 +57,9 @@
                                     class="p-button-rounded p-button-warning mx-2"
                                     @click="confirmDeletePost(slotProps.data)"
                                 />
-                                <Button icon="pi pi-eye" @click="visible = true" class="p-button-rounded mx-2" />
-
-
-<!--                                <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50vw' }">-->
-<!--                                    <p>-->
-<!--                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.-->
-<!--                                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-<!--                                    </p>-->
-<!--                                </Dialog>-->
-
                             </div>
                         </div>
                     </div>
-                </div>
-            </template>
-
-            <template #grid="slotProps">
-                <div class="col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
-                    <div class="p-4 border-1 surface-border surface-card border-round">
-                        <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="flex align-items-center gap-2">
-                                <i class="pi pi-tag"></i>
-                                <span class="font-semibold">{{ slotProps.data.user.name }}</span>
-                            </div>
-<!--                            <Tag :value="slotProps.data.inventoryStatus" :severity="getSeverity(slotProps.data)"></Tag>-->
-                        </div>
-                        <div class="flex flex-column align-items-center gap-3 py-5">
-                                <img v-for="img_path in slotProps.data.images_paths" :key="img_path" class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" :src="img_path" :alt="slotProps.data.name" />
-                            <div class="text-2xl font-bold">{{ slotProps.data.thread }}</div>
-                            <p>Total Likes : {{ slotProps.data.likes_count }}</p>
-
-<!--                            <Rating :modelValue="slotProps.data.likes_count" readonly :cancel="false"></Rating>-->
-                        </div>
-                        <div class="flex align-items-center justify-content-between">
-
-                                <Button
-                                    icon="pi pi-pencil"
-                                    class="p-button-rounded p-button-success mx-2"
-                                    @click="editPost(slotProps.data)"
-                                />
-                            <h2>asd</h2>
-                                <Button
-                                    icon="pi pi-trash"
-                                    class="p-button-rounded p-button-warning mx-2"
-                                    @click="confirmDeletePost(slotProps.data)"
-                                />
-
-                        </div>
-                    </div>
-
                 </div>
             </template>
         </DataView>
@@ -102,8 +75,8 @@
                     style="font-size: 2rem"
                 />
                 <span v-if="post"
-                >Are you sure you want to delete <b>{{ post.name }}</b
-                >?</span
+                    >Are you sure you want to delete <b>{{ post.name }}</b
+                    >?</span
                 >
             </div>
             <template #footer>
@@ -159,27 +132,25 @@
 <script>
 import { FilterMatchMode } from "primevue/api";
 import { useToast } from "primevue/usetoast";
-import {data} from "autoprefixer";
+import { data } from "autoprefixer";
 
 export default {
     computed: {
         data() {
-            return data
-        }
+            return data;
+        },
     },
     props: {
         currentPosts: {
             type: Array,
             required: true,
         },
-
     }, //end of props
 
     emits: ["selectPosts", "deletePost", "editPost"],
 
     data() {
         return {
-            layout: 'grid',
             toast: null,
             loading: false,
             postDialog: false,

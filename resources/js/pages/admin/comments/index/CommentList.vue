@@ -1,0 +1,260 @@
+<template>
+    <Loading v-if="loading" />
+    <DataTable
+        ref="dt"
+        :value="comments"
+        v-model:selection="selectedComments"
+        dataKey="id"
+        :paginator="true"
+        :rows="10"
+        :filters="filters"
+        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+        :rowsPerPageOptions="[5, 10, 25]"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} comments"
+        responsiveLayout="scroll"
+    >
+        <template #header>
+            <div
+                class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                :class="{ 'md:flex-row-reverse': $store.getters['isRtl'] }"
+            >
+                <h5 class="m-0">{{ $t("manage") + " " + "comments" }}</h5>
+                <span class="block mt-2 md:mt-0 p-input-icon-left">
+                    <i class="pi pi-search" />
+                    <InputText
+                        v-model="filters['global'].value"
+                        :placeholder="$t('search')"
+                        :class="{ 'text-right': $store.getters['isRtl'] }"
+                    />
+                </span>
+            </div>
+        </template>
+
+        <Column
+            selectionMode="multiple"
+            headerStyle="width: 3rem"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        ></Column>
+
+
+
+        <Column
+            field="thread"
+            header="thread"
+            :sortable="true"
+            headerStyle="width:14%; min-width:10rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">Comment</span>
+              {{ slotProps.data.thread }}
+            </template>
+        </Column>
+        <Column
+            field="user"
+            header="user"
+            :sortable="true"
+            headerStyle="width:14%; min-width:10rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">User Name Of Comment</span>
+                {{ slotProps.data.user.name }}
+            </template>
+        </Column>
+
+        <Column
+            field="post"
+            header="post"
+            :sortable="true"
+            headerStyle="width:14%; min-width:10rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">PostThread</span>
+                {{ slotProps.data.post.thread }}
+            </template>
+        </Column>
+        <Column
+            field="postID"
+            header="postID"
+            :sortable="true"
+            headerStyle="width:14%; min-width:10rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">postID</span>
+                {{ slotProps.data.post.id }}
+            </template>
+        </Column>
+        <Column
+            field="PostOfUser"
+            header="PostOfUser"
+            :sortable="true"
+            headerStyle="width:14%; min-width:10rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">User of Post</span>
+                {{ slotProps.data.user_of_post_name }}
+            </template>
+        </Column>
+
+        <Column
+            field="action"
+            header="actions"
+            headerStyle="min-width:10rem;display: flex; justify-content: center;"
+            class="text-center"
+        >
+            <template #body="slotProps">
+                <Button
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-warning mx-2"
+                    @click="confirmDeleteComment(slotProps.data)"
+                />
+            </template>
+        </Column>
+    </DataTable>
+    <Dialog
+        v-model:visible="deleteCommentDialog"
+        :style="{ width: '450px' }"
+        header="Confirm"
+        :modal="true"
+    >
+        <div class="flex align-items-center justify-content-center">
+            <i
+                class="pi pi-exclamation-triangle mr-3"
+                style="font-size: 2rem"
+            />
+            <span v-if="comment"
+                >Are you sure you want to delete <b>{{ comment.name }}</b
+                >?</span
+            >
+        </div>
+        <template #footer>
+            <Button
+                label="No"
+                icon="pi pi-times"
+                class="p-button-text"
+                @click="deleteCommentDialog = false"
+            />
+            <Button
+                label="Yes"
+                icon="pi pi-check"
+                class="p-button-text"
+                @click="deleteComment"
+            />
+        </template>
+    </Dialog>
+</template>
+
+<script>
+import { FilterMatchMode } from "primevue/api";
+import { useToast } from "primevue/usetoast";
+
+export default {
+    props: {
+        currentComments: {
+            type: Array,
+            required: true,
+        },
+
+    }, //end of props
+
+    emits: ["selectComments", "deleteComment"],
+
+    data() {
+        return {
+            toast: null,
+            loading: false,
+            commentDialog: false,
+            deleteCommentDialog: false,
+            comment: {},
+            comments: this.currentComments,
+            selectedComments: null,
+            filters: {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            },
+        };
+    }, //end of data
+
+    watch: {
+        selectedComments(val) {
+            this.$emit("selectComments", val);
+        },
+    }, //end of watch
+
+    beforeMount() {
+        this.initFilters();
+        this.toast = useToast();
+    }, //end of beforeMount
+
+    methods: {
+        confirmDeleteComment(comment) {
+            this.comment = comment;
+            this.deleteCommentDialog = true;
+        }, //end of confirmDeleteComment
+
+        deleteComment() {
+            this.loading = true;
+            axios
+                .delete("/api/admin/comments/" + this.comment.id)
+                .then((response) => {
+                    this.toast.add({
+                        severity: "success",
+                        summary: "Successful",
+                        detail: response.data.message,
+                        life: 3000,
+                    });
+                    this.$emit("deleteComment");
+                    this.deleteCommentDialog = false;
+                    this.comment = {};
+                })
+                .catch((errors) => {
+                    if (errors.response) {
+                        this.toast.add({
+                            severity: "error",
+                            summary: "Error",
+                            detail: errors.response.data.message,
+                            life: 15000,
+                        });
+                    }
+                })
+                .then(() => {
+                    this.loading = false;
+                    this.deleteCommentDialog = false;
+                });
+        }, //end of deleteComment
+
+        initFilters() {
+            this.filters = {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            };
+        }, //end of initFilters
+
+        exportCSV() {
+            this.$refs.dt.exportCSV();
+        }, //end of exportCSV
+
+    }, //end of methods
+};
+</script>
+
+<style scoped lang="scss">
+@import "../../../../assets/demo/styles/badges.scss";
+</style>
+
+<style lang="scss">
+.text-right {
+    .p-datatable {
+        .p-column-header-content {
+            display: flex;
+            gap: 0.5rem;
+        }
+    }
+    table {
+        direction: rtl;
+    }
+
+}
+</style>
