@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
-Route::group(["middleware" => "public:sanctum" ,'as' => 'admin.'], function () {
+Route::group(['as' => 'admin.'], function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 

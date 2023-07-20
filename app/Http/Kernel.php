@@ -21,6 +21,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
     ];
 
     /**
@@ -67,6 +69,5 @@ class Kernel extends HttpKernel
         // Custom middleware
         'admin' => \App\Http\Middleware\Admin::class,
         'jwt' => \App\Http\Middleware\JWT::class,
-        'public' => \App\Http\Middleware\PublicAuth::class,
     ];
 }
