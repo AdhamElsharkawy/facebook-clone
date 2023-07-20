@@ -67,6 +67,5 @@ class Kernel extends HttpKernel
         // Custom middleware
         'admin' => \App\Http\Middleware\Admin::class,
         'jwt' => \App\Http\Middleware\JWT::class,
-        'public' => \App\Http\Middleware\PublicAuth::class,
     ];
 }
