@@ -15,9 +15,7 @@ return [
     |
     */
 
-    // allow cors for all and unige jwt token
-    
-    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout', 'register', 'password/email', 'password/reset', 'email/verify', 'email/verification-notification', 'email/resend', 'user/profile-information', 'user/password', 'user/two-factor-authentication', 'user/two-factor-qr-code', 'us' ],
+    'paths' => ['api/*'],
 
     'allowed_methods' => ['*'],
 
@@ -27,9 +25,10 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => ['*'],
+    'exposed_headers' => [],
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
+    'supports_credentials' => false,
+
 ];
