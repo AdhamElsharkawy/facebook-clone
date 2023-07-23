@@ -47,7 +47,7 @@ class ProfileController extends Controller
     public static function getProfileData($user_email)
     {
         $user = User::where('email', $user_email)
-            ->select("id", "title", "name", "email", "image", "mobile", "status", "birth_date", "score", "social_links", "front_theme", "department_id")
+            ->select("id", "title", "name", "email", "image", "mobile", "status", "birth_date", "global_score", "team_score", "social_links", "front_theme", "department_id")
             ->with(['department:id,name'])
             ->with([
                 'experiences' => function ($query) {
