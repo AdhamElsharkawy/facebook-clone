@@ -13,12 +13,12 @@ class LeaderboardController extends Controller
 
     public function getCompanyLeaderboards()
     {
-        $users = User::select("title", "name", "image", "score", "department_id")
+        $users = User::select("title", "name", "image", "global_score", "team_score", "department_id")
             ->where('role', 'user')
             ->with(['department' => function ($q) {
                 $q->select('id', 'name');
             }])
-            ->orderBy('score', 'desc')
+            ->orderBy('global_score', 'desc')
             ->paginate(5);
 
         foreach ($users as $user) {
@@ -31,13 +31,13 @@ class LeaderboardController extends Controller
 
     public function getDepartmentLeaderboards()
     {
-        $users = User::select("title", "name", "image", "score", "department_id")
+        $users = User::select("title", "name", "image", "global_score", "team_score", "department_id")
             ->where('role', 'user')
             ->where('department_id', auth('api')->user()->department_id)
             ->with(['department' => function ($q) {
                 $q->select('id', 'name');
             }])
-            ->orderBy('score', 'desc')
+            ->orderBy('team_score', 'desc')
             ->paginate(5);
 
         foreach ($users as $user) {

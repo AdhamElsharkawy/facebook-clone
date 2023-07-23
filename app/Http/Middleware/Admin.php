@@ -17,7 +17,7 @@ class Admin
     {
         $user = auth()->user();
         
-        if (!$user || !in_array($user->role, ['admin', 'super_admin'])) {
+        if (!$user || !in_array($user->role, ['admin', 'super_admin', 'manager', 'team_leader'])) {
             return response()->json(['message' => 'You are not authorized to access this route'], 401);
         }
         

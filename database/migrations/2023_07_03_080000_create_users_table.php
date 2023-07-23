@@ -25,7 +25,8 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('status')->default('active'); // or blocked
             $table->date('birth_date')->nullable();
-            $table->integer('score')->default(1);
+            $table->integer('global_score')->default(1);
+            $table->integer('team_score')->default(1);
             $table->json("social_links")->nullable();
             $table->string('front_theme')->default('light');
             $table->string('back_theme')->default('light');
