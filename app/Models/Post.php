@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Scout\Searchable;
+use App\Jobs\SendMail;
+use Illuminate\Support\Facades\Bus;
 
 class Post extends Model
 {
@@ -102,10 +105,30 @@ class Post extends Model
     {
         return $this->hasMany(Mention::class);
     } //end of mention
-    
-    public function toSearchableArray(){
+
+    public function toSearchableArray()
+    {
         return [
             "thread" => $this->thread,
         ];
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::created(function ($post) {
+            // $user = ["name" => "solom", "email" => "islam.samy@blueholding.co.uk"];
+            // Bus::batch(
+            //     [new SendMail($user, $post)]
+            // )->dispatch();
+
+            $users = User::whereIn("role", ["user", "manager", "team_leader"])->get();
+
+            Bus::batch(
+                $users->map(function ($user) use ($post) {
+                    return new SendMail($user, $post);
+                })
+            )->dispatch();
+        });
     }
 }
