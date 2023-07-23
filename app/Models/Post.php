@@ -112,23 +112,4 @@ class Post extends Model
             "thread" => $this->thread,
         ];
     }
-
-    public static function boot()
-    {
-        parent::boot();
-        static::created(function ($post) {
-            // $user = ["name" => "solom", "email" => "islam.samy@blueholding.co.uk"];
-            // Bus::batch(
-            //     [new SendMail($user, $post)]
-            // )->dispatch();
-
-            $users = User::whereIn("role", ["user", "manager", "team_leader"])->get();
-
-            Bus::batch(
-                $users->map(function ($user) use ($post) {
-                    return new SendMail($user, $post);
-                })
-            )->dispatch();
-        });
-    }
 }

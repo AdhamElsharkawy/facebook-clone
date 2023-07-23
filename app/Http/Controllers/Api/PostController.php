@@ -8,6 +8,10 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\Seo;
 use App\Http\Traits\SeoTrait;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Bus;
+use App\Jobs\SendMail;
 
 class PostController extends Controller
 {
@@ -65,6 +69,7 @@ class PostController extends Controller
             'polls.*.poll' => 'required|string|max:255',
             'poll_end_date' =>  'required_if:polls,!null|date|after:today',
             'front_link' => 'required|url|max:255',
+            'send_all' => 'nullable|boolean',
         ]);
         if ($validation) {
             return $validation;
@@ -85,6 +90,16 @@ class PostController extends Controller
             'user_id' => auth('api')->user()->id,
             'created_at' => $request->created_at ? $request->created_at : now(),
         ]);
+
+        if ($request->send_all && Auth::user()->role == "manager") {
+            $users = User::whereIn("role", ["user", "manager", "team_leader"])->get();
+
+            Bus::batch(
+                $users->map(function ($user) use ($post) {
+                    return new SendMail($user, $post);
+                })
+            )->dispatch();
+        }
 
         if ($request->polls) {
             foreach ($request->polls as $poll) {
