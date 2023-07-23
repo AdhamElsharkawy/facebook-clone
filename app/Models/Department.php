@@ -21,5 +21,5 @@ class Department extends Model
         return [
             "name" => $this->name,
         ];
-    }
+    } //end of toSearchableArray
 }
