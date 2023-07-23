@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Scout\Searchable;
+use App\Jobs\SendMail;
+use Illuminate\Support\Facades\Bus;
 
 class Post extends Model
 {
@@ -102,8 +105,9 @@ class Post extends Model
     {
         return $this->hasMany(Mention::class);
     } //end of mention
-    
-    public function toSearchableArray(){
+
+    public function toSearchableArray()
+    {
         return [
             "thread" => $this->thread,
         ];
