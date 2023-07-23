@@ -10,10 +10,6 @@ fi
 
 chmod -R ugo+rw /.composer
 
-php artisan migrate --force
-
-php artisan queue:work --tries=3
-
 if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
 else
