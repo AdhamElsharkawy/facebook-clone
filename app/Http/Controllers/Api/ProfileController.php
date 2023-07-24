@@ -34,6 +34,8 @@ class ProfileController extends Controller
             ->latest()
             ->paginate(10);
 
+        if ($posts->count() == 0) return $posts;
+
         foreach ($posts as $post) {
             $post->makeHidden(['id', 'user_id', 'likes', 'images']);
             foreach ($post->comments as $comment) {
@@ -73,19 +75,27 @@ class ProfileController extends Controller
 
         $user->social_links = json_decode($user->social_links);
         // hide the unnecessary fields
-        $user->makeHidden(['department_id']);
-        $user->department->makeHidden('id');
-        foreach ($user->experiences as $experience) {
-            $experience->makeHidden(['user_id', 'company_id']);
-            $experience->company->makeHidden(['id', 'image']);
+        if ($user->department) {
+            $user->makeHidden(['department_id']);
+            $user->department->makeHidden('id');
         }
-        foreach ($user->educations as $education) {
-            $education->makeHidden(['user_id', 'college_id']);
-            $education->college->makeHidden(['id', 'image']);
+        if ($user->experiences) {
+            foreach ($user->experiences as $experience) {
+                $experience->makeHidden(['user_id', 'company_id']);
+                $experience->company->makeHidden(['id', 'image']);
+            }
         }
-        foreach ($user->certifications as $certification) {
-            $certification->makeHidden(['user_id', 'college_id']);
-            $certification->college->makeHidden(['id', 'image']);
+        if ($user->educations) {
+            foreach ($user->educations as $education) {
+                $education->makeHidden(['user_id', 'college_id']);
+                $education->college->makeHidden(['id', 'image']);
+            }
+        }
+        if ($user->certifications) {
+            foreach ($user->certifications as $certification) {
+                $certification->makeHidden(['user_id', 'college_id']);
+                $certification->college->makeHidden(['id', 'image']);
+            }
         }
 
         return $user;
