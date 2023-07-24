@@ -10,6 +10,7 @@ use App\Models\Post;
 use App\Http\Requests\Admin\Post\StorePostRequest;
 use App\Http\Requests\Admin\Post\UpdatePostRequest;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -19,31 +20,16 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['user'=> function ($query){
+        $posts = Post::with(['user' => function ($query) {
             $query->select('id', 'name');
-        },'comments.user:id,name','polls'])->latest()->get();
+        }, 'comments.user:id,name', 'polls'])->latest()->paginate(5);
 
 
         return ['posts' => $posts];
 
-//        ['comments' => function ($query){
-//            $query->select('user_id');
-//        }]
     }
 
 
-
-//    /**
-//     * Display the specified resource.
-//     */
-//    public function show(Post $post)
-//    {
-//        //
-//    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Post $post)
     {
         return response()->json([
@@ -57,24 +43,48 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $form_data = $request->validated();
-        if ($request->images) {
-            for($i = 0; $i < count($request->images); $i++){
-                $post->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($post->images[$i]) : '';
-                $form_data['images'][$i] = $this->img($request->images[$i], 'images/posts/');
-            }
-        } else {
-            $form_data['images'] = $post->images;
-        }
-        if($request->poll_end_date){
-            $form_data['poll_end_date'] = $form_data['poll_end_date']??Carbon::parse($request->poll_end_date);
-        }
-        $comment = Comment::find($form_data['comments'][$i]);
-        $comment->update([
-           ...$form_data['comments'][$i]
-        ]);
+        $form_data = $request->except(['polls', 'comments', 'images']);
+        $polls_form_data["polls"] = $request->polls ? json_decode($request->polls, true) : null;
 
+        // dd($form_data);
+        if($form_data['postNow']){
+            $form_data['created_at'] = Carbon::now();
+        } else {
+            $form_data['created_at'] = Carbon::parse($request->created_at)->format('Y-m-d H:i:s');
+        }
+        unset($form_data['postNow']);
+
+        if ($request->images) {
+            $form_data["images"] = [];
+            if ($post->images) {
+                for ($i = 0; $i < count(($post->images)); $i++) {
+                    if ($post->images[$i] !=  'assets/images/default.png') {
+                        $this->deleteImg($post->images[$i]);
+                    }
+                }
+            }
+            for ($i = 0; $i < count($request->images); $i++) {
+                $file_name = $this->img($request->images[$i], 'images/posts/');
+                array_push($form_data["images"], $file_name);
+            }
+            $form_data["images"] = json_encode($form_data["images"]);
+        }
+
+        if ($request->polls) {
+            $post->polls()->delete();
+            foreach ($polls_form_data["polls"] as $poll) {
+                $post->polls()->create([
+                    'poll' => $poll['poll'],
+                    'votes' => 0,
+                ]);
+            }
+        }
         $post->update($form_data);
+
+        return response()->json([
+            'message' => 'Post updated successfully',
+            'post' => $post
+        ]);
     }
 
     /**
@@ -83,18 +93,16 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         if ($post->images) {
-            for($i = 0; $i < count(($post->images)); $i++){
+            for ($i = 0; $i < count(($post->images)); $i++) {
                 $post->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($post->images[$i]) : '';
             }
         }
         $post->polls()->delete();
         $post->delete();
-
     }
-    public function destroyComment($commentId)
-    {
-        $comment = Comment::findOrFail($commentId);
-        $comment->delete();
-    }
-
+    // public function destroyComment($commentId)
+    // {
+    //     $comment = Comment::findOrFail($commentId);
+    //     $comment->delete();
+    // }
 }

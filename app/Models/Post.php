@@ -14,6 +14,10 @@ class Post extends Model
     use HasFactory, Searchable;
 
     protected $guarded = [];
+    protected $hidden = [];
+
+    //show created_at
+
 
     protected $appends = [
         'images_paths',

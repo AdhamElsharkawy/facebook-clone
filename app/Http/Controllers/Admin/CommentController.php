@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Http\Requests\Admin\Comment\StoreCommentRequest;
 use App\Http\Requests\Admin\Comment\UpdateCommentRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
@@ -15,54 +17,31 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        // i want to select the comment and the name of the user who post the post
+
+        $comments = Comment::with(['user' => function ($query) {
+            $query->select('id', 'name');
+        }, 'post'])->latest()->get();
+        return ['comments' => $comments,
+        ];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCommentRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCommentRequest $request, Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Comment $comment)
     {
-        //
+        if ($comment->images) {
+            for ($i = 0; $i < count(($comment->images)); $i++) {
+                $comment->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($comment->images[$i]) : '';
+            }
+        }
+        $comment->likes()->delete();
+        $comment->delete();
     }
+    public function destroyAll(Request $request)
+    {
+        $comments = Comment::whereIn('id', $request->comments)->get();
+        foreach ($comments as $comment) {
+            $comment->delete();
+        }
+        return response()->json(['message' => __('Comments Deleted Successfully')]);
+    } // end of destroy all function
 }
