@@ -27,11 +27,12 @@ class UpdateUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
             'password' => ['string', 'confirmed'],
-            'role' => ['required', 'in:user,admin'],
+            'role' => ['required', 'in:user,admin,manager,team_leader'],
             'status' => ['required', 'in:active,blocked'],
             'mobile' => ['required', 'string', 'max:255'],
             'birth_date' => ['required', 'date'],
-            'score' => ['required', 'integer'],
+            'team_score' => ['required', 'integer'],
+            'global_score' => ['required', 'integer'],
             'department_id' => ['required', 'exists:departments,id'],
 
         ];

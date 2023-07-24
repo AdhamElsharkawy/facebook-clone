@@ -95,23 +95,41 @@
                 >{{ $t("role") }}</label
             >
             <div class="formgrid grid">
-                <div class="field-radiobutton col-6">
+                <div class="field-radiobutton col-3">
                     <RadioButton
                         id="role1"
                         name="role"
                         value="admin"
                         v-model="user.role"
                     />
-                    <label for="role1">{{ $t("admin") }}</label>
+                    <label for="role1">admin</label>
                 </div>
-                <div class="field-radiobutton col-6">
+                <div class="field-radiobutton col-3">
+                    <RadioButton
+                        id="role3"
+                        name="role"
+                        value="team_leader"
+                        v-model="user.role"
+                    />
+                    <label for="role3">T-leader</label>
+                </div>
+                <div class="field-radiobutton col-3">
+                    <RadioButton
+                        id="role4"
+                        name="role"
+                        value="manager"
+                        v-model="user.role"
+                    />
+                    <label for="role4">Manager</label>
+                </div>
+                <div class="field-radiobutton col-3">
                     <RadioButton
                         id="role2"
                         name="role"
                         value="user"
                         v-model="user.role"
                     />
-                    <label for="role2">{{ $t("user") }}</label>
+                    <label for="role2">user</label>
                 </div>
             </div>
         </div>
@@ -176,7 +194,7 @@
                       placeholder="Select a Department" class="w-full md:w-14rem"/>
         </div>
 
-        <div class="field">
+        <!-- <div class="field">
             <label
                 for="score"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
@@ -195,7 +213,7 @@
             <small class="p-invalid" v-if="submitted && !user.score">
                     scoreIsRequired
                 </small>
-        </div>
+        </div> -->
 
 
         <div class="field">
@@ -316,7 +334,7 @@ export default {
                 name: "",
                 email: "",
                 role: "",
-                score: 0,
+                // score: 0,
                 mobile: "",
                 status: "",
                 birth_date: "",
@@ -345,7 +363,7 @@ export default {
                 this.user.name.trim() &&
                 this.user.title &&
                 this.user.role &&
-                this.user.score &&
+                // this.user.score &&
                 this.user.mobile &&
                 this.user.birth_date &&
                 this.selectedOption &&
