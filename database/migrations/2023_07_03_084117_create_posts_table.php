@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('thread');
             $table->json('images')->nullable();
             $table->dateTime('poll_end_date')->nullable();
+            $table->string('front_link')->nullable();
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
