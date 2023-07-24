@@ -36,60 +36,58 @@
             :class="{ 'text-right': $store.getters['isRtl'] }"
         ></Column>
 
-
-
         <Column
             field="thread"
-            header="thread"
+            header="Comment"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
                 <span class="p-column-title">Comment</span>
-              {{ slotProps.data.thread }}
+                {{ slotProps.data.thread }}
             </template>
         </Column>
         <Column
-            field="user"
+            field="user.name"
             header="user"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">User Name Of Comment</span>
+                <span class="p-column-title">user</span>
                 {{ slotProps.data.user.name }}
             </template>
         </Column>
 
         <Column
-            field="post"
-            header="post"
+            field="post.thread"
+            header="Post_thread"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">PostThread</span>
+                <span class="p-column-title">Post_thread</span>
                 {{ slotProps.data.post.thread }}
             </template>
         </Column>
         <Column
-            field="postID"
-            header="postID"
+            field="post.id"
+            header="Post_id"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">postID</span>
+                <span class="p-column-title">post_id</span>
                 {{ slotProps.data.post.id }}
             </template>
         </Column>
         <Column
-            field="PostOfUser"
-            header="PostOfUser"
+            field="user_of_post_name"
+            header="User_name_of_Post"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
@@ -158,7 +156,6 @@ export default {
             type: Array,
             required: true,
         },
-
     }, //end of props
 
     emits: ["selectComments", "deleteComment"],
@@ -235,7 +232,6 @@ export default {
         exportCSV() {
             this.$refs.dt.exportCSV();
         }, //end of exportCSV
-
     }, //end of methods
 };
 </script>
@@ -255,6 +251,5 @@ export default {
     table {
         direction: rtl;
     }
-
 }
 </style>

@@ -22,7 +22,7 @@ class PostController extends Controller
     {
         $posts = Post::with(['user' => function ($query) {
             $query->select('id', 'name');
-        }, 'comments.user:id,name', 'polls'])->latest()->get();
+        }, 'comments.user:id,name', 'polls'])->latest()->paginate(5);
 
 
         return ['posts' => $posts];

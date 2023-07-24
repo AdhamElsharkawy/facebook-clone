@@ -1,7 +1,13 @@
 <template>
     <Loading v-if="loading" />
     <div class="card">
-        <DataView :value="posts" paginator :rows="5">
+        <DataView
+            :value="posts"
+            :paginator="true"
+            :rows="rows"
+            :totalRecords="totalRecords"
+            @page="onPageChange"
+        >
             <template #list="slotProps">
                 <div class="col-12">
                     <div
@@ -12,7 +18,7 @@
                             v-for="img_path in slotProps.data.images_paths"
                             :key="img_path"
                             class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
-                            style="width: 140px; height: 140px;"
+                            style="width: 140px; height: 140px"
                             :src="img_path"
                             :alt="slotProps.data.name"
                         />
@@ -38,9 +44,10 @@
                                 <div class="flex align-items-center gap-3">
                                     <span class="flex align-items-center gap-2">
                                         <i class="pi pi-tag"></i>
-                                        <span class="font-semibold"> User : {{
-                                            slotProps.data.user.name
-                                        }}</span>
+                                        <span class="font-semibold">
+                                            User :
+                                            {{ slotProps.data.user.name }}</span
+                                        >
                                     </span>
                                 </div>
                             </div>
@@ -63,6 +70,7 @@
                 </div>
             </template>
         </DataView>
+
         <Dialog
             v-model:visible="deletePostDialog"
             :style="{ width: '450px' }"
@@ -139,16 +147,36 @@ export default {
         data() {
             return data;
         },
+        // totalPages() {
+        //     return Math.ceil(this.totalRecords / this.rows);
+        // },
+        // firstRowIndex(event) {
+        //     // Calculate the index of the first item on the current page
+        //     return this.rows * (this.currentPage - event.page);
+        // },
     },
     props: {
         currentPosts: {
             type: Array,
             required: true,
         },
+        rows: {
+            type: Number,
+            required: true,
+        },
+        totalRecords: {
+            type: Number,
+            required: true,
+        },
+        last_page: {
+            type: Number,
+            required: true,
+        },
+
+
     }, //end of props
 
-    emits: ["selectPosts", "deletePost", "editPost"],
-
+    emits: ["selectPosts", "deletePost", "editPost", "pageChange"],
     data() {
         return {
             toast: null,
@@ -161,6 +189,8 @@ export default {
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
             },
+            currentPage: 1,
+            offset: { value: 0 },
         };
     }, //end of data
 
@@ -175,6 +205,11 @@ export default {
         this.toast = useToast();
     }, //end of beforeMount
     methods: {
+        onPageChange(event) {
+            this.currentPage = event.page + 1;
+            console.log(event);
+            this.$emit("pageChange", this.currentPage);
+        },
         confirmDeletePost(post) {
             this.post = post;
             this.deletePostDialog = true;
