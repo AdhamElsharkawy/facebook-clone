@@ -147,13 +147,6 @@ export default {
         data() {
             return data;
         },
-        // totalPages() {
-        //     return Math.ceil(this.totalRecords / this.rows);
-        // },
-        // firstRowIndex(event) {
-        //     // Calculate the index of the first item on the current page
-        //     return this.rows * (this.currentPage - event.page);
-        // },
     },
     props: {
         currentPosts: {
@@ -165,10 +158,6 @@ export default {
             required: true,
         },
         totalRecords: {
-            type: Number,
-            required: true,
-        },
-        last_page: {
             type: Number,
             required: true,
         },
@@ -190,7 +179,6 @@ export default {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
             },
             currentPage: 1,
-            offset: { value: 0 },
         };
     }, //end of data
 

@@ -130,10 +130,8 @@ export default {
                 .then((response) => {
                     this.currentPosts = response.data.posts.data;
                     this.posts = response.data.posts.data;
-                    // this.currentPage = response.data.posts.current_page;
                     this.rows = response.data.posts.per_page;
                     this.totalRecords = response.data.posts.total;
-                    // this.last_page = response.data.posts.last_page;
                     console.log("posstttttt", this.posts);
                 })
                 .catch((errors) => {
