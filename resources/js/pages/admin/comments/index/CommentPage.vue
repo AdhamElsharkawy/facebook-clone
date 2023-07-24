@@ -4,21 +4,45 @@
     <div class="grid" v-else>
         <div class="col-12">
             <div class="card">
-                <post-list
-                    ref="listPostComponent"
-                    :currentPosts="currentPosts"
-                    :rows="rows"
-                    :totalRecords="totalRecords"
-                    @selectPosts="selectPosts"
-                    @editPost="editPost"
-                    @pageChange="pageChange"
-                    @deletePost="fill"
-                ></post-list>
+                <Toolbar
+                    class="mb-4"
+                    :class="{
+                        'flex flex-row-reverse': $store.getters['isRtl'],
+                    }"
+                >
+                    <template v-slot:start>
+                        <div
+                            class="my-2"
+                            :class="{
+                                'flex flex-row-reverse':
+                                    $store.getters['isRtl'],
+                            }"
+                        >
+                            <Button
+                                :label="$t('delete')"
+                                icon="pi pi-trash"
+                                class="p-button-danger"
+                                @click="confirmDeleteSelected"
+                                :disabled="
+                                    !selectedComments || !selectedComments.length
+                                "
+                            />
+                        </div>
+                    </template>
 
-                <edit-post ref="editPostComponent"></edit-post>
+                </Toolbar>
+
+                <comment-list
+                    ref="listCommentComponent"
+                    :currentComments="currentComments"
+                    @selectComments="selectComments"
+                    @deleteComment="fill"
+                ></comment-list>
+
+
 
                 <Dialog
-                    v-model:visible="deletePostsDialog"
+                    v-model:visible="deleteCommentsDialog"
                     :style="{ width: '450px' }"
                     header="Confirm"
                     :modal="true"
@@ -28,9 +52,9 @@
                             class="pi pi-exclamation-triangle mr-3"
                             style="font-size: 2rem"
                         />
-                        <span v-if="post"
+                        <span v-if="comment"
                             >Are you sure you want to delete the selected
-                            posts?</span
+                            comments?</span
                         >
                     </div>
                     <template #footer>
@@ -38,13 +62,13 @@
                             label="No"
                             icon="pi pi-times"
                             class="p-button-text"
-                            @click="deletePostsDialog = false"
+                            @click="deleteCommentsDialog = false"
                         />
                         <Button
                             label="Yes"
                             icon="pi pi-check"
                             class="p-button-text"
-                            @click="deleteSelectedPosts"
+                            @click="deleteSelectedComments"
                         />
                     </template>
                 </Dialog>
@@ -54,42 +78,38 @@
 </template>
 
 <script>
-import PostList from "./PostList.vue";
-import EditPost from "../edit/EditPost.vue";
+import CommentList from "./CommentList.vue";
+// import EditComment from "../edit/EditComment.vue";
+// import CreateComment from "../create/CreateComment.vue";
 import { useToast } from "primevue/usetoast";
 
 export default {
-    components: { PostList, EditPost },
+    components: { CommentList },
     data() {
         return {
-            currentPosts: [],
-            deletePostsDialog: false,
-            selectedPosts: null,
+            currentComments: [],
+            deleteCommentsDialog: false,
+            selectedComments: null,
             loading: false,
             isEmpty: false,
             errors: null,
-            rows: 0,
-            totalRecords: 0,
-            currentPage: 1,
-            first_page_url: "",
-            last_page: 0,
         };
     }, //end of data
 
     methods: {
-        deleteSelectedPosts() {
+        deleteSelectedComments() {
             this.loading = true;
             axios
-                .delete("/api/admin/posts/delete/all", {
+                .delete("/api/admin/comments/delete/all", {
                     data: {
-                        posts: this.selectedPosts.map((val) => val.id),
+                        comments: this.selectedComments.map((val) => val.id),
                     },
                 })
                 .then((response) => {
-                    this.currentPosts = this.currentPosts.filter(
-                        (val) => !this.selectedPosts.includes(val)
+                    this.currentComments = this.currentComments.filter(
+                        (val) => !this.selectedComments.includes(val)
                     );
-                    this.selectedPosts = null;
+                    this.selectedComments = null;
                     this.toast.add({
                         severity: "success",
                         summary: "Successful",
@@ -109,32 +129,25 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                    this.deletePostsDialog = false;
+                    this.deleteCommentsDialog = false;
                 });
-        }, //end of deleteSelectedPosts
+        }, //end of deleteSelectedComments
 
         confirmDeleteSelected() {
-            this.deletePostsDialog = true;
+            this.deleteCommentsDialog = true;
         }, //end of confirmDeleteSelected
 
         exportCSV() {
-            this.$refs.listPostComponent.exportCSV();
+            this.$refs.listCommentComponent.exportCSV();
         }, //end of exportCSV
 
-
-        fill(currentPage) {
+        fill() {
             this.loading = true;
             axios
-                .get(`/api/admin/posts?page=${currentPage}`)
-                // .get("/api/admin/posts?page=1")
+                .get("/api/admin/comments")
                 .then((response) => {
-                    this.currentPosts = response.data.posts.data;
-                    this.posts = response.data.posts.data;
-                    // this.currentPage = response.data.posts.current_page;
-                    this.rows = response.data.posts.per_page;
-                    this.totalRecords = response.data.posts.total;
-                    // this.last_page = response.data.posts.last_page;
-                    console.log("posstttttt", this.posts);
+                    console.log(response.data);
+                    this.currentComments = response.data.comments;
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -144,16 +157,9 @@ export default {
                 }); //end of axios request
         }, //end of fill function
 
-        selectPosts(selectedPosts) {
-            this.selectedPosts = selectedPosts;
-        }, //end of selectPosts
-
-        editPost(post) {
-            this.$refs.editPostComponent.openDialog(post);
-        }, //end of editPost
-        pageChange(currentPage) {
-            this.fill(currentPage);
-        }, //end of pageChange
+        selectComments(selectedComments) {
+            this.selectedComments = selectedComments;
+        }, //end of selectComments
     }, //end of methods
 
     beforeMount() {

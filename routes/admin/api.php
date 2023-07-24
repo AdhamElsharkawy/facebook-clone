@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CertificationController;
 use App\Http\Controllers\Admin\CollegeController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\EducationController;
@@ -36,9 +37,8 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     Route::resource('certifications', CertificationController::class)->except(['show', 'create']);
     Route::delete('certifications/delete/all', [CertificationController::class, 'destroyAll']);
     Route::resource('posts', PostController::class)->except(['show', 'create','store']);
-    Route::delete('posts/delete/comment/{commentId}', [PostController::class, 'destroyComment']);
-
-
+    Route::resource('comments', CommentController::class)->except(['show', 'create','store','edit','update']);
+    Route::delete('comments/delete/all', [CommentController::class, 'destroyAll']);
     //seos
     Route::resource('seos', SeoController::class)->only(['index', 'update']);
 });
