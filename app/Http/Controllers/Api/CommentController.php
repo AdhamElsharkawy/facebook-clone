@@ -30,9 +30,17 @@ class CommentController extends Controller
         $post = Post::find($id);
         if (!$post) return $this->notFound();
 
+        $images = [];
+        if ($request->images) {
+            foreach ($request->images as $image) {
+                // $images[] = $this->img($image, 'images/posts/comments/');
+                $images[] = $this->uploadS3Image($image, 'images/posts/comments/');
+            }
+        }
+
         $comment = $post->comments()->create([
             'thread' => $request->thread,
-            'images' => $request->images ? $this->uploadImages($request->images) : null,
+            'images' => $images !== [] ? json_encode($images) : null,
             'user_id' => auth('api')->user()->id,
         ]);
 

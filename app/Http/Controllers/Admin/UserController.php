@@ -32,7 +32,8 @@ class UserController extends Controller
         $form_data['password'] = bcrypt($request->password);
 
         //image uploading
-        $request->image ? $form_data['image'] = $this->img($request->image, 'images/users/') : '';
+        // $request->image ? $form_data['image'] = $this->img($request->image, 'images/users/') : '';
+        $request->image ? $form_data['image'] = $this->uploadS3Image($request->image, 'images/users') : '';
 
         User::create($form_data);
 

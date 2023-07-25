@@ -118,8 +118,10 @@ class ProfileController extends Controller
         $form_data = $request->only(['title', 'mobile']);
         $user = Auth::guard('api')->user();
         if ($request->image) {
-            //  $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
-            // $form_data['image'] = $this->uploadS3Image($request->image, 'images/users/');
+            // check if user image is  user.png
+            $user->image != 'assets/images/user.png' ? $this->deleteS3Image($user->image) : '';
+            $form_data['image'] = $this->uploadS3Image($request->image, 'images/users');
+            // $form_data['image'] = $this->img($request->image, 'images/users/');
         } else {
             $form_data['image'] = $user->image;
         }

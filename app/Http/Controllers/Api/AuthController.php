@@ -28,7 +28,7 @@ class AuthController extends Controller
         $rules = [
             'email' => 'required|email',
             'password' => 'required|string',
-            'remember_me' => 'boolean',
+            'remember_me' => 'required|boolean',
         ];
         try {
             $request->validate($rules);
@@ -91,6 +91,14 @@ class AuthController extends Controller
                 'message' => 'Your account is blocked',
             ], 401);
         }
+
+        // set token expire time
+        if ($request->remember_me) {
+            auth('api')->factory()->setTTL(60 * 24 * 30);
+        } else {
+            auth('api')->factory()->setTTL(60 * 8);
+        }
+
         // get user data
         $user = ProfileController::getProfileData($request->email);
         // generate response
@@ -100,6 +108,7 @@ class AuthController extends Controller
             'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
+                'expires_in' => auth('api')->factory()->getTTL() * 60,
             ]
         ];
         $seo = Seo::first();
