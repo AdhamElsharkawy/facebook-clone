@@ -10,7 +10,7 @@
                         'flex flex-row-reverse': $store.getters['isRtl'],
                     }"
                 >
-                    <template v-slot:start>
+                    <template  v-if="this.authUser.role == 'super_admin' || this.authUser.role == 'admin'" v-slot:start>
                         <div
                             class="my-2"
                             :class="{
@@ -119,6 +119,7 @@ export default {
             isEmpty: false,
             errors: null,
             departments: [],
+            authUser: this.$store.getters["adminAuth/user"],
         };
     }, //end of data
 
@@ -179,7 +180,6 @@ export default {
                 .then((response) => {
                     this.currentUsers = response.data.users;
                     this.departments = response.data.departments;
-                    console.log(this.currentUsers);
                     // console.log(this.departments);
                 })
                 .catch((errors) => {

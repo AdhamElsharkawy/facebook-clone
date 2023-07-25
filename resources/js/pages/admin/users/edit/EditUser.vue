@@ -1,9 +1,9 @@
 <template>
     <Dialog
         v-if="
-            user.role == 'super_admin' ||
-            user.role == 'admin' ||
-            user.role == 'user'
+            this.authUser == 'super_admin' ||
+            this.authUser == 'admin' ||
+            this.authUser == 'user'
         "
         v-model:visible="userDialog"
         :style="{ width: '450px' }"
@@ -289,7 +289,7 @@
         </template>
     </Dialog>
     <Dialog
-        v-else-if="user.role == 'team_leader'"
+        v-else-if="this.authUser == 'team_leader'"
         v-model:visible="userDialog"
         :style="{ width: '450px' }"
         :header="$t('editUser')"
@@ -340,7 +340,7 @@
     </Dialog>
 
     <Dialog
-        v-else-if="user.role == 'manager'"
+        v-else-if="this.authUser == 'manager'"
         v-model:visible="userDialog"
         :style="{ width: '450px' }"
         :header="$t('editUser')"
@@ -402,6 +402,7 @@ export default {
             submitted: false,
             selectedOption: null,
             myRole: "",
+            authUser: {},
         };
     },
     methods: {
@@ -492,6 +493,7 @@ export default {
 
         openDialog(user) {
             this.user = user;
+            // console.log(this.$store.getters["adminAuth/user"].role);
             this.userDialog = true;
             this.selectedOption = this.user.department;
             this.myRole = this.user.role;
@@ -507,5 +509,9 @@ export default {
     beforeMount() {
         this.toast = useToast();
     }, //end of beforeMount
+    created() {
+        this.authUser = this.$store.getters["adminAuth/user"].role;
+        console.log(this.authUser);
+    }, //end of created
 };
 </script>
