@@ -144,17 +144,31 @@
             </template>
         </Column>
         <Column
-            field="score"
-            header="score"
+            field="global_score"
+            header="global_score"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">Score</span>
-                {{ slotProps.data.score }}
+                <span class="p-column-title">global_score</span>
+                {{ slotProps.data.global_score }}
             </template>
         </Column>
+
+        <Column
+            field="team_score"
+            header="team_score"
+            :sortable="true"
+            headerStyle="width:14%; min-width:14rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">team_score</span>
+                {{ slotProps.data.team_score }}
+            </template>
+        </Column>
+
         <Column
             field="department"
             header="department"
