@@ -21416,6 +21416,9 @@ video {
 .m-auto{
   margin: auto;
 }
+.m-2{
+  margin: 0.5rem;
+}
 .mx-2{
   margin-left: 0.5rem;
   margin-right: 0.5rem;
@@ -21667,6 +21670,9 @@ video {
 }
 .p-6{
   padding: 1.5rem;
+}
+.p-1{
+  padding: 0.25rem;
 }
 .px-4{
   padding-left: 1rem;
