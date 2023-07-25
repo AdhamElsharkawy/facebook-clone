@@ -195,7 +195,7 @@
                     class="p-button-rounded p-button-success mx-2"
                     @click="editUser(slotProps.data)"
                 />
-                <Button
+                <Button v-if="authUser.role == 'super_admin' || authUser.role == 'admin'"
                     icon="pi pi-trash"
                     class="p-button-rounded p-button-warning mx-2"
                     @click="confirmDeleteUser(slotProps.data)"
@@ -253,6 +253,7 @@ export default {
 
     data() {
         return {
+            authUser:{},
             toast: null,
             loading: false,
             userDialog: false,
@@ -328,6 +329,19 @@ export default {
             this.$emit("editUser", user);
         }, //end of editUser
     }, //end of methods
+    created() {
+        this.authUser = this.$store.getters["adminAuth/user"];
+        this.users = this.users.filter((user) => {
+                    if(this.authUser.role == 'admin' || this.authUser.role == 'super_admin'){
+                        return true;
+                    } else if(this.authUser.role == 'manager'){
+                        return user.role !== 'admin' && user.role !== 'super_admin' && user.role !== 'manager'
+                    } else if(this.authUser.role == 'team_leader'){
+                        return user.role !== 'admin' && user.role !== 'manager' && user.role !== 'super_admin' && user.role !== 'team_leader'
+                    }
+                    // return user.role == this.authUser.role
+            });
+    }, //end of created
 };
 </script>
 
