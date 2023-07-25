@@ -5,6 +5,7 @@ namespace App\Http\Traits;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 trait ImageTrait
 {
@@ -61,5 +62,19 @@ trait ImageTrait
             $images_paths[] = $this->img($image, $path);
         }
         return json_encode($images_paths);
+    }
+
+    public function uploadS3Image($file, $path = 'images')
+    {
+        $path = Storage::disk('s3')->put($path, $file);
+        return Storage::disk('s3')->url($path);
+    }
+
+    public function deleteS3Image($file)
+    {
+        $exploded_file = explode('/', $file);
+        $file = array_slice($exploded_file, 3);
+        $file = implode('/', $file);
+        Storage::disk('s3')->delete($file);
     }
 }
