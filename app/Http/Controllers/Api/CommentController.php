@@ -72,7 +72,8 @@ class CommentController extends Controller
         if ($request->old_images) {
             foreach ($request->old_images as $image) {
                 if (!in_array($image, $request->images)) {
-                    $this->deleteImg($image, 'images/posts/comments/');
+                    // $this->deleteImg($image, 'images/posts/comments/');
+                    $this->deleteS3Image($image, 'images/posts/comments/');
                 } else {
                     $images[] = $image;
                 }
@@ -81,7 +82,8 @@ class CommentController extends Controller
 
         if ($request->images) {
             foreach ($request->images as $image) {
-                $images[] = $this->img($image, 'images/posts/comments/');
+                // $images[] = $this->img($image, 'images/posts/comments/');
+                $images[] = $this->uploadS3Image($image, 'images/posts/comments/');
             }
         }
 
@@ -106,6 +108,14 @@ class CommentController extends Controller
         if (!$comment) return $this->notFound();
 
         $comment->likes()->delete();
+
+        if ($comment->images) {
+            foreach (json_decode($comment->images) as $image) {
+                // $this->deleteImg($image, 'images/posts/comments/');
+                $this->deleteS3Image($image, 'images/posts/comments/');
+            }
+        }
+
         $comment->delete();
 
         return $this->apiSuccessResponse(
