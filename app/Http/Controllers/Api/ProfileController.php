@@ -12,10 +12,11 @@ use App\Models\College;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Company;
+use App\Http\Traits\ImageTrait;
 
 class ProfileController extends Controller
 {
-    use GeneralTrait, SeoTrait;
+    use GeneralTrait, SeoTrait, ImageTrait;
 
     public static function getPosts($user_id)
     {
@@ -74,6 +75,7 @@ class ProfileController extends Controller
             ->first();
 
         $user->social_links = json_decode($user->social_links);
+        $user->makeHidden(['image']);
         // hide the unnecessary fields
         if ($user->department) {
             $user->makeHidden(['department_id']);
@@ -114,7 +116,13 @@ class ProfileController extends Controller
             return $this->apiValidationTrait($request->all(), $rules);
         }
         $form_data = $request->only(['title', 'mobile']);
-        $request->image ? $form_data['image'] = $this->img($request->image, 'images/users/') : '';
+        $user = Auth::guard('api')->user();
+        if ($request->image) {
+            //  $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
+            // $form_data['image'] = $this->uploadS3Image($request->image, 'images/users/');
+        } else {
+            $form_data['image'] = $user->image;
+        }
 
         $user = Auth::guard('api')->user();
         $user->update($form_data);
