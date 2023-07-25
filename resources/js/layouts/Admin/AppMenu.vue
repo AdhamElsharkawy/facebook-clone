@@ -2,10 +2,11 @@
 import { ref } from "vue";
 import AppMenuItem from "./AppMenuItem.vue";
 import { useI18n } from "vue-i18n";
+import { useStore } from "vuex";
 
 const { t: $t } = useI18n();
-
-const model = ref([
+const authUser = useStore().getters["adminAuth/user"].role;
+const adminModel = ref([
     {
         label: $t('home'),
         items: [
@@ -212,30 +213,52 @@ const model = ref([
         ],
     },
 ]);
+
+const model = ref([
+    {
+        label: $t('home'),
+        items: [
+            {
+                label: $t('dashboard'),
+                icon: "pi pi-fw pi-home",
+                to: "/admin/dashboard",
+                name: "admin.dashboard",
+            },
+        ],
+    },
+    {
+        label: $t('collections'),
+        items: [
+            {
+                label: $t('users'),
+                icon: "pi pi-users",
+                to: "/admin/users",
+                name: "admin.users",
+            },
+        ],
+    },
+]);
+
 </script>
 
 <template>
     <ul class="layout-menu">
-        <template v-for="(item, i) in model" :key="item">
+        <template v-for="(item, i) in adminModel" :key="item">
             <app-menu-item
-                v-if="!item.separator"
+                v-if="!item.separator && authUser == 'admin' || authUser == 'super_admin'"
                 :item="item"
                 :index="i"
             ></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
         </template>
-        <li>
-            <a
-                href="https://www.primefaces.org/primeblocks-vue/#/"
-                target="_blank"
-            >
-                <img
-                    src="/layout/images/banner-primeblocks.png"
-                    alt="Prime Blocks"
-                    class="w-full mt-3"
-                />
-            </a>
-        </li>
+        <template v-for="(item, i) in model" :key="item">
+            <app-menu-item
+                v-if="!item.separator && authUser == 'manager' || authUser == 'team_leader'"
+                :item="item"
+                :index="i"
+            ></app-menu-item>
+            <li v-if="item.separator" class="menu-separator"></li>
+        </template>
     </ul>
 </template>
 

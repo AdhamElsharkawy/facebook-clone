@@ -10,6 +10,7 @@ const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
 const profileMenu = ref(null);
 const router = useRouter();
+const authUser = store.getters["adminAuth/user"];
 
 onMounted(() => {
     bindOutsideClickListener();
@@ -152,6 +153,7 @@ export default {
                 />
             </OverlayPanel>
             <router-link
+                v-if="authUser == 'super_admin' || authUser == 'admin'"
                 :to="{ name: 'admin.settings' }"
                 @click="onSettingsClick()"
                 class="p-link layout-topbar-button text-decoration-none"
