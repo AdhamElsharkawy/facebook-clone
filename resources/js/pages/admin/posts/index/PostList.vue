@@ -6,6 +6,7 @@
             :paginator="true"
             :rows="rows"
             :totalRecords="totalRecords"
+            :CurrentPageReport="4"
             @page="onPageChange"
         >
             <template #list="slotProps">
@@ -13,11 +14,11 @@
                     <div
                         class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4"
                     >
-                        <div v-if="slotProps.data.images_paths.length > 0" class="inline-block">
+                        <div v-if="slotProps.data.images_paths.length > 0">
                             <img
                                 v-for="img_path in slotProps.data.images_paths"
                                 :key="img_path"
-                                class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
+                                class="w-9 sm:w-16rem xl:w-10rem shadow-2 mx-auto border-round inline-block"
                                 style="width: 140px; height: 140px"
                                 :src="img_path"
                                 :alt="slotProps.data.name"
@@ -122,6 +123,10 @@ export default {
             type: Array,
             required: true,
         },
+        currentPage: {
+            type: Number,
+            required: true,
+        },
         rows: {
             type: Number,
             required: true,
@@ -145,7 +150,6 @@ export default {
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
             },
-            currentPage: 1,
         };
     }, //end of data
 
@@ -161,8 +165,7 @@ export default {
     }, //end of beforeMount
     methods: {
         onPageChange(event) {
-            this.currentPage = event.page + 1;
-            this.$emit("pageChange", this.currentPage);
+            this.$emit("pageChange", event.page + 1);
         },
         confirmDeletePost(post) {
             this.post = post;

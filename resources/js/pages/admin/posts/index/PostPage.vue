@@ -9,6 +9,7 @@
                     :currentPosts="currentPosts"
                     :rows="rows"
                     :totalRecords="totalRecords"
+                    :currentPage="currentPage"
                     @selectPosts="selectPosts"
                     @editPost="editPost"
                     @pageChange="pageChange"
@@ -132,6 +133,7 @@ export default {
                     this.posts = response.data.posts.data;
                     this.rows = response.data.posts.per_page;
                     this.totalRecords = response.data.posts.total;
+                    this.currentPage = response.data.posts.current_page;
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;

@@ -54,20 +54,20 @@ class ProfileController extends Controller
             ->with(['department:id,name'])
             ->with([
                 'experiences' => function ($query) {
-                    $query->select("title", "type", "start_date", "end_date", "is_current", "user_id", "company_id")
+                    $query->select("id","title", "type", "start_date", "end_date", "is_current", "user_id", "company_id")
                         ->with(['company' => function ($query) {
                             $query->select('id', 'name', 'image');
                         }]);
                 },
             ])
             ->with(['educations' => function ($query) {
-                $query->select("degree", "major", "start_date", "end_date", "is_current", "user_id", "location", "college_id")
+                $query->select("id","degree", "major", "start_date", "end_date", "is_current", "user_id", "location", "college_id")
                     ->with(['college' => function ($query) {
                         $query->select('id', 'name', 'image');
                     }]);
             }])
             ->with(['certifications' => function ($query) {
-                $query->select("major", "location", "start_date", "end_date", "is_current", "valid_until", "confirmation_link", "user_id", "college_id")
+                $query->select("id","major", "location", "start_date", "end_date", "is_current", "valid_until", "confirmation_link", "user_id", "college_id")
                     ->with(['college' => function ($query) {
                         $query->select('id', 'name', 'image');
                     }]);
