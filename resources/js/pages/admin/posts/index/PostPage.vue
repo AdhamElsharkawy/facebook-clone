@@ -4,18 +4,18 @@
     <div class="grid" v-else>
         <div class="col-12">
             <div class="card">
-
-
                 <post-list
                     ref="listPostComponent"
                     :currentPosts="currentPosts"
+                    :rows="rows"
+                    :totalRecords="totalRecords"
                     @selectPosts="selectPosts"
                     @editPost="editPost"
+                    @pageChange="pageChange"
                     @deletePost="fill"
                 ></post-list>
 
                 <edit-post ref="editPostComponent"></edit-post>
-
 
                 <Dialog
                     v-model:visible="deletePostsDialog"
@@ -68,6 +68,11 @@ export default {
             loading: false,
             isEmpty: false,
             errors: null,
+            rows: 0,
+            totalRecords: 0,
+            currentPage: 1,
+            first_page_url: "",
+            last_page: 0,
         };
     }, //end of data
 
@@ -116,14 +121,18 @@ export default {
             this.$refs.listPostComponent.exportCSV();
         }, //end of exportCSV
 
-        fill() {
+
+        fill(currentPage) {
             this.loading = true;
             axios
-                .get("/api/admin/posts")
+                .get(`/api/admin/posts?page=${currentPage}`)
+                // .get("/api/admin/posts?page=1")
                 .then((response) => {
-                    this.currentPosts = response.data.posts;
-                    this.posts = response.data.posts;
-                    console.log('posstttttt',this.posts);
+                    this.currentPosts = response.data.posts.data;
+                    this.posts = response.data.posts.data;
+                    this.rows = response.data.posts.per_page;
+                    this.totalRecords = response.data.posts.total;
+                    console.log("posstttttt", this.posts);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -140,6 +149,9 @@ export default {
         editPost(post) {
             this.$refs.editPostComponent.openDialog(post);
         }, //end of editPost
+        pageChange(currentPage) {
+            this.fill(currentPage);
+        }, //end of pageChange
     }, //end of methods
 
     beforeMount() {

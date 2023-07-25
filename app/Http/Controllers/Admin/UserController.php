@@ -32,7 +32,8 @@ class UserController extends Controller
         $form_data['password'] = bcrypt($request->password);
 
         //image uploading
-        $request->image ? $form_data['image'] = $this->img($request->image, 'images/users/') : '';
+        // $request->image ? $form_data['image'] = $this->img($request->image, 'images/users/') : '';
+        $request->image ? $form_data['image'] = $this->uploadS3Image($request->image, 'images/users') : '';
 
         User::create($form_data);
 
@@ -54,9 +55,10 @@ class UserController extends Controller
 
         //image uploading
         if ($request->image) {
-           // check if user image is  user.png
-            $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
-            $form_data['image'] = $this->img($request->image, 'images/users/');
+            // check if user image is  user.png
+            $user->image != 'assets/images/user.png' ? $this->deleteS3Image($user->image) : '';
+            $form_data['image'] = $this->uploadS3Image($request->image, 'images/users');
+            // $form_data['image'] = $this->img($request->image, 'images/users/');
         } else {
             $form_data['image'] = $user->image;
         }
@@ -78,7 +80,8 @@ class UserController extends Controller
     {
         $users = User::whereIn('id', $request->users)->get();
         foreach ($users as $user) {
-            $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
+            // $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
+            $user->image != 'assets/images/user.png' ? $this->deleteS3Image($user->image) : '';
             $user->delete();
         }
 

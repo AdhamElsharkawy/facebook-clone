@@ -73,6 +73,12 @@ const model = ref([
                 icon: "pi pi-users",
                 to: "/admin/posts",
                 name: "admin.posts",
+            },
+            {
+                label: 'Comments',
+                icon: "pi pi-users",
+                to: "/admin/comments",
+                name: "admin.comments",
             }
 
         ],

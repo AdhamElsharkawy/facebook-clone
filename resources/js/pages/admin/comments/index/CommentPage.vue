@@ -19,55 +19,30 @@
                             }"
                         >
                             <Button
-                                :label="$t('new')"
-                                icon="pi pi-plus"
-                                class="p-button-success"
-                                :class="{
-                                    'mr-2': !$store.getters['isRtl'],
-                                    'ml-2': $store.getters['isRtl'],
-                                }"
-                                @click="createNewUser"
-                            />
-                            <Button
                                 :label="$t('delete')"
                                 icon="pi pi-trash"
                                 class="p-button-danger"
                                 @click="confirmDeleteSelected"
                                 :disabled="
-                                    !selectedUsers || !selectedUsers.length
+                                    !selectedComments || !selectedComments.length
                                 "
                             />
                         </div>
                     </template>
 
-                    <template v-slot:end>
-                        <Button
-                            :label="$t('export')"
-                            icon="pi pi-upload"
-                            class="p-button-help"
-                            @click="exportCSV($event)"
-                        />
-                    </template>
                 </Toolbar>
 
-                <user-list
-                    ref="listUserComponent"
-                    :currentUsers="currentUsers"
-                    @selectUsers="selectUsers"
-                    @editUser="editUser"
-                    @deleteUser="fill"
-                ></user-list>
+                <comment-list
+                    ref="listCommentComponent"
+                    :currentComments="currentComments"
+                    @selectComments="selectComments"
+                    @deleteComment="fill"
+                ></comment-list>
 
-                <edit-user ref="editUserComponent" :departments="departments"></edit-user>
 
-                <create-user
-                    ref="createUserComponent"
-                    @userCreated="fill"
-                    :departments="departments"
-                ></create-user>
 
                 <Dialog
-                    v-model:visible="deleteUsersDialog"
+                    v-model:visible="deleteCommentsDialog"
                     :style="{ width: '450px' }"
                     header="Confirm"
                     :modal="true"
@@ -77,9 +52,9 @@
                             class="pi pi-exclamation-triangle mr-3"
                             style="font-size: 2rem"
                         />
-                        <span v-if="user"
+                        <span v-if="comment"
                             >Are you sure you want to delete the selected
-                            users?</span
+                            comments?</span
                         >
                     </div>
                     <template #footer>
@@ -87,13 +62,13 @@
                             label="No"
                             icon="pi pi-times"
                             class="p-button-text"
-                            @click="deleteUsersDialog = false"
+                            @click="deleteCommentsDialog = false"
                         />
                         <Button
                             label="Yes"
                             icon="pi pi-check"
                             class="p-button-text"
-                            @click="deleteSelectedUsers"
+                            @click="deleteSelectedComments"
                         />
                     </template>
                 </Dialog>
@@ -103,44 +78,38 @@
 </template>
 
 <script>
-import UserList from "./UserList.vue";
-import EditUser from "../edit/EditUser.vue";
-import CreateUser from "../create/CreateUser.vue";
+import CommentList from "./CommentList.vue";
+// import EditComment from "../edit/EditComment.vue";
+// import CreateComment from "../create/CreateComment.vue";
 import { useToast } from "primevue/usetoast";
 
 export default {
-    components: { UserList, EditUser, CreateUser },
+    components: { CommentList },
     data() {
         return {
-            currentUsers: [],
-            deleteUsersDialog: false,
-            selectedUsers: null,
+            currentComments: [],
+            deleteCommentsDialog: false,
+            selectedComments: null,
             loading: false,
             isEmpty: false,
             errors: null,
-            departments: [],
         };
     }, //end of data
 
     methods: {
-        createNewUser() {
-            this.user = {};
-            this.$refs.createUserComponent.openDialog();
-        }, //end of openNew
-
-        deleteSelectedUsers() {
+        deleteSelectedComments() {
             this.loading = true;
             axios
-                .delete("/api/admin/users/delete/all", {
+                .delete("/api/admin/comments/delete/all", {
                     data: {
-                        users: this.selectedUsers.map((val) => val.id),
+                        comments: this.selectedComments.map((val) => val.id),
                     },
                 })
                 .then((response) => {
-                    this.currentUsers = this.currentUsers.filter(
-                        (val) => !this.selectedUsers.includes(val)
+                    this.currentComments = this.currentComments.filter(
+                        (val) => !this.selectedComments.includes(val)
                     );
-                    this.selectedUsers = null;
+                    this.selectedComments = null;
                     this.toast.add({
                         severity: "success",
                         summary: "Successful",
@@ -160,27 +129,25 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                    this.deleteUsersDialog = false;
+                    this.deleteCommentsDialog = false;
                 });
-        }, //end of deleteSelectedUsers
+        }, //end of deleteSelectedComments
 
         confirmDeleteSelected() {
-            this.deleteUsersDialog = true;
+            this.deleteCommentsDialog = true;
         }, //end of confirmDeleteSelected
 
         exportCSV() {
-            this.$refs.listUserComponent.exportCSV();
+            this.$refs.listCommentComponent.exportCSV();
         }, //end of exportCSV
 
         fill() {
             this.loading = true;
             axios
-                .get("/api/admin/users")
+                .get("/api/admin/comments")
                 .then((response) => {
-                    this.currentUsers = response.data.users;
-                    this.departments = response.data.departments;
-                    console.log(this.currentUsers);
-                    // console.log(this.departments);
+                    console.log(response.data);
+                    this.currentComments = response.data.comments;
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -190,13 +157,9 @@ export default {
                 }); //end of axios request
         }, //end of fill function
 
-        selectUsers(selectedUsers) {
-            this.selectedUsers = selectedUsers;
-        }, //end of selectUsers
-
-        editUser(user) {
-            this.$refs.editUserComponent.openDialog(user);
-        }, //end of editUser
+        selectComments(selectedComments) {
+            this.selectedComments = selectedComments;
+        }, //end of selectComments
     }, //end of methods
 
     beforeMount() {

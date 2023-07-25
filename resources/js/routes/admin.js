@@ -186,6 +186,14 @@ const admin = [
         props: true,
     },
 
+    // comments
+    {
+        name: "admin.comments",
+        path: "comments",
+        component: () => import("../pages/admin/comments/index/CommentPage.vue"),
+        props: true,
+    },
+
     //settings
     {
         name: "admin.settings",

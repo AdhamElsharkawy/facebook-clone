@@ -1,5 +1,10 @@
 <template>
     <Dialog
+        v-if="
+            user.role == 'super_admin' ||
+            user.role == 'admin' ||
+            user.role == 'user'
+        "
         v-model:visible="userDialog"
         :style="{ width: '450px' }"
         :header="$t('editUser')"
@@ -34,7 +39,7 @@
             <label
                 for="title"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            >title</label
+                >title</label
             >
             <InputText
                 id="title"
@@ -48,15 +53,13 @@
                 ]"
             />
             <small class="p-invalid" v-if="submitted && !user.title">
-                    titleIsRequired
-                </small>
+                titleIsRequired
+            </small>
         </div>
 
         <div class="field">
-            <label
-                for="name"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-            >name</label
+            <label for="name" :class="[{ 'float-right': $store.getters.isRtl }]"
+                >name</label
             >
             <InputText
                 id="name"
@@ -70,15 +73,15 @@
                 ]"
             />
             <small class="p-invalid" v-if="submitted && !user.name">
-                    nameIsRequired
-                </small>
+                nameIsRequired
+            </small>
         </div>
 
         <div class="field">
             <label
                 for="email"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            >email</label
+                >email</label
             >
             <InputText
                 id="email"
@@ -91,15 +94,15 @@
                 ]"
             />
             <small class="p-invalid" v-if="submitted && !user.email">
-                    emailIsRequired
-                </small>
+                emailIsRequired
+            </small>
         </div>
 
         <div class="field">
             <label
                 for="mobile"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            >mobile</label
+                >mobile</label
             >
             <InputText
                 id="mobile"
@@ -112,32 +115,50 @@
                 ]"
             />
             <small class="p-invalid" v-if="submitted && !user.mobile">
-                    mobileIsRequired
-                </small>
+                mobileIsRequired
+            </small>
         </div>
 
         <div class="field">
             <label
                 class="mb-3"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            >role</label
+                >role</label
             >
             <div class="formgrid grid">
-                <div class="field-radiobutton col-6">
+                <div class="field-radiobutton col-3">
                     <RadioButton
                         id="role1"
                         name="role"
                         value="admin"
-                        v-model="user.role"
+                        v-model="myRole"
                     />
                     <label for="role1">admin</label>
                 </div>
-                <div class="field-radiobutton col-6">
+                <div class="field-radiobutton col-3">
+                    <RadioButton
+                        id="role3"
+                        name="role"
+                        value="team_leader"
+                        v-model="myRole"
+                    />
+                    <label for="role3">T-leader</label>
+                </div>
+                <div class="field-radiobutton col-3">
+                    <RadioButton
+                        id="role4"
+                        name="role"
+                        value="manager"
+                        v-model="myRole"
+                    />
+                    <label for="role4">Manager</label>
+                </div>
+                <div class="field-radiobutton col-3">
                     <RadioButton
                         id="role2"
                         name="role"
                         value="user"
-                        v-model="user.role"
+                        v-model="myRole"
                     />
                     <label for="role2">user</label>
                 </div>
@@ -147,7 +168,7 @@
             <label
                 class="mb-3"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            >status</label
+                >status</label
             >
             <div class="formgrid grid">
                 <div class="field-radiobutton col-6">
@@ -175,45 +196,177 @@
             <label
                 for="birth_date"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            >birth_date</label
+                >birth_date</label
             >
-            <Calendar required="true" id="birth_date" v-model="user.birth_date" :class="[{ 'p-invalid': submitted && !user.birth_date },]" dateFormat="yy-mm-dd" />
+            <Calendar
+                required="true"
+                id="birth_date"
+                v-model="user.birth_date"
+                :class="[{ 'p-invalid': submitted && !user.birth_date }]"
+                dateFormat="yy-mm-dd"
+            />
             <small class="p-invalid" v-if="submitted && !user.birth_date">
-                    birth_dateIsRequired
-                </small>
+                birth_dateIsRequired
+            </small>
         </div>
 
         <div class="field">
             <label
-                for="score"
+                for="team_score"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            >score</label
+                >Team Score</label
             >
             <InputText
                 id="score"
-                v-model.number="user.score"
+                v-model.number="user.team_score"
                 required="true"
                 type="number"
                 :class="[
-                    { 'p-invalid': submitted && !user.score },
+                    { 'p-invalid': submitted && !user.team_score },
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !user.score">
-                    scoreIsRequired
-                </small>
+            <small class="p-invalid" v-if="submitted && !user.team_score">
+                team_scoreIsRequired
+            </small>
+        </div>
+
+        <div class="field">
+            <label
+                for="global_score"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Global Score</label
+            >
+            <InputText
+                id="score"
+                v-model.number="user.global_score"
+                required="true"
+                type="number"
+                :class="[
+                    { 'p-invalid': submitted && !user.global_score },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.global_score">
+                global Score Is Required
+            </small>
         </div>
 
         <div class="field">
             <label
                 for="departments"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            >Department</label
+                >Department</label
             >
-            <Dropdown v-model="selectedOption" :options="departments" optionLabel="name"
-                      placeholder="Select a Department" class="w-full md:w-14rem"/>
+            <Dropdown
+                v-model="selectedOption"
+                :options="departments"
+                optionLabel="name"
+                placeholder="Select a Department"
+                class="w-full md:w-14rem"
+            />
         </div>
 
+        <template #footer>
+            <div
+                :class="{
+                    'flex flex-row-reverse float-left': $store.getters.isRtl,
+                }"
+            >
+                <Button
+                    :label="$t('cancel')"
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    @click="hideDialog"
+                />
+                <Button
+                    :label="$t('submit')"
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    @click="updateUser"
+                />
+            </div>
+        </template>
+    </Dialog>
+    <Dialog
+        v-else-if="user.role == 'team_leader'"
+        v-model:visible="userDialog"
+        :style="{ width: '450px' }"
+        :header="$t('editUser')"
+        :modal="true"
+        class="p-fluid"
+    >
+        <div class="field">
+            <label
+                for="team_score"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Team Score</label
+            >
+            <InputText
+                id="score"
+                v-model.number="user.team_score"
+                required="true"
+                type="number"
+                :class="[
+                    { 'p-invalid': submitted && !user.team_score },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.team_score">
+                team_scoreIsRequired
+            </small>
+        </div>
+
+        <template #footer>
+            <div
+                :class="{
+                    'flex flex-row-reverse float-left': $store.getters.isRtl,
+                }"
+            >
+                <Button
+                    :label="$t('cancel')"
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    @click="hideDialog"
+                />
+                <Button
+                    :label="$t('submit')"
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    @click="updateUser"
+                />
+            </div>
+        </template>
+    </Dialog>
+
+    <Dialog
+        v-else-if="user.role == 'manager'"
+        v-model:visible="userDialog"
+        :style="{ width: '450px' }"
+        :header="$t('editUser')"
+        :modal="true"
+        class="p-fluid"
+    >
+        <div class="field">
+            <label
+                for="global_score"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Global Score</label
+            >
+            <InputText
+                id="score"
+                v-model.number="user.global_score"
+                required="true"
+                type="number"
+                :class="[
+                    { 'p-invalid': submitted && !user.global_score },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.global_score">
+                global Score Is Required
+            </small>
+        </div>
         <template #footer>
             <div
                 :class="{
@@ -238,7 +391,7 @@
 </template>
 
 <script>
-import {useToast} from "primevue/usetoast";
+import { useToast } from "primevue/usetoast";
 
 export default {
     props: ["departments"],
@@ -248,6 +401,7 @@ export default {
             userDialog: false,
             submitted: false,
             selectedOption: null,
+            myRole: "",
         };
     },
     methods: {
@@ -257,23 +411,30 @@ export default {
         }, //end of uploadImage
         updateUser() {
             this.submitted = true;
-
-            if (this.user.name && this.user.name.trim() && this.user.email) {
+            console.log(this.user);
+            if (this.user.name.trim() && this.user.email) {
                 this.loading = true;
                 const formData = new FormData();
                 const options = {
                     year: "numeric",
                     month: "2-digit",
-                    day: "numeric"
+                    day: "numeric",
                 };
                 // if condition this.user.birthdate is yyyy-mm-dd
                 let regEx = /^\d{4}-\d{2}-\d{2}$/;
                 let convertedDate;
-                if(this.user.birth_date !== regEx && typeof this.user.birth_date == 'object'){
+                if (
+                    this.user.birth_date !== regEx &&
+                    typeof this.user.birth_date == "object"
+                ) {
                     console.log(typeof this.user.birth_date);
-                    const formattedDate = this.user.birth_date.toLocaleDateString('en-US', options).replace(/\//g, '-');
-                    const [month, day, year] = formattedDate.split('-').map(Number);
-                     convertedDate = `${year}-${month}-${day}`;
+                    const formattedDate = this.user.birth_date
+                        .toLocaleDateString("en-US", options)
+                        .replace(/\//g, "-");
+                    const [month, day, year] = formattedDate
+                        .split("-")
+                        .map(Number);
+                    convertedDate = `${year}-${month}-${day}`;
                     console.log(typeof convertedDate);
                     console.log(convertedDate);
                     this.user.birth_date = convertedDate;
@@ -283,14 +444,19 @@ export default {
                 formData.append("email", this.user.email);
                 formData.append("mobile", this.user.mobile);
                 formData.append("status", this.user.status);
-                formData.append("score", this.user.score);
-                formData.append("role", this.user.role);
-                if( typeof this.user.image =='object'){
-                    formData.append("image",this.user.image)
+                formData.append("team_score", this.user.team_score);
+                formData.append("global_score", this.user.global_score);
+                // this.user.role = this.x;
+                formData.append("role", this.myRole);
+                if (typeof this.user.image == "object") {
+                    formData.append("image", this.user.image);
                 }
                 // this.user.department.name = this.selectedOption.name;
                 formData.append("department_id", this.selectedOption.id);
-                formData.append("birth_date", convertedDate ?? this.user.birth_date);
+                formData.append(
+                    "birth_date",
+                    convertedDate ?? this.user.birth_date
+                );
                 formData.append("_method", "PUT");
                 axios
                     .post("/api/admin/users/" + this.user.id, formData)
@@ -320,7 +486,7 @@ export default {
         }, //end of updateUser
 
         editUser(editUser) {
-            this.user = {...editUser};
+            this.user = { ...editUser };
             this.userDialog = true;
         }, //end of editUser
 
@@ -328,6 +494,7 @@ export default {
             this.user = user;
             this.userDialog = true;
             this.selectedOption = this.user.department;
+            this.myRole = this.user.role;
         }, //end of openDialog
 
         hideDialog() {

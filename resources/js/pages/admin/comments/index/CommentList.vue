@@ -2,15 +2,15 @@
     <Loading v-if="loading" />
     <DataTable
         ref="dt"
-        :value="users"
-        v-model:selection="selectedUsers"
+        :value="comments"
+        v-model:selection="selectedComments"
         dataKey="id"
         :paginator="true"
         :rows="10"
         :filters="filters"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         :rowsPerPageOptions="[5, 10, 25]"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} comments"
         responsiveLayout="scroll"
     >
         <template #header>
@@ -18,7 +18,7 @@
                 class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
                 :class="{ 'md:flex-row-reverse': $store.getters['isRtl'] }"
             >
-                <h5 class="m-0">{{ $t("manage") + " " + $t("users") }}</h5>
+                <h5 class="m-0">{{ $t("manage") + " " + "comments" }}</h5>
                 <span class="block mt-2 md:mt-0 p-input-icon-left">
                     <i class="pi pi-search" />
                     <InputText
@@ -36,152 +36,67 @@
             :class="{ 'text-right': $store.getters['isRtl'] }"
         ></Column>
 
-
         <Column
-            field="title"
-            header="title"
+            field="thread"
+            header="Comment"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">Title</span>
-                {{ slotProps.data.title }}
+                <span class="p-column-title">Comment</span>
+                {{ slotProps.data.thread }}
             </template>
         </Column>
-
         <Column
-            field="name"
-            header="name"
+            field="user.name"
+            header="user"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">Name</span>
-                {{ slotProps.data.name }}
+                <span class="p-column-title">user</span>
+                {{ slotProps.data.user.name }}
             </template>
         </Column>
 
         <Column
-            field="image"
-            header="image"
+            field="post.thread"
+            header="Post_thread"
+            :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">Image</span>
-                <img
-                    :src="slotProps.data.image_path"
-                    :alt="slotProps.data.image"
-                    class="shadow-2"
-                    width="100"
-                />
-            </template>
-        </Column>
-
-        <Column
-            field="email"
-            header="email"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">Email</span>
-                {{ slotProps.data.email }}
-            </template>
-        </Column>
-
-        <Column
-            field="role"
-            header="role"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">Role</span>
-                {{ slotProps.data.role }}
-            </template>
-        </Column>
-
-        <Column
-            field="mobile"
-            header="mobile"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">Mobile</span>
-                {{ slotProps.data.mobile }}
-            </template>
-        </Column>
-
-        <Column
-            field="status"
-            header="status"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">Status</span>
-                {{ slotProps.data.status }}
+                <span class="p-column-title">Post_thread</span>
+                {{ slotProps.data.post.thread }}
             </template>
         </Column>
         <Column
-            field="birth_date"
-            header="BirthDate"
+            field="post.id"
+            header="Post_id"
             :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
+            headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">Birth Date</span>
-                {{ slotProps.data.birth_date }}
+                <span class="p-column-title">post_id</span>
+                {{ slotProps.data.post.id }}
             </template>
         </Column>
         <Column
-            field="global_score"
-            header="global_score"
+            field="user_of_post_name"
+            header="User_name_of_Post"
             :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
+            headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">global_score</span>
-                {{ slotProps.data.global_score }}
+                <span class="p-column-title">User of Post</span>
+                {{ slotProps.data.user_of_post_name }}
             </template>
         </Column>
-
-        <Column
-            field="team_score"
-            header="team_score"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">team_score</span>
-                {{ slotProps.data.team_score }}
-            </template>
-        </Column>
-
-        <Column
-            field="department"
-            header="department"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">department</span>
-                {{ slotProps.data.department?.name }}
-            </template>
-        </Column>
-
 
         <Column
             field="action"
@@ -191,20 +106,15 @@
         >
             <template #body="slotProps">
                 <Button
-                    icon="pi pi-pencil"
-                    class="p-button-rounded p-button-success mx-2"
-                    @click="editUser(slotProps.data)"
-                />
-                <Button
                     icon="pi pi-trash"
                     class="p-button-rounded p-button-warning mx-2"
-                    @click="confirmDeleteUser(slotProps.data)"
+                    @click="confirmDeleteComment(slotProps.data)"
                 />
             </template>
         </Column>
     </DataTable>
     <Dialog
-        v-model:visible="deleteUserDialog"
+        v-model:visible="deleteCommentDialog"
         :style="{ width: '450px' }"
         header="Confirm"
         :modal="true"
@@ -214,8 +124,8 @@
                 class="pi pi-exclamation-triangle mr-3"
                 style="font-size: 2rem"
             />
-            <span v-if="user"
-                >Are you sure you want to delete <b>{{ user.name }}</b
+            <span v-if="comment"
+                >Are you sure you want to delete <b>{{ comment.name }}</b
                 >?</span
             >
         </div>
@@ -224,13 +134,13 @@
                 label="No"
                 icon="pi pi-times"
                 class="p-button-text"
-                @click="deleteUserDialog = false"
+                @click="deleteCommentDialog = false"
             />
             <Button
                 label="Yes"
                 icon="pi pi-check"
                 class="p-button-text"
-                @click="deleteUser"
+                @click="deleteComment"
             />
         </template>
     </Dialog>
@@ -242,24 +152,23 @@ import { useToast } from "primevue/usetoast";
 
 export default {
     props: {
-        currentUsers: {
+        currentComments: {
             type: Array,
             required: true,
         },
-
     }, //end of props
 
-    emits: ["selectUsers", "deleteUser", "editUser"],
+    emits: ["selectComments", "deleteComment"],
 
     data() {
         return {
             toast: null,
             loading: false,
-            userDialog: false,
-            deleteUserDialog: false,
-            user: {},
-            users: this.currentUsers,
-            selectedUsers: null,
+            commentDialog: false,
+            deleteCommentDialog: false,
+            comment: {},
+            comments: this.currentComments,
+            selectedComments: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
             },
@@ -267,8 +176,8 @@ export default {
     }, //end of data
 
     watch: {
-        selectedUsers(val) {
-            this.$emit("selectUsers", val);
+        selectedComments(val) {
+            this.$emit("selectComments", val);
         },
     }, //end of watch
 
@@ -278,15 +187,15 @@ export default {
     }, //end of beforeMount
 
     methods: {
-        confirmDeleteUser(user) {
-            this.user = user;
-            this.deleteUserDialog = true;
-        }, //end of confirmDeleteUser
+        confirmDeleteComment(comment) {
+            this.comment = comment;
+            this.deleteCommentDialog = true;
+        }, //end of confirmDeleteComment
 
-        deleteUser() {
+        deleteComment() {
             this.loading = true;
             axios
-                .delete("/api/admin/users/" + this.user.id)
+                .delete("/api/admin/comments/" + this.comment.id)
                 .then((response) => {
                     this.toast.add({
                         severity: "success",
@@ -294,9 +203,9 @@ export default {
                         detail: response.data.message,
                         life: 3000,
                     });
-                    this.$emit("deleteUser");
-                    this.deleteUserDialog = false;
-                    this.user = {};
+                    this.$emit("deleteComment");
+                    this.deleteCommentDialog = false;
+                    this.comment = {};
                 })
                 .catch((errors) => {
                     if (errors.response) {
@@ -310,9 +219,9 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                    this.deleteUserDialog = false;
+                    this.deleteCommentDialog = false;
                 });
-        }, //end of deleteUser
+        }, //end of deleteComment
 
         initFilters() {
             this.filters = {
@@ -323,10 +232,6 @@ export default {
         exportCSV() {
             this.$refs.dt.exportCSV();
         }, //end of exportCSV
-
-        editUser(user) {
-            this.$emit("editUser", user);
-        }, //end of editUser
     }, //end of methods
 };
 </script>
