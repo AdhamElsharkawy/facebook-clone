@@ -1,14 +1,7 @@
 <template>
     <Loading v-if="loading" />
     <div class="card">
-        <DataView
-            :value="currentPosts"
-            :paginator="true"
-            :rows="rows"
-            :totalRecords="totalRecords"
-            :CurrentPageReport="4"
-            @page="onPageChange"
-        >
+        <DataView :value="currentPosts">
             <template #list="slotProps">
                 <div class="col-12">
                     <div
@@ -159,13 +152,9 @@ export default {
         },
     }, //end of watch
 
-    beforeMount() {
-        this.initFilters();
-        this.toast = useToast();
-    }, //end of beforeMount
     methods: {
-        onPageChange(event) {
-            this.$emit("pageChange", event.page + 1);
+        onPageChange(pageNumber) {
+            this.$emit("pageChange", pageNumber);
         },
         confirmDeletePost(post) {
             this.post = post;
@@ -217,6 +206,11 @@ export default {
             this.$emit("editPost", post);
         }, //end of editPost
     }, //end of methods
+
+    beforeMount() {
+        this.initFilters();
+        this.toast = useToast();
+    }, //end of beforeMount
 };
 </script>
 
