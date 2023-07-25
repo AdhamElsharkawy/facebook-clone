@@ -12,10 +12,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Bus;
 use App\Jobs\SendMail;
+use App\Http\Traits\ImageTrait;
 
 class PostController extends Controller
 {
-    use GeneralTrait, SeoTrait;
+    use GeneralTrait, SeoTrait, ImageTrait;
 
     /**
      * Display a listing of the resource.
@@ -78,7 +79,8 @@ class PostController extends Controller
         if ($request->images) {
             $images = [];
             foreach ($request->images as $image) {
-                $images[] = $this->img($image, 'images/posts/');
+                // $images[] = $this->img($image, 'images/posts/');
+                $images[] = $this->uploadS3Image($image, 'images/posts');
             }
         }
 
@@ -179,7 +181,8 @@ class PostController extends Controller
         if ($request->old_images) {
             foreach ($request->old_images as $image) {
                 if (!in_array($image, $request->images)) {
-                    $this->deleteImg($image, 'images/posts/');
+                    // $this->deleteImg($image, 'images/posts/');
+                    $this->deleteS3Image($image);
                 } else {
                     $images[] = $image;
                 }
@@ -188,7 +191,8 @@ class PostController extends Controller
 
         if ($request->images) {
             foreach ($request->images as $image) {
-                $images[] = $this->img($image, 'images/posts/');
+                // $images[] = $this->img($image, 'images/posts/');
+                $images[] = $this->uploadS3Image($image, 'images/posts');
             }
         }
 
@@ -233,7 +237,8 @@ class PostController extends Controller
 
         if ($post->images) {
             foreach (json_decode($post->images) as $image) {
-                $this->deleteImg($image, 'images/posts/');
+                // $this->deleteImg($image, 'images/posts/');
+                $this->deleteS3Image($image);
             }
         }
 
