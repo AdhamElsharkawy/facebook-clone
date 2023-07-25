@@ -122,7 +122,6 @@ export default {
             this.$refs.listPostComponent.exportCSV();
         }, //end of exportCSV
 
-
         fill(currentPage) {
             this.loading = true;
             axios
