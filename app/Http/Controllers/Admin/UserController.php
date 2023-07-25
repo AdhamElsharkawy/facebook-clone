@@ -70,7 +70,8 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
+        // $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
+        $user->image != 'assets/images/user.png' ? $this->deleteS3Image($user->image) : '';
         $user->delete();
 
         return response()->json(['message' => __('User Deleted Successfully')], 200);
