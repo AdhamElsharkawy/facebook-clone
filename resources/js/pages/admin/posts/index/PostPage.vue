@@ -132,7 +132,6 @@ export default {
                     this.posts = response.data.posts.data;
                     this.rows = response.data.posts.per_page;
                     this.totalRecords = response.data.posts.total;
-                    console.log("posstttttt", this.posts);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;

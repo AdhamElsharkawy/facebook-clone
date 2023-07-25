@@ -79,24 +79,23 @@ class ProfileController extends Controller
         // hide the unnecessary fields
         if ($user->department) {
             $user->makeHidden(['department_id']);
-            $user->department->makeHidden('id');
         }
         if ($user->experiences) {
             foreach ($user->experiences as $experience) {
                 $experience->makeHidden(['user_id', 'company_id']);
-                $experience->company->makeHidden(['id', 'image']);
+                $experience->company->makeHidden(['image']);
             }
         }
         if ($user->educations) {
             foreach ($user->educations as $education) {
                 $education->makeHidden(['user_id', 'college_id']);
-                $education->college->makeHidden(['id', 'image']);
+                $education->college->makeHidden(['image']);
             }
         }
         if ($user->certifications) {
             foreach ($user->certifications as $certification) {
                 $certification->makeHidden(['user_id', 'college_id']);
-                $certification->college->makeHidden(['id', 'image']);
+                $certification->college->makeHidden(['image']);
             }
         }
 

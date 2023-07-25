@@ -2,7 +2,7 @@
     <Loading v-if="loading" />
     <div class="card">
         <DataView
-            :value="posts"
+            :value="currentPosts"
             :paginator="true"
             :rows="rows"
             :totalRecords="totalRecords"
@@ -13,15 +13,16 @@
                     <div
                         class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4"
                     >
-                        <img
-                            v-if="slotProps.data.images_paths.length > 0"
-                            v-for="img_path in slotProps.data.images_paths"
-                            :key="img_path"
-                            class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
-                            style="width: 140px; height: 140px"
-                            :src="img_path"
-                            :alt="slotProps.data.name"
-                        />
+                        <div v-if="slotProps.data.images_paths.length > 0" class="inline-block">
+                            <img
+                                v-for="img_path in slotProps.data.images_paths"
+                                :key="img_path"
+                                class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
+                                style="width: 140px; height: 140px"
+                                :src="img_path"
+                                :alt="slotProps.data.name"
+                            />
+                        </div>
                         <div
                             class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4"
                         >
@@ -105,38 +106,6 @@
     </div>
 </template>
 
-<Dialog
-    v-model:visible="deletePostDialog"
-    :style="{ width: '450px' }"
-    header="Confirm"
-    :modal="true"
->
-<div class="flex align-items-center justify-content-center">
-    <i
-        class="pi pi-exclamation-triangle mr-3"
-        style="font-size: 2rem"
-    />
-    <span v-if="post"
-    >Are you sure you want to delete <b>{{ post.name }}</b
-    >?</span
-    >
-</div>
-<template #footer>
-    <Button
-        label="No"
-        icon="pi pi-times"
-        class="p-button-text"
-        @click="deletePostDialog = false"
-    />
-    <Button
-        label="Yes"
-        icon="pi pi-check"
-        class="p-button-text"
-        @click="deletePost"
-    />
-</template>
-</Dialog>
-
 <script>
 import { FilterMatchMode } from "primevue/api";
 import { useToast } from "primevue/usetoast";
@@ -161,8 +130,6 @@ export default {
             type: Number,
             required: true,
         },
-
-
     }, //end of props
 
     emits: ["selectPosts", "deletePost", "editPost", "pageChange"],
@@ -173,7 +140,7 @@ export default {
             postDialog: false,
             deletePostDialog: false,
             post: {},
-            posts: this.currentPosts,
+            // posts: this.currentPosts,
             selectedPosts: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -195,7 +162,6 @@ export default {
     methods: {
         onPageChange(event) {
             this.currentPage = event.page + 1;
-            console.log(event);
             this.$emit("pageChange", this.currentPage);
         },
         confirmDeletePost(post) {
