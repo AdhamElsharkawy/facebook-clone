@@ -30,7 +30,7 @@ class CompanyController extends Controller
     {
         $form_data = $request->validated();
         //image uploading
-        $request->image ? $form_data['image'] = $this->img($request->image, 'images/companies/') : '';
+        $request->image ? $form_data['image'] = $this->uploadS3Image($request->image, 'images/companies') : '';
 
         Company::create($form_data);
 
@@ -54,8 +54,8 @@ class CompanyController extends Controller
         $form_data = $request->validated();
         //image uploading
         if ($request->image) {
-            $company->image !=  'assets/images/default.png' ? $this->deleteImg($company->image) : '';
-            $form_data['image'] = $this->img($request->image, 'images/companies/');
+            $company->image !=  'assets/images/default.png' ? $this->deleteS3Image($company->image) : '';
+            $form_data['image'] = $this->uploadS3Image($request->image, 'images/companies');
         } else {
             $form_data['image'] = $company->image;
         }
@@ -69,7 +69,7 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        $company->image != 'assets/images/default.png' ? $this->deleteImg($company->image) : '';
+        $company->image != 'assets/images/default.png' ? $this->deleteS3Image($company->image) : '';
         $company->delete();
 
         return response()->json(['message' => __('Company Deleted Successfully')], 200);
@@ -79,7 +79,7 @@ class CompanyController extends Controller
     {
         $companies = Company::whereIn('id', $request->companies)->get();
         foreach ($companies as $company) {
-            $company->image != 'assets/images/default.png' ? $this->deleteImg($company->image) : '';
+            $company->image != 'assets/images/default.png' ? $this->deleteS3Image($company->image) : '';
             $company->delete();
         }
         return response()->json(['message' => __('Companies Deleted Successfully')]);

@@ -32,7 +32,7 @@ class EventController extends Controller
         $form_data['start_date'] = Carbon::parse($request->start_date)->format('Y-m-d H:i:s');
         $form_data['end_date'] = Carbon::parse($request->end_date)->format('Y-m-d H:i:s');
         //image uploading
-        $request->image ? $form_data['image'] = $this->img($request->image, 'images/events/') : '';
+        $request->image ? $form_data['image'] = $this->uploadS3Image($request->image, 'images/events') : '';
 
         Event::create($form_data);
 
@@ -55,8 +55,8 @@ class EventController extends Controller
         //image uploading
         $form_data = $request->validated();
         if ($request->image) {
-            $event->image !=  'assets/images/default.png' ? $this->deleteImg($event->image) : '';
-            $form_data['image'] = $this->img($request->image, 'images/events/');
+            $event->image !=  'assets/images/default.png' ? $this->deleteS3Image($event->image) : '';
+            $form_data['image'] = $this->uploadS3Image($request->image, 'images/events');
         } else {
             $form_data['image'] = $event->image;
         }
@@ -72,7 +72,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        $event->image != 'assets/images/default.png' ? $this->deleteImg($event->image) : '';
+        $event->image != 'assets/images/default.png' ? $this->deleteS3Image($event->image) : '';
         $event->delete();
 
         return response()->json(['message' => __('Event Deleted Successfully')], 200);
@@ -82,7 +82,7 @@ class EventController extends Controller
     {
         $events = Event::whereIn('id', $request->events)->get();
         foreach ($events as $event) {
-            $event->image != 'assets/images/default.png' ? $this->deleteImg($event->image) : '';
+            $event->image != 'assets/images/default.png' ? $this->deleteS3Image($event->image) : '';
             $event->delete();
         }
         return response()->json(['message' => __('Events Deleted Successfully')]);

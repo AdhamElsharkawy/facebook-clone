@@ -35,6 +35,10 @@
                 <comment-list
                     ref="listCommentComponent"
                     :currentComments="currentComments"
+                    :rows="rows"
+                    :totalPages="totalPages"
+                    :currentPage="currentPage"
+                    @pageChange="pageChange"
                     @selectComments="selectComments"
                     @deleteComment="fill"
                 ></comment-list>
@@ -79,8 +83,6 @@
 
 <script>
 import CommentList from "./CommentList.vue";
-// import EditComment from "../edit/EditComment.vue";
-// import CreateComment from "../create/CreateComment.vue";
 import { useToast } from "primevue/usetoast";
 
 export default {
@@ -93,6 +95,9 @@ export default {
             loading: false,
             isEmpty: false,
             errors: null,
+            rows: 0,
+            totalPages: 0,
+            currentPage: 1,
         };
     }, //end of data
 
@@ -141,13 +146,16 @@ export default {
             this.$refs.listCommentComponent.exportCSV();
         }, //end of exportCSV
 
-        fill() {
+        fill(currentPage) {
             this.loading = true;
             axios
-                .get("/api/admin/comments")
+                .get(`/api/admin/comments?page=${currentPage}`)
                 .then((response) => {
                     console.log(response.data);
-                    this.currentComments = response.data.comments;
+                    this.currentComments = response.data.comments.data;
+                    this.rows = response.data.comments.per_page;
+                    this.totalPages = response.data.comments.last_page;
+                    this.currentPage = response.data.comments.current_page;
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -156,6 +164,9 @@ export default {
                     this.loading = false;
                 }); //end of axios request
         }, //end of fill function
+        pageChange(currentPage) {
+            this.fill(currentPage);
+        }, //end of pageChange
 
         selectComments(selectedComments) {
             this.selectedComments = selectedComments;

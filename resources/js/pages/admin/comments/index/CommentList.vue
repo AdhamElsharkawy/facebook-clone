@@ -5,12 +5,7 @@
         :value="comments"
         v-model:selection="selectedComments"
         dataKey="id"
-        :paginator="true"
-        :rows="10"
         :filters="filters"
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        :rowsPerPageOptions="[5, 10, 25]"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} comments"
         responsiveLayout="scroll"
     >
         <template #header>
@@ -94,7 +89,7 @@
         >
             <template #body="slotProps">
                 <span class="p-column-title">User of Post</span>
-                {{ slotProps.data.user_of_post_name }}
+                {{ slotProps.data.post.user.name }}
             </template>
         </Column>
 
@@ -113,6 +108,39 @@
             </template>
         </Column>
     </DataTable>
+
+    <div class="flex flex-row justify-content-end mt-5">
+        <button
+            class="p-2"
+            :class="currentPage === 1 ? 'p-disabled' : ''"
+            @click="onPageChange(1)"
+        >
+            <Icon icon="mingcute:arrows-left-line" />
+        </button>
+        <button
+            class="p-2"
+            :class="currentPage === 1 ? 'p-disabled' : ''"
+            @click="onPageChange(currentPage - 1)"
+        >
+            <Icon icon="iconamoon:arrow-left-2-duotone" width="16" />
+        </button>
+        <span class="p-2">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button
+            class="p-2"
+            :class="currentPage === totalPages ? 'p-disabled' : ''"
+            @click="onPageChange(currentPage + 1)"
+        >
+            <Icon icon="iconamoon:arrow-right-2-duotone" width="16" />
+        </button>
+        <button
+            class="p-2"
+            :class="currentPage === totalPages ? 'p-disabled' : ''"
+            @click="onPageChange(totalPages)"
+        >
+            <Icon icon="mingcute:arrows-right-line" />
+        </button>
+    </div>
+
     <Dialog
         v-model:visible="deleteCommentDialog"
         :style="{ width: '450px' }"
@@ -156,9 +184,24 @@ export default {
             type: Array,
             required: true,
         },
+
+        currentPage: {
+            type: Number,
+            required: true,
+        },
+
+        rows: {
+            type: Number,
+            required: true,
+        },
+
+        totalPages: {
+            type: Number,
+            required: true,
+        },
     }, //end of props
 
-    emits: ["selectComments", "deleteComment"],
+    emits: ["selectComments", "deleteComment", "pageChange"],
 
     data() {
         return {
@@ -187,6 +230,10 @@ export default {
     }, //end of beforeMount
 
     methods: {
+        onPageChange(pageNumber) {
+            this.$emit("pageChange", pageNumber);
+        }, //end of onPageChange
+
         confirmDeleteComment(comment) {
             this.comment = comment;
             this.deleteCommentDialog = true;
