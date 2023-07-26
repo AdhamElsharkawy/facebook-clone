@@ -274,7 +274,6 @@ export default {
 
         openDialog() {
             this.newEducationDialog = true;
-            console.log(this.colleges);
         }, //end of openDialog
 
         hideDialog() {

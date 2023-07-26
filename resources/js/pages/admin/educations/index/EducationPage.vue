@@ -182,7 +182,6 @@ export default {
                     this.currentEducations = response.data.educations;
                     this.colleges = response.data.colleges;
                     this.users = response.data.users;
-                    console.log('currentEducations',this.currentEducations);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;

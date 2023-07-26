@@ -177,8 +177,6 @@ export default {
                 .then((response) => {
                     this.currentDepartments = response.data.departments;
                     this.departments = response.data.departments;
-                    console.log(this.currentDepartments);
-                    console.log(this.departments);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
