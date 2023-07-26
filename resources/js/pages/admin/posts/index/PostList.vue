@@ -66,6 +66,38 @@
             </template>
         </DataView>
 
+        <div class="flex flex-row justify-content-end mt-5">
+            <button
+                class="p-2"
+                :class="currentPage === 1 ? 'p-disabled' : ''"
+                @click="onPageChange(1)"
+            >
+                <Icon icon="mingcute:arrows-left-line" />
+            </button>
+            <button
+                class="p-2"
+                :class="currentPage === 1 ? 'p-disabled' : ''"
+                @click="onPageChange(currentPage - 1)"
+            >
+                <Icon icon="iconamoon:arrow-left-2-duotone" width="16" />
+            </button>
+            <span class="p-2">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button
+                class="p-2"
+                :class="currentPage === totalPages ? 'p-disabled' : ''"
+                @click="onPageChange(currentPage + 1)"
+            >
+                <Icon icon="iconamoon:arrow-right-2-duotone" width="16" />
+            </button>
+            <button
+                class="p-2"
+                :class="currentPage === totalPages ? 'p-disabled' : ''"
+                @click="onPageChange(totalPages)"
+            >
+                <Icon icon="mingcute:arrows-right-line" />
+            </button>
+        </div>
+
         <Dialog
             v-model:visible="deletePostDialog"
             :style="{ width: '450px' }"
@@ -124,7 +156,7 @@ export default {
             type: Number,
             required: true,
         },
-        totalRecords: {
+        totalPages: {
             type: Number,
             required: true,
         },
