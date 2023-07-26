@@ -116,7 +116,7 @@
         </Column>
 
         <Column
-            field="company"
+            field="company.name"
             header="company"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
@@ -222,7 +222,6 @@ export default {
     beforeMount() {
         this.initFilters();
         this.toast = useToast();
-        console.log(this.experiences);
     }, //end of beforeMount
 
     methods: {

@@ -116,7 +116,7 @@
         </Column>
 
         <Column
-            field="college"
+            field="college.name"
             header="college"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
@@ -222,7 +222,6 @@ export default {
     beforeMount() {
         this.initFilters();
         this.toast = useToast();
-        console.log(this.educations);
     }, //end of beforeMount
 
     methods: {

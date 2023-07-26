@@ -274,7 +274,6 @@ export default {
 
         openDialog() {
             this.newExperienceDialog = true;
-            console.log(this.companies);
         }, //end of openDialog
 
         hideDialog() {

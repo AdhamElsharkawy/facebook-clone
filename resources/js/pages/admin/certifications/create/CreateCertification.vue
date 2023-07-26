@@ -301,7 +301,6 @@ export default {
 
         openDialog() {
             this.newCertificationDialog = true;
-            console.log(this.colleges);
         }, //end of openDialog
 
         hideDialog() {
