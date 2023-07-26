@@ -1,14 +1,7 @@
 <template>
     <Loading v-if="loading" />
     <div class="card">
-        <DataView
-            :value="currentPosts"
-            :paginator="true"
-            :rows="rows"
-            :totalRecords="totalRecords"
-            :CurrentPageReport="4"
-            @page="onPageChange"
-        >
+        <DataView :value="currentPosts">
             <template #list="slotProps">
                 <div class="col-12">
                     <div
@@ -73,6 +66,38 @@
             </template>
         </DataView>
 
+        <div class="flex flex-row justify-content-end mt-5">
+            <button
+                class="p-2"
+                :class="currentPage === 1 ? 'p-disabled' : ''"
+                @click="onPageChange(1)"
+            >
+                <Icon icon="mingcute:arrows-left-line" />
+            </button>
+            <button
+                class="p-2"
+                :class="currentPage === 1 ? 'p-disabled' : ''"
+                @click="onPageChange(currentPage - 1)"
+            >
+                <Icon icon="iconamoon:arrow-left-2-duotone" width="16" />
+            </button>
+            <span class="p-2">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button
+                class="p-2"
+                :class="currentPage === totalPages ? 'p-disabled' : ''"
+                @click="onPageChange(currentPage + 1)"
+            >
+                <Icon icon="iconamoon:arrow-right-2-duotone" width="16" />
+            </button>
+            <button
+                class="p-2"
+                :class="currentPage === totalPages ? 'p-disabled' : ''"
+                @click="onPageChange(totalPages)"
+            >
+                <Icon icon="mingcute:arrows-right-line" />
+            </button>
+        </div>
+
         <Dialog
             v-model:visible="deletePostDialog"
             :style="{ width: '450px' }"
@@ -131,7 +156,7 @@ export default {
             type: Number,
             required: true,
         },
-        totalRecords: {
+        totalPages: {
             type: Number,
             required: true,
         },
@@ -159,13 +184,9 @@ export default {
         },
     }, //end of watch
 
-    beforeMount() {
-        this.initFilters();
-        this.toast = useToast();
-    }, //end of beforeMount
     methods: {
-        onPageChange(event) {
-            this.$emit("pageChange", event.page + 1);
+        onPageChange(pageNumber) {
+            this.$emit("pageChange", pageNumber);
         },
         confirmDeletePost(post) {
             this.post = post;
@@ -217,6 +238,11 @@ export default {
             this.$emit("editPost", post);
         }, //end of editPost
     }, //end of methods
+
+    beforeMount() {
+        this.initFilters();
+        this.toast = useToast();
+    }, //end of beforeMount
 };
 </script>
 
