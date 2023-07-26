@@ -83,8 +83,6 @@
 
 <script>
 import CommentList from "./CommentList.vue";
-// import EditComment from "../edit/EditComment.vue";
-// import CreateComment from "../create/CreateComment.vue";
 import { useToast } from "primevue/usetoast";
 
 export default {

@@ -89,7 +89,7 @@
         >
             <template #body="slotProps">
                 <span class="p-column-title">User of Post</span>
-                {{ slotProps.data.user_of_post_name }}
+                {{ slotProps.data.post.user.name }}
             </template>
         </Column>
 
