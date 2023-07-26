@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\CollegeController;
 use App\Http\Controllers\Api\CertificationController;
 use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\EducationController;
+use App\Events\NewNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,13 +72,21 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // events apis
     Route::get("events", [EventController::class, 'getEvents'])->name('events');
+
+    // posts apis
     Route::resource("posts", PostController::class)->except(['create', 'edit']);
     Route::put("posts/{post}/like", [PostController::class, 'reactLike'])->name('posts.like');
-
     Route::put("posts/{post}/vote", [PostController::class, 'vote'])->name('posts.poll');
 
+    // comments apis
     Route::post("comments/{post}", [CommentController::class, 'store'])->name('comments.store');
     Route::put("comments/{comment}", [CommentController::class, 'update'])->name('comments.update');
     Route::put("comments/{comment}/like", [CommentController::class, 'reactLike'])->name('comments.like');
     Route::delete("comments/{comment}", [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    // trigger noitification event
+    Route::get("noitification", function () {
+        event(new NewNotification('hello'));
+        return response()->json(['message' => 'Event has been sent!']);
+    });
 });

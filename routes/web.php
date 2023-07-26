@@ -18,6 +18,8 @@ use App\Models\Round;
 Route::get(
     '/{any?}',
     function () {
+        event(new \App\Events\NewNotification('hello'));
+        
         return view('index');
     }
 )->where('any', '^(?!api\/)[\/\w\.\,-]*');
