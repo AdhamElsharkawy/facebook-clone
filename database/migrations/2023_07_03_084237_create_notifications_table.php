@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->text('description');
             $table->boolean('read')->default(false);
-            $table->string('link');
+            $table->string('type');
+            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade')->onUpdate('cascade');
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

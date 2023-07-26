@@ -110,6 +110,11 @@ class Post extends Model
         return $this->hasMany(Mention::class);
     } //end of mention
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    } //end of notification
+
     public function toSearchableArray()
     {
         return [
