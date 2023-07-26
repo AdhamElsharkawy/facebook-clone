@@ -16,4 +16,9 @@ class Notification extends Model
     {
         return $this->belongsTo(User::class);
     } //end of user
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    } //end of post
 }
