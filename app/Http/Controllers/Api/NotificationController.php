@@ -12,7 +12,14 @@ class NotificationController extends Controller
 
     public function getNotifications()
     {
-        $notifications = Notification::where('user_id', auth('api')->user()->id)->latest()->paginate(10);
+        $notifications = Notification::where('user_id', auth('api')->user()->id)->with("post.comments")->latest()->paginate(10);
+        $notifications->makeHidden(['user_id', 'updated_at']);
+        $notifications->map(function ($notification) {
+            $notification->post->makeHidden(['images', 'user_id', 'updated_at']);
+            $notification->post->comments->map(function ($comment) {
+                $comment->makeHidden(['id', 'images','user_id', 'updated_at']);
+            });
+        });
         return $this->apiSuccessResponse($notifications);
     } //end of getNotifications
 
