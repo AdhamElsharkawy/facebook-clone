@@ -29,7 +29,7 @@ class CollegeController extends Controller
     {
         $form_data = $request->validated();
         //image uploading
-        $request->image ? $form_data['image'] = $this->img($request->image, 'images/colleges/') : '';
+        $request->image ? $form_data['image'] = $this->uploadS3Image($request->image, 'images/colleges') : '';
 
         College::create($form_data);
 
@@ -53,8 +53,8 @@ class CollegeController extends Controller
         $form_data = $request->validated();
         //image uploading
         if ($request->image) {
-            $college->image !=  'assets/images/default.png' ? $this->deleteImg($college->image) : '';
-            $form_data['image'] = $this->img($request->image, 'images/colleges/');
+            $college->image !=  'assets/images/default.png' ? $this->deleteS3Image($college->image) : '';
+            $form_data['image'] = $this->uploadS3Image($request->image, 'images/colleges');
         } else {
             $form_data['image'] = $college->image;
         }
@@ -68,7 +68,7 @@ class CollegeController extends Controller
      */
     public function destroy(College $college)
     {
-        $college->image != 'assets/images/default.png' ? $this->deleteImg($college->image) : '';
+        $college->image != 'assets/images/default.png' ? $this->deleteS3Image($college->image) : '';
         $college->delete();
 
         return response()->json(['message' => __('College Deleted Successfully')], 200);
@@ -77,7 +77,7 @@ class CollegeController extends Controller
     {
         $colleges = College::whereIn('id', $request->colleges)->get();
         foreach ($colleges as $college) {
-            $college->image != 'assets/images/default.png' ? $this->deleteImg($college->image) : '';
+            $college->image != 'assets/images/default.png' ? $this->deleteS3Image($college->image) : '';
             $college->delete();
         }
         return response()->json(['message' => __('Colleges Deleted Successfully')]);
