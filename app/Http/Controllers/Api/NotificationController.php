@@ -14,7 +14,7 @@ class NotificationController extends Controller
     {
         $notifications = Notification::where('user_id', auth('api')->user()->id)->latest()->paginate(10);
         $notifications->makeHidden(['user_id', 'updated_at']);
-        
+
         return $this->apiSuccessResponse($notifications);
     } //end of getNotifications
 
