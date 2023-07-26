@@ -8,7 +8,7 @@
                     ref="listPostComponent"
                     :currentPosts="currentPosts"
                     :rows="rows"
-                    :totalRecords="totalRecords"
+                    :totalPages="totalPages"
                     :currentPage="currentPage"
                     @selectPosts="selectPosts"
                     @editPost="editPost"
@@ -70,7 +70,7 @@ export default {
             isEmpty: false,
             errors: null,
             rows: 0,
-            totalRecords: 0,
+            totalPages: 0,
             currentPage: 1,
             first_page_url: "",
             last_page: 0,
@@ -131,7 +131,7 @@ export default {
                     this.currentPosts = response.data.posts.data;
                     this.posts = response.data.posts.data;
                     this.rows = response.data.posts.per_page;
-                    this.totalRecords = response.data.posts.total;
+                    this.totalPages = response.data.posts.last_page;
                     this.currentPage = response.data.posts.current_page;
                 })
                 .catch((errors) => {
