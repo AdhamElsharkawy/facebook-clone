@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('thread');
+            $table->string('thread')->nullable();
             $table->json('images')->nullable();
             $table->dateTime('poll_end_date')->nullable();
+            $table->string('poll_caption')->nullable();
             // $table->string('front_link')->nullable();
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
