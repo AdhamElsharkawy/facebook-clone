@@ -40,7 +40,7 @@ class AuthController extends Controller
         // generate token
         $token = auth('api')->attempt($request->only('email', 'password'));
         if (!$token) {
-            $odoo_user = Http::post(env('ODOO_URL') . '/web/session/authenticate', [
+            $odoo_user = Http::post(env('ODOO_URL') . '/api/external_auth/', [
                 'params' => [
                     'db' => env('ODOO_DB'),
                     'login' => $request->email,
