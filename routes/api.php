@@ -86,7 +86,11 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // trigger noitification event
     Route::get("noitification", function () {
-        event(new NewNotification('hello'));
+        broadcast(new NewNotification(['data' => 'asas']));
         return response()->json(['message' => 'Event has been sent!']);
     });
+
+    // Route::get('broadcast/auth', function () {
+    //     broadcast(new NewNotification(['data' => 'asas']));
+    // });
 });

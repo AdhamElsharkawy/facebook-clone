@@ -9,8 +9,9 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class NewNotification
+class NewNotification implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -29,12 +30,13 @@ class NewNotification
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn() : array
+    public function broadcastOn()
     {
-        return [
-            // new PrivateChannel('channel-name'),
-            new Channel('notifications-channel')
-        ];
+        // return [
+        //     // new PrivateChannel('channel-name'),
+        //     new Channel('notifications-channel')
+        // ];
+        return new Channel('notifications-channel');
     }
 
     public function broadcastAs()
