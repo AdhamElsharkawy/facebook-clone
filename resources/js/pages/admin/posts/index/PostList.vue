@@ -36,6 +36,11 @@
                                     Total Reactions :
                                     {{ slotProps.data.total_reactions }}
                                 </p>
+                                <p v-if="slotProps.data.polls.length > 0">
+                                    <strong>Poll Caption :</strong>
+                                    <br />
+                                    {{ slotProps.data.poll_caption }}
+                                </p>
                                 <div class="flex align-items-center gap-3">
                                     <span class="flex align-items-center gap-2">
                                         <i class="pi pi-tag"></i>
