@@ -24,6 +24,7 @@ class PostFactory extends Factory
                 "assets/images/default.png",
             ]),
             "poll_end_date" => $this->faker->dateTimeBetween('+1 day', '+2 day'),
+            "poll_caption" => $this->faker->sentence(3),
             "user_id" => $this->faker->numberBetween(1, 20),
         ];
     }
