@@ -34,7 +34,7 @@
             <label
                 class="mb-3"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            > Is Current</label
+            > Is Current ?</label
             >
             <div class="formgrid grid">
                 <div class="field-radiobutton col-6">
@@ -53,7 +53,7 @@
                         :value="false"
                         v-model="education.is_current"
                     />
-                    <label for="is_current2">Is Not Current</label>
+                    <label for="is_current2">Not</label>
                 </div>
             </div>
         </div>
