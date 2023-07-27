@@ -16,13 +16,14 @@ window.Echo = new Echo({
     broadcaster: "socket.io",
     host: window.location.hostname + ":" + window.laravel_echo_port,
 });
+
 // window.Echo.channel("notifications-channel").listen(
 //     ".NotificationEvent",
 //     (data) => {
 //         console.log(data);
 //     }
 // );
-console.log(window.Laravel.user);
+
 window.Echo.private("user." + window.Laravel.user).listen(
     ".NotificationEvent",
     (e) => {

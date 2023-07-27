@@ -17,7 +17,6 @@ use App\Http\Controllers\Api\CertificationController;
 use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\EducationController;
 use App\Events\NewNotification;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,7 +86,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // trigger noitification event
     Route::get("noitification", function () {
-        broadcast(new NewNotification(Auth::guard('sanctum')->id, 'Hello World'));
+        broadcast(new NewNotification(auth('api')->user(), 'Hello World'));
         return response()->json(['message' => 'Event has been sent!']);
     });
 });
