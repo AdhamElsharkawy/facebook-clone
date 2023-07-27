@@ -320,4 +320,41 @@ class PostController extends Controller
             'post voted successfully',
         );
     } // end of vote
+
+    public function undoVote(Request $request, string $id)
+    {
+        $validation = $this->apiValidationTrait($request->all(), [
+            "poll_id" => "required|numeric|exists:polls,id",
+        ]);
+        if ($validation) return $validation;
+
+        $post = Post::find($id);
+        if (!$post) {
+            return $this->notFound();
+        }
+
+        $poll = $post->polls()->find($request->poll_id);
+        if (!$poll) {
+            return $this->notFound();
+        }
+
+        // check if the user already voted
+        if (!$poll->users()->where('user_id', auth('api')->user()->id)->first()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'you didn\'t vote',
+            ], 422);
+        }
+
+        $poll->update([
+            'votes' => $poll->votes - 1,
+        ]);
+        $poll->users()->detach(auth('api')->user()->id);
+
+        return $this->apiSuccessResponse(
+            ['post' => $post->load('polls')],
+            $this->seo('undo vote', 'home-page'),
+            'post vote undone successfully',
+        );
+    } // end of undoVote
 }
