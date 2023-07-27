@@ -143,7 +143,6 @@ export default {
         }, //end of uploadImage
         updateEvent() {
             this.submitted = true;
-            console.log(this.event.start_date);
 
             if ( this.event.name.trim() && this.event.description.trim() && this.event.start_date) {
                 this.loading = true;
@@ -177,7 +176,6 @@ export default {
                 formData.append("description", this.event.description);
                 formData.append("start_date", convertedStartDateString ?? this.event.start_date);
                 formData.append("end_date", convertedEndDateString ?? this.event.end_date);
-                console.log(this.event.image);
                 if( typeof this.event.image =='object'){
                     formData.append("image",this.event.image)
                 }

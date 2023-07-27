@@ -210,7 +210,6 @@ export default {
         }, //end of uploadImage
         updateCertification() {
             this.submitted = true;
-            console.log(this.certification.start_date);
 
             if ( this.certification.major.trim() && this.certification.start_date && this.certification.end_date) {
                 this.loading = true;
@@ -265,12 +264,6 @@ export default {
                 formData.append('confirmation_link',this.certification.confirmation_link);
                 formData.append('college_id',this.selectedOption.id);
                 formData.append('user_id',this.userOption.id);
-
-
-
-                // this.certification.college = this.selectedOption;
-                console.log(this.selectedOption);
-
 
                 formData.append("_method", "PUT");
                 axios

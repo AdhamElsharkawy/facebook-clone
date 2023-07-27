@@ -194,7 +194,6 @@ export default {
         }, //end of uploadImage
         updateExperience() {
             this.submitted = true;
-            console.log(this.experience.start_date);
 
             if ( this.experience.title.trim() && this.experience.description.trim() && this.experience.start_date && this.experience.end_date) {
                 this.loading = true;

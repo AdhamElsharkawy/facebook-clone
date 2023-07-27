@@ -155,7 +155,6 @@ export default {
                     this.rows = response.data.comments.per_page;
                     this.totalPages = response.data.comments.last_page;
                     this.currentPage = response.data.comments.current_page;
-                    console.log(response.data.comments);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;

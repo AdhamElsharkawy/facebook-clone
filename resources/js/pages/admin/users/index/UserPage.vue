@@ -180,7 +180,6 @@ export default {
                 .then((response) => {
                     this.currentUsers = response.data.users;
                     this.departments = response.data.departments;
-                    // console.log(this.departments);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
