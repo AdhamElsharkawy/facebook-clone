@@ -29,7 +29,7 @@ class PostController extends Controller
             }, 'comments' => function ($query) {
                 $query->select('id', 'post_id', 'user_id', 'thread', "images", 'created_at')
                     ->with(['user' => function ($query) {
-                        $query->select('id', 'name', 'image');
+                        $query->select('id', 'name', 'image','department_id')->with('department:id,name');
                     }]);
             }, 'user' => function ($query) {
                 $query->select('id', 'name', 'image', 'role', 'department_id')->with('department:id,name');

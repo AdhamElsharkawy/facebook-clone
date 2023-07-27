@@ -183,7 +183,6 @@ export default {
                     this.currentCertifications = response.data.certifications;
                      this.colleges = [...this.colleges,...response.data.colleges];
                     // this.colleges = response.data.colleges;
-                    // console.log('currentCertifications',this.currentCertifications);
                     this.users = response.data.users;
                 })
                 .catch((errors) => {
