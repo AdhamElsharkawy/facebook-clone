@@ -178,7 +178,7 @@ export default {
     watch: {
         post: {
             handler() {
-                console.log("post", this.post);
+                // console.log("post", this.post);
             },
             deep: true,
         },
@@ -242,9 +242,9 @@ export default {
                     const day = ("0" + this.post.created_at.getDate()).slice(
                         -2
                     );
-                    const hours = (
-                        "0" + this.post.created_at.getHours()
-                    ).slice(-2);
+                    const hours = ("0" + this.post.created_at.getHours()).slice(
+                        -2
+                    );
                     const minutes = (
                         "0" + this.post.created_at.getMinutes()
                     ).slice(-2);
@@ -266,10 +266,10 @@ export default {
                 if (this.post.poll_end_date) {
                     formData.append("poll_end_date", this.post.poll_end_date);
                 }
-                if(this.post.pending){
+                if (this.post.pending) {
                     formData.append("created_at", this.post.created_at);
                 }
-                    formData.append("postNow", this.post.postNow?1:0);
+                formData.append("postNow", this.post.postNow ? 1 : 0);
                 // if (this.post.comments.length > 0) {
                 //     formData.append(
                 //         "comments",
@@ -315,7 +315,6 @@ export default {
             this.post = post;
             this.postDialog = true;
             this.polls = this.post.polls;
-            console.log("post", this.post);
         }, //end of openDialog
         hideDialog() {
             this.post = {};

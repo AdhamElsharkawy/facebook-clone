@@ -129,6 +129,7 @@ export default {
                 // .get("/api/admin/posts?page=1")
                 .then((response) => {
                     this.currentPosts = response.data.posts.data;
+                    console.log(this.currentPosts);
                     this.posts = response.data.posts.data;
                     this.rows = response.data.posts.per_page;
                     this.totalPages = response.data.posts.last_page;
