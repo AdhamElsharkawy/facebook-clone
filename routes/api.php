@@ -77,6 +77,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     Route::resource("posts", PostController::class)->except(['create', 'edit']);
     Route::put("posts/{post}/like", [PostController::class, 'reactLike'])->name('posts.like');
     Route::put("posts/{post}/vote", [PostController::class, 'vote'])->name('posts.poll');
+    Route::put("posts/{post}/undo-vote", [PostController::class, 'undoVote'])->name('posts.undo-poll');
 
     // comments apis
     Route::post("comments/{post}", [CommentController::class, 'store'])->name('comments.store');
