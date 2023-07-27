@@ -27,6 +27,10 @@
 
     <script>
         window.laravel_echo_port = '{{ env('LARAVEL_ECHO_PORT') }}';
+        window.Laravel = {!! json_encode([
+            // 'user' => auth()->check() ? auth()->user()->id : null,
+            'user' => Auth::guard('sanctum')->check() ? Auth::guard('sanctum')->id : null,
+        ]) !!};
     </script>
     <script src="//{{ Request::getHost() }}:{{ env('LARAVEL_ECHO_PORT') }}/socket.io/socket.io.js"></script>
     <script type="module" src="{{ mix('js/app.js') }}"></script>
