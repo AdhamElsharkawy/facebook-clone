@@ -18,7 +18,7 @@ class NewNotification implements ShouldBroadcastNow
     /**
      * Create a new event instance.
      */
-    public $data = ['asas'];
+    public $data = [];
 
     public function __construct($data)
     {

@@ -89,8 +89,4 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
         broadcast(new NewNotification(['data' => 'asas']));
         return response()->json(['message' => 'Event has been sent!']);
     });
-
-    // Route::get('broadcast/auth', function () {
-    //     broadcast(new NewNotification(['data' => 'asas']));
-    // });
 });
