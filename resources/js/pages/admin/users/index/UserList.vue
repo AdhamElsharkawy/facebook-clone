@@ -158,19 +158,19 @@
 
         <Column
             field="team_score"
-            header="team_score"
+            header="teamScore"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">team_score</span>
+                <span class="p-column-title">teamScore</span>
                 {{ slotProps.data.team_score }}
             </template>
         </Column>
 
         <Column
-            field="department"
+            field="department.name"
             header="department"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"

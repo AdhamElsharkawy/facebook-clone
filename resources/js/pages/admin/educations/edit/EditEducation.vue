@@ -194,7 +194,6 @@ export default {
         }, //end of uploadImage
         updateEducation() {
             this.submitted = true;
-            console.log(this.education.start_date);
 
             if ( this.education.degree.trim() && this.education.major.trim() && this.education.start_date && this.education.end_date) {
                 this.loading = true;

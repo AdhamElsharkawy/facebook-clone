@@ -90,7 +90,6 @@ export default {
         uploadImage() {
             if (!this.$refs.fileUploader.files[0]) return;
             this.company.image = this.$refs.fileUploader.files[0];
-            console.log(this.company.image);
         }, //end of uploadImage
         updateCompany() {
             this.submitted = true;
@@ -139,8 +138,6 @@ export default {
         openDialog(company) {
             this.company = company;
             this.companyDialog = true;
-            console.log(this.company);
-            // this.selectedOption = this.company.department;
         }, //end of openDialog
 
         hideDialog() {

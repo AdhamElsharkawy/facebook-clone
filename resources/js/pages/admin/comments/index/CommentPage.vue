@@ -151,7 +151,6 @@ export default {
             axios
                 .get(`/api/admin/comments?page=${currentPage}`)
                 .then((response) => {
-                    console.log(response.data);
                     this.currentComments = response.data.comments.data;
                     this.rows = response.data.comments.per_page;
                     this.totalPages = response.data.comments.last_page;

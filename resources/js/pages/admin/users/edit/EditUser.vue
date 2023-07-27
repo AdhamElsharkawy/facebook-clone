@@ -412,7 +412,6 @@ export default {
         }, //end of uploadImage
         updateUser() {
             this.submitted = true;
-            console.log(this.user);
             if (this.user.name.trim() && this.user.email) {
                 this.loading = true;
                 const formData = new FormData();
@@ -428,7 +427,6 @@ export default {
                     this.user.birth_date !== regEx &&
                     typeof this.user.birth_date == "object"
                 ) {
-                    console.log(typeof this.user.birth_date);
                     const formattedDate = this.user.birth_date
                         .toLocaleDateString("en-US", options)
                         .replace(/\//g, "-");
@@ -436,8 +434,6 @@ export default {
                         .split("-")
                         .map(Number);
                     convertedDate = `${year}-${month}-${day}`;
-                    console.log(typeof convertedDate);
-                    console.log(convertedDate);
                     this.user.birth_date = convertedDate;
                 }
                 formData.append("title", this.user.title);
@@ -493,7 +489,6 @@ export default {
 
         openDialog(user) {
             this.user = user;
-            // console.log(this.$store.getters["adminAuth/user"].role);
             this.userDialog = true;
             this.selectedOption = this.user.department;
             this.myRole = this.user.role;
@@ -511,7 +506,6 @@ export default {
     }, //end of beforeMount
     created() {
         this.authUser = this.$store.getters["adminAuth/user"].role;
-        console.log(this.authUser);
     }, //end of created
 };
 </script>

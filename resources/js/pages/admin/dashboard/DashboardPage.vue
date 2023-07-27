@@ -1,7 +1,8 @@
 <template>
     <div className="card">
-        <h5>{{$t('emptyPage')}}</h5>
-        <p>{{$t('loremIpsum')}}</p>
+        <span>{{$t('Welcome to')}}</span>
+        <h5>{{$t('Intranet Dashboard')}}</h5>
+        <!-- <p>{{$t('loremIpsum')}}</p> -->
     </div>
 </template>
 
