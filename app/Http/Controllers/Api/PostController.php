@@ -23,7 +23,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'created_at')
+        $posts = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'poll_caption','created_at')
             ->with(['polls' => function ($query) {
                 $query->select('id', 'post_id', 'poll', 'votes')->with(['users:id,name,image']);
             }, 'comments' => function ($query) {
@@ -68,13 +68,14 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $validation = $this->apiValidationTrait($request->all(), [
-            'thread' => 'required|string|max:255',
+            'thread' => 'nullable|string|max:255',
             "created_at" => "nullable|date",
             'images' => 'nullable|array',
             'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'polls' => 'nullable|array',
             'polls.*.poll' => 'required|string|max:255',
             'poll_end_date' =>  'required_if:polls,!null|date|after:today',
+            'poll_caption' => 'required_if:polls,!null|string|max:255',
             // 'front_link' => 'required|url|max:255',
             'send_all' => 'nullable|boolean',
         ]);
@@ -89,15 +90,15 @@ class PostController extends Controller
                 $images[] = $this->uploadS3Image($image, 'images/posts');
             }
         }
+       
+        $form_data = $request->except(['images', 'send_all', 'polls']);
+        if ($request->images) {
+            $form_data['images'] = json_encode($images);
+        }
+        $form_data['user_id'] = auth('api')->user()->id;
+        $form_data['created_at'] = $request->created_at ? $request->created_at : now();
 
-        $post = Post::create([
-            'thread' => $request->thread,
-            'images' => $request->images ? json_encode($images) : null,
-            'poll_end_date' => $request->poll_end_date ? $request->poll_end_date : null,
-            // 'front_link' => $request->front_link,
-            'user_id' => auth('api')->user()->id,
-            'created_at' => $request->created_at ? $request->created_at : now(),
-        ]);
+        $post = Post::create($form_data);
 
         if ($request->send_all && Auth::user()->role == "manager") {
             $users = User::whereIn("role", ["user", "manager", "team_leader"])->get();
@@ -129,7 +130,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $post = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'created_at')
+        $post = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'poll_caption','created_at')
             ->with(['polls' => function ($query) {
                 $query->select('id', 'post_id', 'poll', 'votes')->with(['users:id,name,image']);
             }])
@@ -161,7 +162,7 @@ class PostController extends Controller
     public function update(Request $request, string $id)
     {
         $validation = $this->apiValidationTrait($request->all(), [
-            'thread' => 'required|string|max:255',
+            'thread' => 'nullable|string|max:255',
             "created_at" => "nullable|date",
             'old_images' => 'nullable|array',  // only old image path that will remain --- without url ---
             'images' => 'nullable|array',     // only new images
@@ -169,6 +170,7 @@ class PostController extends Controller
             'polls' => 'nullable|array',
             'polls.*.id' => 'nullable|numeric|max:255|exists:polls,id', //send poll id if you want to update
             'polls.*.poll' => 'required|string|max:255',
+            'poll_caption' => 'required_if:polls,!null|string|max:255',
             'poll_end_date' =>  'required_if:polls,!null|date|after:today',
             // 'front_link' => 'required|url|max:255',
         ]);
@@ -200,13 +202,13 @@ class PostController extends Controller
             }
         }
 
-        $post->update([
-            'thread' => $request->thread,
-            'images' => $request->images ? json_encode($images) : null,
-            'poll_end_date' => $request->poll_end_date ? $request->poll_end_date : null,
-            // 'front_link' => $request->front_link,
-            'created_at' => $request->created_at ? $request->created_at : now(),
-        ]);
+        $form_data = $request->except(['images', 'old_images', 'polls']);
+        if ($request->images) {
+            $form_data['images'] = json_encode($images);
+        }
+        $form_data['created_at'] = $request->created_at ? $request->created_at : now();
+
+        $post->update($form_data);
 
         if ($request->polls) {
             foreach ($request->polls as $poll) {

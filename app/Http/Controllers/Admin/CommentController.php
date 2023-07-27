@@ -39,7 +39,13 @@ class CommentController extends Controller
                 $comment->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($comment->images[$i]) : '';
             }
         }
-        $comment->likes()->delete();
+        
+
+
+        
+        $comment->likes()->whereNull('post_id')->delete();
+        $comment->likes()->update(['comment_id' => null]);
+        // $comment->likes()->delete();
         $comment->delete();
     }
     public function destroyAll(Request $request)
