@@ -16,10 +16,19 @@ axios.defaults.withCredentials = true;
 //     broadcaster: "socket.io",
 //     host: window.location.hostname + ":" + window.laravel_echo_port,
 // });
-// var i = 0;
+
+// // public channel
 // window.Echo.channel("notifications-channel").listen(
 //     ".NotificationEvent",
 //     (data) => {
 //         console.log(data);
+//     }
+// );
+
+// // private channel
+// window.Echo.private("user." + window.Laravel.user).listen(
+//     ".NotificationEvent",
+//     (e) => {
+//         console.log(e);
 //     }
 // );
