@@ -179,11 +179,9 @@ export default {
             axios
                 .get("/api/admin/experiences")
                 .then((response) => {
-                    console.log('response',response.data);
                     this.currentExperiences = response.data.experiences;
                     this.companies = response.data.companies;
                     this.users = response.data.users;
-                    console.log('currentExperiences',this.currentExperiences);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;

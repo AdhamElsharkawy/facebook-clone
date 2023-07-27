@@ -73,44 +73,6 @@
             }}</small>
         </div>
 
-        <!-- <div v-if="post.comments.length > 0" class="field">
-            <label
-                for="comments"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-                >All comments on the Post :</label
-            >
-            <div v-for="(comment, index) in post.comments" :key="index">
-                <label
-                    for="comment"
-                    :class="[{ 'float-right': $store.getters.isRtl }]"
-                    >({{ comment.user.name }}) comment :</label
-                >
-                <InputText
-                    id="comment"
-                    v-model.trim="comment.thread"
-                    required="true"
-                    autofocus
-                    type="text"
-                    :class="[
-                        { 'p-invalid': submitted && !comment },
-                        { 'text-right': $store.getters.isRtl },
-                    ]"
-                />
-                <input type="hidden" name="_method" value="DELETE" />
-                <Button
-                    :label="$t('delete comment')"
-                    icon="pi pi-trash"
-                    class="p-button-danger mt-2"
-                    @click="deleteComment(comment.id)"
-                    :disabled="!post.comments || !post.comments.length"
-                />
-            </div>
-
-            <small class="p-invalid" v-if="submitted && !comment">{{
-                threadIsRequired
-            }}</small>
-        </div> -->
-
         <div v-if="post.polls.length > 0">
             <div>
                 <div class="field mt-2">
@@ -345,61 +307,22 @@ export default {
                     });
             }
         }, //end of updatePost
-
         editPost(editPost) {
             this.post = { ...editPost };
             this.postDialog = true;
         }, //end of editPost
-        // deleteComment(commentId) {
-        //     this.loading = true;
-        //     const formData = new FormData();
-        //     formData.append("_method", "DELETE");
-        //     axios
-        //         .post(`/api/admin/posts/delete/comment/${commentId}`, formData)
-        //         .then((response) => {
-        //             this.toast.add({
-        //                 severity: "success",
-        //                 summary: "Successful",
-        //                 detail: response.data.message,
-        //                 life: 3000,
-        //             });
-        //             this.removeCommentFromList(commentId);
-        //             // this.hideDialog();
-        //         })
-        //         .catch((errors) => {
-        //             if (errors.response) {
-        //                 this.toast.add({
-        //                     severity: "error",
-        //                     summary: "Error",
-        //                     detail: errors.response.data.message,
-        //                     life: 15000,
-        //                 });
-        //             }
-        //         })
-        //         .then(() => {
-        //             this.loading = false;
-        //         });
-        // }, //end of deleteComment
-        // removeCommentFromList(commentId) {
-        //     this.post.comments = this.post.comments.filter(
-        //         (comment) => comment.id !== commentId
-        //     );
-        // }, //end of removeCommentFromList
-
         openDialog(post) {
             this.post = post;
             this.postDialog = true;
             this.polls = this.post.polls;
             console.log("post", this.post);
         }, //end of openDialog
-
         hideDialog() {
             this.post = {};
             this.postDialog = false;
             this.submitted = false;
         }, //end of hideDialog
     }, //end of methods
-
     beforeMount() {
         this.toast = useToast();
     }, //end of beforeMount

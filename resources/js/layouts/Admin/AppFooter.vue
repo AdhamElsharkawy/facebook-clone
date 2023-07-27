@@ -23,9 +23,9 @@ const logoUrl = computed(() => {
         {{ $t("by") }}
         <span class="font-medium mx-2"
             ><a
-                href="https://islamdev.me"
+                href="https://inteligencia.me"
                 class="transition ease-in-out no-underline"
-                >Islam Samy</a
+                >Inteligencia</a
             >
         </span>
         <button

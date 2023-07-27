@@ -52,7 +52,7 @@
         >
             <template #body="slotProps">
                 <span class="p-column-title">user</span>
-                {{ slotProps.data.user.name }}
+                {{ slotProps.data.user.name}}
             </template>
         </Column>
 
@@ -81,7 +81,7 @@
             </template>
         </Column>
         <Column
-            field="user_of_post_name"
+            field="post.user.name"
             header="User_name_of_Post"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"

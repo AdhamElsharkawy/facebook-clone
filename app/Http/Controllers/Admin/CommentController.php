@@ -22,7 +22,7 @@ class CommentController extends Controller
         $comments = Comment::with(['user' => function ($query) {
             $query->select('id', 'name');
         }, 'post' => function ($query) {
-            $query->select('id', 'user_id')->with(['user' => function ($query) {
+            $query->select('id', 'user_id','thread')->with(['user' => function ($query) {
                 $query->select('id', 'name');
             }]);
         }])->latest()->paginate(10);

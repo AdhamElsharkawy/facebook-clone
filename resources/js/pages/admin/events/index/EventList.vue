@@ -198,7 +198,6 @@ export default {
     beforeMount() {
         this.initFilters();
         this.toast = useToast();
-        console.log(this.events);
     }, //end of beforeMount
 
     methods: {
