@@ -22,11 +22,10 @@ class PostController extends Controller
     {
         $posts = Post::with(['user' => function ($query) {
             $query->select('id', 'name');
-        }, 'comments.user:id,name', 'polls'])->latest()->paginate(5);
+        }, 'comments.user:id,name', 'polls'])->paginate(5);
 
 
         return ['posts' => $posts];
-
     }
 
 
@@ -45,9 +44,10 @@ class PostController extends Controller
     {
         $form_data = $request->except(['polls', 'comments', 'images']);
         $polls_form_data["polls"] = $request->polls ? json_decode($request->polls, true) : null;
+        // dd($request->all());
 
         // dd($form_data);
-        if($form_data['postNow']){
+        if ($form_data['postNow']) {
             $form_data['created_at'] = Carbon::now();
         } else {
             $form_data['created_at'] = Carbon::parse($request->created_at)->format('Y-m-d H:i:s');
@@ -78,7 +78,10 @@ class PostController extends Controller
                     'votes' => 0,
                 ]);
             }
+        } else {
+            $post->polls()->delete();
         }
+
         $post->update($form_data);
 
         return response()->json([
@@ -98,6 +101,9 @@ class PostController extends Controller
             }
         }
         $post->polls()->delete();
+        $post->comments()->delete();
+        $post->likes()->delete();
+        // $post->comments()->likes()->delete();
         $post->delete();
     }
     // public function destroyComment($commentId)
