@@ -10,6 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use App\Models\User;
 
 class NewNotification implements ShouldBroadcastNow
 {
@@ -18,10 +19,12 @@ class NewNotification implements ShouldBroadcastNow
     /**
      * Create a new event instance.
      */
-    public $data = ['asas'];
+    public $data;
+    public $user;
 
-    public function __construct($data)
+    public function __construct(User $user, $data)
     {
+        $this->user = $user;
         $this->data = $data;
     }
 
@@ -32,11 +35,8 @@ class NewNotification implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        // return [
-        //     // new PrivateChannel('channel-name'),
-        //     new Channel('notifications-channel')
-        // ];
-        return new Channel('notifications-channel');
+        // return new Channel('notifications-channel');
+        return new PrivateChannel('user.' . $this->user->id);
     }
 
     public function broadcastAs()
