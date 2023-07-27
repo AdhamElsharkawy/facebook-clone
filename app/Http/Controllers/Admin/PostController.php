@@ -81,7 +81,6 @@ class PostController extends Controller
         } else {
             $post->polls()->delete();
         }
-
         $post->update($form_data);
 
         return response()->json([
