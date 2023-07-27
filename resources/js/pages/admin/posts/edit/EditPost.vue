@@ -6,7 +6,7 @@
         :modal="true"
         class="p-fluid"
     >
-        <div v-if="post.images" class="field text-center mb-4">
+        <div class="field text-center mb-4">
             <div class="p-inputgroup">
                 <div class="custom-file">
                     <FileUpload
