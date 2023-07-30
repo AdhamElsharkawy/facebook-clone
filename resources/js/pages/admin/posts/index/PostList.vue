@@ -71,7 +71,7 @@
             </template>
         </DataView>
 
-        <div class="flex flex-row justify-content-end mt-5">
+        <div class="flex flex-row justify-content-center mt-5">
             <button
                 class="p-2"
                 :class="currentPage === 1 ? 'p-disabled' : ''"

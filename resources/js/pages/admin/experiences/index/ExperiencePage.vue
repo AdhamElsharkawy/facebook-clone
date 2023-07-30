@@ -53,6 +53,9 @@
                 <experience-list
                     ref="listExperienceComponent"
                     :currentExperiences="currentExperiences"
+                    :totalPages="totalPages"
+                    :currentPage="currentPage"
+                    @pageChange="pageChange"
                     @selectExperiences="selectExperiences"
                     @editExperience="editExperience"
                     @deleteExperience="fill"
@@ -174,12 +177,14 @@ export default {
             this.$refs.listExperienceComponent.exportCSV();
         }, //end of exportCSV
 
-        fill() {
+        fill(currentPage) {
             this.loading = true;
             axios
-                .get("/api/admin/experiences")
+                .get(`/api/admin/experiences?page=${currentPage}`)
                 .then((response) => {
-                    this.currentExperiences = response.data.experiences;
+                    this.currentExperiences = response.data.experiences.data;
+                    this.totalPages = response.data.experiences.last_page;
+                    this.currentPage = response.data.experiences.current_page;
                     this.companies = response.data.companies;
                     this.users = response.data.users;
                 })
@@ -190,6 +195,9 @@ export default {
                     this.loading = false;
                 }); //end of axios request
         }, //end of fill function
+        pageChange(currentPage) {
+            this.fill(currentPage);
+        }, //end of pageChange
 
         selectExperiences(selectedExperiences) {
             this.selectedExperiences = selectedExperiences;

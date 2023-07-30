@@ -53,6 +53,9 @@
                 <certification-list
                     ref="listCertificationComponent"
                     :currentCertifications="currentCertifications"
+                    :totalPages="totalPages"
+                    :currentPage="currentPage"
+                    @pageChange="pageChange"
                     @selectCertifications="selectCertifications"
                     @editCertification="editCertification"
                     @deleteCertification="fill"
@@ -122,6 +125,8 @@ export default {
             errors: null,
             colleges: [{"id": null, "name": "No College"}],
             users: [],
+            totalPages: 0,
+            currentPage: 1,
         };
     }, //end of data
 
@@ -175,12 +180,14 @@ export default {
             this.$refs.listCertificationComponent.exportCSV();
         }, //end of exportCSV
 
-        fill() {
+        fill(currentPage) {
             this.loading = true;
             axios
-                .get("/api/admin/certifications")
+                .get(`/api/admin/certifications?page=${currentPage}`)
                 .then((response) => {
-                    this.currentCertifications = response.data.certifications;
+                    this.currentCertifications = response.data.certifications.data;
+                    this.totalPages = response.data.certifications.last_page;
+                    this.currentPage = response.data.certifications.current_page;
                      this.colleges = [...this.colleges,...response.data.colleges];
                     // this.colleges = response.data.colleges;
                     this.users = response.data.users;
@@ -192,6 +199,9 @@ export default {
                     this.loading = false;
                 }); //end of axios request
         }, //end of fill function
+        pageChange(currentPage) {
+            this.fill(currentPage);
+        }, //end of pageChange
 
         selectCertifications(selectedCertifications) {
             this.selectedCertifications = selectedCertifications;

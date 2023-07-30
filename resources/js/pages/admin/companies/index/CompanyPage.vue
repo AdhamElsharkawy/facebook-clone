@@ -53,12 +53,15 @@
                 <company-list
                     ref="listCompanyComponent"
                     :currentCompanies="currentCompanies"
+                    :totalPages="totalPages"
+                    :currentPage="currentPage"
+                    @pageChange="pageChange"
                     @selectCompanies="selectCompanies"
                     @editCompany="editCompany"
                     @deleteCompany="fill"
                 ></company-list>
 
-                <edit-company ref="editCompanyComponent" ></edit-company>
+                <edit-company ref="editCompanyComponent"  ></edit-company>
 
                 <create-company
                     ref="createCompanyComponent"
@@ -117,6 +120,8 @@ export default {
             loading: false,
             isEmpty: false,
             errors: null,
+            totalPages: 0,
+            currentPage: 1,
         };
     }, //end of data
 
@@ -170,12 +175,16 @@ export default {
             this.$refs.listCompanyComponent.exportCSV();
         }, //end of exportCSV
 
-        fill() {
+        fill(currentPage) {
             this.loading = true;
             axios
-                .get("/api/admin/companies")
+                .get(`/api/admin/companies?page=${currentPage}`)
                 .then((response) => {
-                    this.currentCompanies = response.data.companies;
+                    console.log(response.data);
+                    this.currentCompanies = response.data.companies.data;
+                    this.totalPages = response.data.companies.last_page;
+                    this.currentPage = response.data.companies.current_page;
+
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -184,6 +193,10 @@ export default {
                     this.loading = false;
                 }); //end of axios request
         }, //end of fill function
+
+        pageChange(currentPage) {
+            this.fill(currentPage);
+        }, //end of pageChange
 
         selectCompanies(selectedCompanies) {
             this.selectedCompanies = selectedCompanies;
