@@ -18,7 +18,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::latest()->get();
+        $companies = Company::latest()->paginate(5);
         return ['companies' => $companies];
     }
 

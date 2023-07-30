@@ -53,6 +53,9 @@
                 <education-list
                     ref="listEducationComponent"
                     :currentEducations="currentEducations"
+                    :totalPages="totalPages"
+                    :currentPage="currentPage"
+                    @pageChange="pageChange"
                     @selectEducations="selectEducations"
                     @editEducation="editEducation"
                     @deleteEducation="fill"
@@ -121,6 +124,8 @@ export default {
             errors: null,
             colleges: [],
             users: [],
+            totalPages: 0,
+            currentPage: 1,
         };
     }, //end of data
 
@@ -174,14 +179,17 @@ export default {
             this.$refs.listEducationComponent.exportCSV();
         }, //end of exportCSV
 
-        fill() {
+        fill(currentPage) {
             this.loading = true;
             axios
-                .get("/api/admin/educations")
+                .get(`/api/admin/educations?page=${currentPage}`)
                 .then((response) => {
-                    this.currentEducations = response.data.educations;
+                    console.log(response.data);
+                    this.currentEducations = response.data.educations.data;
                     this.colleges = response.data.colleges;
                     this.users = response.data.users;
+                    this.totalPages = response.data.educations.last_page;
+                    this.currentPage = response.data.educations.current_page;
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -190,6 +198,9 @@ export default {
                     this.loading = false;
                 }); //end of axios request
         }, //end of fill function
+        pageChange(currentPage) {
+            this.fill(currentPage);
+        }, //end of pageChange
 
         selectEducations(selectedEducations) {
             this.selectedEducations = selectedEducations;

@@ -5,12 +5,7 @@
         :value="certifications"
         v-model:selection="selectedCertifications"
         dataKey="id"
-        :paginator="true"
-        :rows="10"
         :filters="filters"
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        :rowsPerPageOptions="[5, 10, 25]"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} certifications"
         responsiveLayout="scroll"
     >
         <template #header>
@@ -162,6 +157,39 @@
             </template>
         </Column>
     </DataTable>
+
+    <div class="flex flex-row justify-content-center mt-5">
+        <button
+            class="p-2"
+            :class="currentPage === 1 ? 'p-disabled' : ''"
+            @click="onPageChange(1)"
+        >
+            <Icon icon="mingcute:arrows-left-line" />
+        </button>
+        <button
+            class="p-2"
+            :class="currentPage === 1 ? 'p-disabled' : ''"
+            @click="onPageChange(currentPage - 1)"
+        >
+            <Icon icon="iconamoon:arrow-left-2-duotone" width="16" />
+        </button>
+        <span class="p-2">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button
+            class="p-2"
+            :class="currentPage === totalPages ? 'p-disabled' : ''"
+            @click="onPageChange(currentPage + 1)"
+        >
+            <Icon icon="iconamoon:arrow-right-2-duotone" width="16" />
+        </button>
+        <button
+            class="p-2"
+            :class="currentPage === totalPages ? 'p-disabled' : ''"
+            @click="onPageChange(totalPages)"
+        >
+            <Icon icon="mingcute:arrows-right-line" />
+        </button>
+    </div>
+
     <Dialog
         v-model:visible="deleteCertificationDialog"
         :style="{ width: '450px' }"
@@ -205,10 +233,18 @@ export default {
             type: Array,
             required: true,
         },
+        currentPage: {
+            type: Number,
+            required: true,
+        },
+        totalPages: {
+            type: Number,
+            required: true,
+        },
 
     }, //end of props
 
-    emits: ["selectCertifications", "deleteCertification", "editCertification"],
+    emits: ["selectCertifications", "deleteCertification", "editCertification","pageChange"],
 
     data() {
         return {
@@ -241,6 +277,10 @@ export default {
             this.certification = certification;
             this.deleteCertificationDialog = true;
         }, //end of confirmDeleteCertification
+
+        onPageChange(pageNumber) {
+            this.$emit("pageChange", pageNumber);
+        }, //end of onPageChange
 
         deleteCertification() {
             this.loading = true;

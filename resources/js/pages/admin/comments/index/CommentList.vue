@@ -184,17 +184,10 @@ export default {
             type: Array,
             required: true,
         },
-
         currentPage: {
             type: Number,
             required: true,
         },
-
-        rows: {
-            type: Number,
-            required: true,
-        },
-
         totalPages: {
             type: Number,
             required: true,

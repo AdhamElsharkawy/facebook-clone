@@ -19,7 +19,7 @@ class CertificationController extends Controller
      */
     public function index()
     {
-        $certifications = Certification::with('college','user')->latest()->get();
+        $certifications = Certification::with('college','user')->latest()->paginate(10);
         $colleges = College::all();
         $users = User::all();
         return ['certifications' => $certifications,'colleges' => $colleges,'users' => $users];
