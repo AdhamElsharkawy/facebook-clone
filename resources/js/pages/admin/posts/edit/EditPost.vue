@@ -6,7 +6,7 @@
         :modal="true"
         class="p-fluid"
     >
-        <div v-if="post.images" class="field text-center mb-4">
+        <div class="field text-center mb-4">
             <div class="p-inputgroup">
                 <div class="custom-file">
                     <FileUpload
@@ -33,7 +33,6 @@
             <InputText
                 id="thread"
                 v-model.trim="post.thread"
-                required="true"
                 autofocus
                 type="text"
                 :class="[
@@ -41,9 +40,9 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !post.thread">{{
+            <!-- <small class="p-invalid" v-if="submitted && !post.thread">{{
                 threadIsRequired
-            }}</small>
+            }}</small> -->
         </div>
 
         <div v-if="post.pending">
@@ -100,6 +99,31 @@
                     >{{ threadIsRequired }}</small
                 >
             </div>
+            <div>
+                <div class="field mt-2">
+                    <label
+                        for="poll_caption"
+                        :class="[{ 'float-right': $store.getters.isRtl }]"
+                        >Poll Caption</label
+                    >
+                    <InputText
+                        id="poll_caption"
+                        v-model.trim="post.poll_caption"
+                        required="true"
+                        autofocus
+                        type="text"
+                        :class="[
+                            { 'p-invalid': submitted && !post.poll_caption },
+                            { 'text-right': $store.getters.isRtl },
+                        ]"
+                    />
+                </div>
+                <small
+                    class="p-invalid"
+                    v-if="submitted && !post.poll_end_date"
+                    >{{ threadIsRequired }}</small
+                >
+            </div>
             <div class="w-full mt-4 p-10">
                 <Button
                     type="button"
@@ -119,6 +143,8 @@
                             >
                             <input
                                 v-model="poll.poll"
+                                type="text"
+                                required="true"
                                 placeholder="enter you poll name"
                                 class="w-full pl-3 py-2 border border-indigo-500 rounded"
                                 id="poll.poll"
@@ -185,7 +211,6 @@ export default {
     },
     methods: {
         addMore() {
-            // console.log(this.comments);
             this.polls.push({
                 poll: "",
                 post_id: this.post.id,
@@ -200,112 +225,110 @@ export default {
         },
         updatePost() {
             this.submitted = true;
-            if (this.post.thread && this.post.thread.trim()) {
-                this.loading = true;
-                const formData = new FormData();
-                let regEx = "/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/";
-                let convertedEndPollDateString;
-                if (
-                    this.post.poll_end_date != regEx &&
-                    typeof this.post.poll_end_date == "object"
-                ) {
-                    const year = this.post.poll_end_date.getFullYear();
-                    const month = (
-                        "0" +
-                        (this.post.poll_end_date.getMonth() + 1)
-                    ).slice(-2);
-                    const day = ("0" + this.post.poll_end_date.getDate()).slice(
-                        -2
-                    );
-                    const hours = (
-                        "0" + this.post.poll_end_date.getHours()
-                    ).slice(-2);
-                    const minutes = (
-                        "0" + this.post.poll_end_date.getMinutes()
-                    ).slice(-2);
-                    const seconds = (
-                        "0" + this.post.poll_end_date.getSeconds()
-                    ).slice(-2);
-                    convertedEndPollDateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                    this.post.poll_end_date = convertedEndPollDateString;
-                }
-                let convertedCreatedDateString;
-                if (
-                    this.post.created_at != regEx &&
-                    typeof this.post.created_at == "object"
-                ) {
-                    const year = this.post.created_at.getFullYear();
-                    const month = (
-                        "0" +
-                        (this.post.created_at.getMonth() + 1)
-                    ).slice(-2);
-                    const day = ("0" + this.post.created_at.getDate()).slice(
-                        -2
-                    );
-                    const hours = ("0" + this.post.created_at.getHours()).slice(
-                        -2
-                    );
-                    const minutes = (
-                        "0" + this.post.created_at.getMinutes()
-                    ).slice(-2);
-                    const seconds = (
-                        "0" + this.post.created_at.getSeconds()
-                    ).slice(-2);
-                    convertedCreatedDateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                    this.post.created_at = convertedCreatedDateString;
-                }
-                formData.append("thread", this.post.thread);
-                if (typeof this.images == "object" && this.images.length > 0) {
-                    for (let i = 0; i < this.images.length; i++) {
-                        formData.append("images[]", this.images[i]);
-                    }
-                }
-                if (this.post.polls.length > 0) {
-                    formData.append("polls", JSON.stringify(this.post.polls));
-                }
-                if (this.post.poll_end_date) {
-                    formData.append("poll_end_date", this.post.poll_end_date);
-                }
-                if (this.post.pending) {
-                    formData.append("created_at", this.post.created_at);
-                }
-                formData.append("postNow", this.post.postNow ? 1 : 0);
-                // if (this.post.comments.length > 0) {
-                //     formData.append(
-                //         "comments",
-                //         JSON.stringify(this.post.comments)
-                //     );
-                // }
-                formData.append("_method", "PUT");
-                axios
-                    .post("/api/admin/posts/" + this.post.id, formData, {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                    })
-                    .then((response) => {
-                        this.toast.add({
-                            severity: "success",
-                            summary: "Successful",
-                            detail: response.data.message,
-                            life: 3000,
-                        });
-                        this.hideDialog();
-                    })
-                    .catch((errors) => {
-                        if (errors.response) {
-                            this.toast.add({
-                                severity: "error",
-                                summary: "Error",
-                                detail: errors.response.data.message,
-                                life: 15000,
-                            });
-                        }
-                    })
-                    .then(() => {
-                        this.loading = false;
-                    });
+            this.loading = true;
+            const formData = new FormData();
+            let regEx = "/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/";
+            let convertedEndPollDateString;
+            if (
+                this.post.poll_end_date != regEx &&
+                typeof this.post.poll_end_date == "object"
+            ) {
+                const year = this.post.poll_end_date.getFullYear();
+                const month = (
+                    "0" +
+                    (this.post.poll_end_date.getMonth() + 1)
+                ).slice(-2);
+                const day = ("0" + this.post.poll_end_date.getDate()).slice(-2);
+                const hours = ("0" + this.post.poll_end_date.getHours()).slice(
+                    -2
+                );
+                const minutes = (
+                    "0" + this.post.poll_end_date.getMinutes()
+                ).slice(-2);
+                const seconds = (
+                    "0" + this.post.poll_end_date.getSeconds()
+                ).slice(-2);
+                convertedEndPollDateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                this.post.poll_end_date = convertedEndPollDateString;
             }
+            let convertedCreatedDateString;
+            if (
+                this.post.created_at != regEx &&
+                typeof this.post.created_at == "object"
+            ) {
+                const year = this.post.created_at.getFullYear();
+                const month = (
+                    "0" +
+                    (this.post.created_at.getMonth() + 1)
+                ).slice(-2);
+                const day = ("0" + this.post.created_at.getDate()).slice(-2);
+                const hours = ("0" + this.post.created_at.getHours()).slice(-2);
+                const minutes = ("0" + this.post.created_at.getMinutes()).slice(
+                    -2
+                );
+                const seconds = ("0" + this.post.created_at.getSeconds()).slice(
+                    -2
+                );
+                convertedCreatedDateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                this.post.created_at = convertedCreatedDateString;
+            }
+            formData.append("thread", this.post.thread ? this.post.thread : "");
+            if (typeof this.images == "object" && this.images.length > 0) {
+                for (let i = 0; i < this.images.length; i++) {
+                    formData.append("images[]", this.images[i]);
+                }
+            }
+            if (this.post.polls.length > 0) {
+                formData.append("polls", JSON.stringify(this.post.polls));
+            }
+            if (this.post.poll_end_date) {
+                formData.append("poll_end_date", this.post.poll_end_date);
+            }
+
+            formData.append(
+                "poll_caption",
+                this.post.poll_caption ? this.post.poll_caption : ""
+            );
+
+            if (this.post.pending) {
+                formData.append("created_at", this.post.created_at);
+            }
+            formData.append("postNow", this.post.postNow ? 1 : 0);
+            // if (this.post.comments.length > 0) {
+            //     formData.append(
+            //         "comments",
+            //         JSON.stringify(this.post.comments)
+            //     );
+            // }
+            formData.append("_method", "PUT");
+            axios
+                .post("/api/admin/posts/" + this.post.id, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                })
+                .then((response) => {
+                    this.toast.add({
+                        severity: "success",
+                        summary: "Successful",
+                        detail: response.data.message,
+                        life: 3000,
+                    });
+                    this.hideDialog();
+                })
+                .catch((errors) => {
+                    if (errors.response) {
+                        this.toast.add({
+                            severity: "error",
+                            summary: "Error",
+                            detail: errors.response.data.message,
+                            life: 15000,
+                        });
+                    }
+                })
+                .then(() => {
+                    this.loading = false;
+                });
         }, //end of updatePost
         editPost(editPost) {
             this.post = { ...editPost };

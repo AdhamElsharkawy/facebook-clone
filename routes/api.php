@@ -41,14 +41,17 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     Route::post("experiences", [ExperienceController::class, 'store'])->name('experience.store');
     Route::put("experiences/{experience}", [ExperienceController::class, 'update'])->name('experience.update');
+    Route::delete("experiences/{experience}", [ExperienceController::class, 'destroy'])->name('experience.destroy');
 
     Route::get("colleges", [CollegeController::class, 'index'])->name('college.index');
 
     Route::post("educations", [EducationController::class, 'store'])->name('education.store');
     Route::put("educations/{education}", [EducationController::class, 'update'])->name('education.update');
+    Route::delete("educations/{education}", [EducationController::class, 'destroy'])->name('education.destroy');
 
     Route::post("certifications", [CertificationController::class, 'store'])->name('certification.store');
     Route::put("certifications/{certification}", [CertificationController::class, 'update'])->name('certification.update');
+    Route::delete("certifications/{certification}", [CertificationController::class, 'destroy'])->name('certification.destroy');
 
     // user apis
     Route::get("users", [UserController::class, 'index'])->name('users');
@@ -62,6 +65,10 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     // notification apis
     Route::get("notifications", [NotificationController::class, 'getNotifications'])->name('notifications');
     Route::put("notifications/{id}", [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::get("trigger-noitification", function () {
+        broadcast(new NewNotification(auth('api')->user(), 'New Notification'));
+        return response()->json(['message' => 'Event has been sent!']);
+    });
 
     // leaderboards apis
     Route::get("company/leaderboards", [LeaderboardController::class, 'getCompanyLeaderboards'])->name('company.leaderboards');
@@ -84,14 +91,4 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     Route::put("comments/{comment}", [CommentController::class, 'update'])->name('comments.update');
     Route::put("comments/{comment}/like", [CommentController::class, 'reactLike'])->name('comments.like');
     Route::delete("comments/{comment}", [CommentController::class, 'destroy'])->name('comments.destroy');
-
-    // trigger noitification event
-    Route::get("noitification", function () {
-        broadcast(new NewNotification(['data' => 'asas']));
-        return response()->json(['message' => 'Event has been sent!']);
-    });
-
-    // Route::get('broadcast/auth', function () {
-    //     broadcast(new NewNotification(['data' => 'asas']));
-    // });
 });

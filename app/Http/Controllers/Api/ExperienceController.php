@@ -85,4 +85,17 @@ class ExperienceController extends Controller
             "Experience updated successfully."
         );
     } //end of update
+
+    public function destroy($id)
+    {
+        $experience = auth('api')->user()->experiences()->find($id);
+        if (!$experience) return response()->json(['error' => 'Experience not found.'], 404);
+
+        $experience->delete();
+        return $this->apiSuccessResponse(
+            [],
+            $this->seo('Experience', 'experience'),
+            "Experience deleted successfully."
+        );
+    } //end of destroy
 }

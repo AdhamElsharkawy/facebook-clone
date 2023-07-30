@@ -22,7 +22,7 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'thread' => 'required|string',
+            'thread' => 'nullable',
             // 'comments' => 'nullable',
         ];
     }

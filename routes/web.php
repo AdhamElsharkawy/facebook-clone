@@ -22,6 +22,9 @@ Route::get(
     }
 )->where('any', '^(?!api\/)[\/\w\.\,-]*');
 
+Route::post('/broadcasting/auth', function () {
+    return auth('sanctum')->user();
+})->middleware('auth:sanctum');
 
 // Route::get('/t',function(){
 //     Round::where('name', 'ROUND1')->first()->update(['id' => '1']);
