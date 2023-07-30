@@ -85,4 +85,17 @@ class EducationController extends Controller
             "Education updated successfully."
         );
     } //end of update
+
+    public function destroy($id)
+    {
+        $education = auth('api')->user()->educations()->find($id);
+        if (!$education) return $this->apiErrorResponse("Education not found.");
+
+        $education->delete();
+        return $this->apiSuccessResponse(
+            [],
+            $this->seo('Education', 'education'),
+            "Education deleted successfully."
+        );
+    } //end of destroy
 }

@@ -87,4 +87,13 @@ class CertificationController extends Controller
             "Certification updated successfully."
         );
     } //end of update
+
+    public function destroy($id)
+    {
+        $certification = auth('api')->user()->certifications()->find($id);
+        if (!$certification) return $this->apiErrorResponse("Certification not found.");
+
+        $certification->delete();
+        return $this->apiSuccessResponse([], "Certification deleted successfully.");
+    } //end of destroy
 }
