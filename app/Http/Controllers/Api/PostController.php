@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Bus;
 use App\Jobs\SendMail;
 use App\Http\Traits\ImageTrait;
+use App\Http\Controllers\Api\NotificationController;
 
 class PostController extends Controller
 {
@@ -276,6 +277,12 @@ class PostController extends Controller
                 ['reaction' => $request->reaction]
             );
         }
+
+        NotificationController::newNotification(
+            $post->user_id,
+            'like',
+            $post->id,
+        );
 
         return $this->apiSuccessResponse(
             ['post' => $post->load('likes')],

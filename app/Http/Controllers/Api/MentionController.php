@@ -8,6 +8,7 @@ use App\Http\Traits\SeoTrait;
 use App\Http\Traits\GeneralTrait;
 use App\Models\Mention;
 use App\Models\Seo;
+use App\Http\Controllers\Api\NotificationController;
 
 class MentionController extends Controller
 {
@@ -31,6 +32,13 @@ class MentionController extends Controller
                 "mentioned_user_id" => $mention["mentioned_id"],
                 "user_id" => auth('api')->user()->id,
             ]));
+
+            NotificationController::newNotification(
+                $mention["mentioned_id"],
+                "mention",
+                $request->post_id ?? null,
+                $request->comment_id ?? null
+            );
         }
 
         return $this->apiSuccessResponse(

@@ -9,6 +9,7 @@ use App\Http\Traits\GeneralTrait;
 use App\Http\Traits\ImageTrait;
 use App\Models\Post;
 use App\Models\Comment;
+use App\Http\Controllers\Api\NotificationController;
 
 class CommentController extends Controller
 {
@@ -43,6 +44,12 @@ class CommentController extends Controller
             'images' => $images !== [] ? json_encode($images) : null,
             'user_id' => auth('api')->user()->id,
         ]);
+
+        NotificationController::newNotification(
+            $post->user_id,
+            'comment',
+            $post->id,
+        );
 
         return $this->apiSuccessResponse(
             ['comment' => $comment],
@@ -147,7 +154,14 @@ class CommentController extends Controller
                 ['reaction' => $request->reaction]
             );
         }
-        
+
+        NotificationController::newNotification(
+            $comment->user_id,
+            'like',
+            null,
+            $comment->id,
+        );
+
         return $this->apiSuccessResponse(
             [],
             $this->seo('react to comment', 'home-page'),
