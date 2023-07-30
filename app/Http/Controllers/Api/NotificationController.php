@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\GeneralTrait;
 use App\Models\Notification;
+use App\Events\NewNotification;
+use App\Models\User;
 
 class NotificationController extends Controller
 {
@@ -24,4 +26,18 @@ class NotificationController extends Controller
         $notification->update(['read' => true]);
         return $this->apiSuccessResponse(null, 'Notification marked as read successfully');
     } //end of markAsRead
+
+    public static function newNotification($user_id, $type, $post_id = null, $comment_id = null)
+    {
+        if ($user_id == auth('api')->user()->id) return;
+        if ($post_id = null && $comment_id == null) return;
+
+        $notification = Notification::create([
+            'user_id' => $user_id,
+            'type' => $type,
+            'post_id' => $post_id
+        ]);
+
+        broadcast(new NewNotification($user_id, $notification));
+    } //end of newNotification
 }

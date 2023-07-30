@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->boolean('read')->default(false);
             $table->string('type');
-            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade')->onUpdate('cascade');
+            $table->bigInteger('post_id')->nullable()->unsigned();
+            $table->bigInteger('comment_id')->nullable()->unsigned();
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
