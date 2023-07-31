@@ -31,7 +31,7 @@ class CertificationController extends Controller
         if ($request->college_id) {
             $certification = auth('api')->user()->certifications()->create($request->all());
         } else {
-            $college = College::create([
+            $college = College::firstOrCreate([
                 'name' => $request->college_name,
             ]);
             $formData = $request->except('college_name');
@@ -70,7 +70,7 @@ class CertificationController extends Controller
         if ($request->college_id) {
             $certification->update($request->all());
         } else {
-            $college = College::create([
+            $college = College::firstOrCreate([
                 'name' => $request->college_name,
             ]);
             $formData = $request->except('college_name');

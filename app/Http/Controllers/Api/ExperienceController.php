@@ -30,7 +30,7 @@ class ExperienceController extends Controller
         if ($request->company_id) {
             $experience = auth('api')->user()->experiences()->create($request->all());
         } else {
-            $company = Company::create([
+            $company = Company::firstOrCreate([
                 'name' => $request->company_name,
             ]);
             $formData = $request->except('company_name');
@@ -68,7 +68,7 @@ class ExperienceController extends Controller
         if ($request->company_id) {
             $experience->update($request->all());
         } else {
-            $company = Company::create([
+            $company = Company::firstOrCreate([
                 'name' => $request->company_name,
             ]);
             $formData = $request->except('company_name');

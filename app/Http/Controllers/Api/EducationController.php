@@ -30,7 +30,7 @@ class EducationController extends Controller
         if ($request->college_id) {
             $education = auth('api')->user()->educations()->create($request->all());
         } else {
-            $college = College::create([
+            $college = College::firstOrCreate([
                 'name' => $request->college_name,
             ]);
             $formData = $request->except('college_name');
@@ -68,7 +68,7 @@ class EducationController extends Controller
         if ($request->college_id) {
             $education->update($request->all());
         } else {
-            $college = College::create([
+            $college = College::firstOrCreate([
                 'name' => $request->college_name,
             ]);
             $formData = $request->except('college_name');
