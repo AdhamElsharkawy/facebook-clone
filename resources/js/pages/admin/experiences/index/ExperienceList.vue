@@ -5,12 +5,7 @@
         :value="experiences"
         v-model:selection="selectedExperiences"
         dataKey="id"
-        :paginator="true"
-        :rows="10"
         :filters="filters"
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        :rowsPerPageOptions="[5, 10, 25]"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} experiences"
         responsiveLayout="scroll"
     >
         <template #header>
@@ -35,9 +30,6 @@
             headerStyle="width: 3rem"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         ></Column>
-
-
-
 
         <Column
             field="title"
@@ -128,8 +120,6 @@
             </template>
         </Column>
 
-
-
         <Column
             field="action"
             header="actions"
@@ -149,7 +139,41 @@
                 />
             </template>
         </Column>
+
     </DataTable>
+
+    <div class="flex flex-row justify-content-center mt-5">
+        <button
+            class="p-2"
+            :class="currentPage === 1 ? 'p-disabled' : ''"
+            @click="onPageChange(1)"
+        >
+            <Icon icon="mingcute:arrows-left-line" />
+        </button>
+        <button
+            class="p-2"
+            :class="currentPage === 1 ? 'p-disabled' : ''"
+            @click="onPageChange(currentPage - 1)"
+        >
+            <Icon icon="iconamoon:arrow-left-2-duotone" width="16" />
+        </button>
+        <span class="p-2">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button
+            class="p-2"
+            :class="currentPage === totalPages ? 'p-disabled' : ''"
+            @click="onPageChange(currentPage + 1)"
+        >
+            <Icon icon="iconamoon:arrow-right-2-duotone" width="16" />
+        </button>
+        <button
+            class="p-2"
+            :class="currentPage === totalPages ? 'p-disabled' : ''"
+            @click="onPageChange(totalPages)"
+        >
+            <Icon icon="mingcute:arrows-right-line" />
+        </button>
+    </div>
+
     <Dialog
         v-model:visible="deleteExperienceDialog"
         :style="{ width: '450px' }"
@@ -193,10 +217,19 @@ export default {
             type: Array,
             required: true,
         },
+        
+        currentPage: {
+            type: Number,
+            required: true,
+        },
+        totalPages: {
+            type: Number,
+            required: true,
+        },
 
     }, //end of props
 
-    emits: ["selectExperiences", "deleteExperience", "editExperience"],
+    emits: ["selectExperiences", "deleteExperience", "editExperience","pageChange"],
 
     data() {
         return {
@@ -225,6 +258,10 @@ export default {
     }, //end of beforeMount
 
     methods: {
+        onPageChange(pageNumber) {
+            this.$emit("pageChange", pageNumber);
+        }, //end of onPageChange
+
         confirmDeleteExperience(experience) {
             this.experience = experience;
             this.deleteExperienceDialog = true;

@@ -19,7 +19,7 @@ class ExperienceController extends Controller
      */
     public function index()
     {
-        $experiences = Experience::with('company','user')->latest()->get();
+        $experiences = Experience::with('company','user')->latest()->paginate(10);
         $companies = Company::all();
         $users = User::all();
         return ['experiences' => $experiences,'companies' => $companies,'users' => $users];

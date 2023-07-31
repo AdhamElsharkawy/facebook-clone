@@ -19,7 +19,7 @@ class EducationController extends Controller
      */
     public function index()
     {
-        $educations = Education::with('college','user')->latest()->get();
+        $educations = Education::with('college','user')->latest()->paginate(10);
         $colleges = College::all();
         $users = User::all();
         return ['educations' => $educations,'colleges' => $colleges,'users' => $users];
