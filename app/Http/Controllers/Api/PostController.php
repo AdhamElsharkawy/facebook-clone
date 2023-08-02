@@ -24,13 +24,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'poll_caption','created_at')
+        $posts = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'poll_caption', 'created_at')
             ->with(['polls' => function ($query) {
                 $query->select('id', 'post_id', 'poll', 'votes')->with(['users:id,name,image']);
             }, 'comments' => function ($query) {
                 $query->select('id', 'post_id', 'user_id', 'thread', "images", 'created_at')
                     ->with(['user' => function ($query) {
-                        $query->select('id', 'name', 'image','department_id')->with('department:id,name');
+                        $query->select('id', 'name', 'image', 'department_id')->with('department:id,name');
                     }]);
             }, 'user' => function ($query) {
                 $query->select('id', 'name', 'image', 'role', 'department_id')->with('department:id,name');
@@ -91,7 +91,7 @@ class PostController extends Controller
                 $images[] = $this->uploadS3Image($image, 'images/posts');
             }
         }
-       
+
         $form_data = $request->except(['images', 'send_all', 'polls']);
         if ($request->images) {
             $form_data['images'] = json_encode($images);
@@ -131,7 +131,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $post = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'poll_caption','created_at')
+        $post = Post::select('id', 'user_id', 'thread', 'images', 'poll_end_date', 'poll_caption', 'created_at')
             ->with(['polls' => function ($query) {
                 $query->select('id', 'post_id', 'poll', 'votes')->with(['users:id,name,image']);
             }])
@@ -290,6 +290,22 @@ class PostController extends Controller
             'post reacted successfully',
         );
     } // end of reactLike
+
+    public function undoReactLike(string $id)
+    {
+        $post = Post::find($id);
+        if (!$post) {
+            return $this->notFound();
+        }
+
+        $post->likes()->where('user_id', auth('api')->user()->id)->delete();
+
+        return $this->apiSuccessResponse(
+            ['post' => $post->load('likes')],
+            $this->seo('undo react', 'home-page'),
+            'post reaction undone successfully',
+        );
+    } // end of undoReact
 
     public function vote(Request $request, string $id)
     {

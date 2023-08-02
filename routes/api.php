@@ -83,6 +83,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     // posts apis
     Route::resource("posts", PostController::class)->except(['create', 'edit']);
     Route::put("posts/{post}/like", [PostController::class, 'reactLike'])->name('posts.like');
+    Route::put("posts/{post}/undo-like", [PostController::class, 'undoReactLike'])->name('posts.undo-like');
     Route::put("posts/{post}/vote", [PostController::class, 'vote'])->name('posts.poll');
     Route::put("posts/{post}/undo-vote", [PostController::class, 'undoVote'])->name('posts.undo-poll');
 
@@ -90,5 +91,6 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     Route::post("comments/{post}", [CommentController::class, 'store'])->name('comments.store');
     Route::put("comments/{comment}", [CommentController::class, 'update'])->name('comments.update');
     Route::put("comments/{comment}/like", [CommentController::class, 'reactLike'])->name('comments.like');
+    Route::put("comments/{comment}/undo-like", [CommentController::class, 'undoReactLike'])->name('comments.undo-like');
     Route::delete("comments/{comment}", [CommentController::class, 'destroy'])->name('comments.destroy');
 });
