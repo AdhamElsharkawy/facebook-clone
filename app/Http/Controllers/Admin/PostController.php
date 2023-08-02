@@ -59,12 +59,12 @@ class PostController extends Controller
             if ($post->images) {
                 for ($i = 0; $i < count(($post->images)); $i++) {
                     if ($post->images[$i] !=  'assets/images/default.png') {
-                        $this->deleteImg($post->images[$i]);
+                        $this->deleteS3Image($post->images[$i]);
                     }
                 }
             }
             for ($i = 0; $i < count($request->images); $i++) {
-                $file_name = $this->img($request->images[$i], 'images/posts/');
+                $file_name = $this->uploadS3Image($request->images[$i], 'images/posts');
                 array_push($form_data["images"], $file_name);
             }
             $form_data["images"] = json_encode($form_data["images"]);
@@ -96,7 +96,7 @@ class PostController extends Controller
     {
         if ($post->images) {
             for ($i = 0; $i < count(($post->images)); $i++) {
-                $post->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($post->images[$i]) : '';
+                $post->images[$i] !=  'assets/images/default.png' ? $this->deleteS3Image($post->images[$i]) : '';
             }
         }
         $post->polls()->delete();
