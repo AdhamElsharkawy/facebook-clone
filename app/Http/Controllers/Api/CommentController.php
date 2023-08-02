@@ -165,4 +165,21 @@ class CommentController extends Controller
             'reacted to comment successfully',
         );
     } // end of reactLike
+
+    /**
+     * Undo react to the specified resource.
+     */
+    public function undoReactLike(string $id)
+    {
+        $comment = Comment::find($id);
+        if (!$comment) return $this->notFound();
+
+        $comment->likes()->where('user_id', auth('api')->user()->id)->delete();
+
+        return $this->apiSuccessResponse(
+            [],
+            $this->seo('undo react to comment', 'home-page'),
+            'undo reacted to comment successfully',
+        );
+    } // end of undoReactLike
 }
