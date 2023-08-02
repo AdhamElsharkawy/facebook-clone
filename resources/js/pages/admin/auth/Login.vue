@@ -21,7 +21,7 @@ export default {
     computed: {
         logoUrl() {
             const { layoutConfig } = useLayout();
-            return `../${layoutConfig.darkTheme.value ? "Logo" : "Logo"}.svg`;
+            return '../images/Logo_inteligencia.svg';
         },
     }, //end of computed
 
@@ -75,7 +75,7 @@ export default {
             <img
                 :src="logoUrl"
                 alt="Admin logo"
-                class="mb-5 w-6rem flex-shrink-0"
+                class="mb-5 w-6rem flex-shrink-0 my_logo"
             />
             <div
                 style="
@@ -171,6 +171,9 @@ export default {
 </template>
 
 <style scoped>
+.my_logo{
+    scale: 250%;
+}
 .pi-eye {
     transform: scale(1.6);
     margin-right: 1rem;

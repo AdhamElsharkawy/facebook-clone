@@ -19,7 +19,7 @@ const logoUrl = computed(() => {
         class="layout-footer"
         :class="$store.getters['isRtl'] ? 'flex flex-row-reverse' : ''"
     >
-        <img :src="logoUrl" alt="Logo" height="20" class="mx-2" />
+        <!-- <img :src="logoUrl" alt="Logo" height="20" class="mx-2" /> -->
         {{ $t("by") }}
         <span class="font-medium mx-2"
             ><a

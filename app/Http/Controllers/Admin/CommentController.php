@@ -36,7 +36,7 @@ class CommentController extends Controller
     {
         if ($comment->images) {
             for ($i = 0; $i < count(($comment->images)); $i++) {
-                $comment->images[$i] !=  'assets/images/default.png' ? $this->deleteImg($comment->images[$i]) : '';
+                $comment->images[$i] !=  'assets/images/default.png' ? $this->deleteS3Image($comment->images[$i]) : '';
             }
         }
         
