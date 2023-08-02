@@ -30,7 +30,7 @@ class NotificationController extends Controller
     public static function newNotification($user_id, $type, $post_id = null, $comment_id = null)
     {
         if ($user_id == auth('api')->user()->id) return;
-        if ($post_id = null && $comment_id == null) return;
+        if (!$post_id && !$comment_id) return;
 
         $notification = Notification::create([
             'user_id' => $user_id,
@@ -38,6 +38,6 @@ class NotificationController extends Controller
             'post_id' => $post_id
         ]);
 
-        broadcast(new NewNotification($user_id, $notification));
+        // broadcast(new NewNotification(User::find($user_id), $notification));
     } //end of newNotification
 }

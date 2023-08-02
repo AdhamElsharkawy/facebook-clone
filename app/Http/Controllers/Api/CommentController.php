@@ -27,7 +27,6 @@ class CommentController extends Controller
         ]);
 
         if ($validations) return $validations;
-
         $post = Post::find($id);
         if (!$post) return $this->notFound();
 
