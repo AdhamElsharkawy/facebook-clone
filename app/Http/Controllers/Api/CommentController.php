@@ -43,7 +43,6 @@ class CommentController extends Controller
             'images' => $images !== [] ? json_encode($images) : null,
             'user_id' => auth('api')->user()->id,
         ]);
-
         NotificationController::newNotification(
             $post->user_id,
             'comment',
@@ -157,8 +156,7 @@ class CommentController extends Controller
         NotificationController::newNotification(
             $comment->user_id,
             'like',
-            null,
-            $comment->id,
+            $comment->post_id,
         );
 
         return $this->apiSuccessResponse(

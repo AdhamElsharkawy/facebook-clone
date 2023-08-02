@@ -58,20 +58,20 @@ class ProfileController extends Controller
                     $query->select("id", "title", "type", "start_date", "end_date", "is_current", "user_id", "company_id")
                         ->with(['company' => function ($query) {
                             $query->select('id', 'name', 'image');
-                        }]);
+                        }])->orderBy('start_date', 'desc');
                 },
             ])
             ->with(['educations' => function ($query) {
                 $query->select("id", "degree", "major", "start_date", "end_date", "is_current", "user_id", "location", "college_id")
                     ->with(['college' => function ($query) {
                         $query->select('id', 'name', 'image');
-                    }]);
+                    }])->orderBy('start_date', 'desc');
             }])
             ->with(['certifications' => function ($query) {
                 $query->select("id", "major", "location", "start_date", "end_date", "is_current", "valid_until", "confirmation_link", "user_id", "college_id")
                     ->with(['college' => function ($query) {
                         $query->select('id', 'name', 'image');
-                    }]);
+                    }])->orderBy('start_date', 'desc');
             }])
             ->first();
 

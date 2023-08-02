@@ -27,6 +27,7 @@ class Post extends Model
         'total_reactions',
         "pending",
         "my_post",
+        "my_like",
         "votes",
     ]; //end of appends
 
@@ -79,6 +80,13 @@ class Post extends Model
     {
         return $this->user_id == auth('api')->id();
     } //end of getMyPostAttribute
+
+    public function getMyLikeAttribute()
+    {
+        $like = $this->likes()->select('reaction','user_id','post_id')->where('user_id', auth('api')->id())->first();
+        if (!$like) return false;
+        return $like->reaction;
+    } //end of getMyLikeAttribute
 
     public function getVotesAttribute()
     {

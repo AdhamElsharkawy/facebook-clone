@@ -27,10 +27,10 @@ class NotificationController extends Controller
         return $this->apiSuccessResponse(null, 'Notification marked as read successfully');
     } //end of markAsRead
 
-    public static function newNotification($user_id, $type, $post_id = null, $comment_id = null)
+    public static function newNotification($user_id, $type, $post_id = null)
     {
         if ($user_id == auth('api')->user()->id) return;
-        if (!$post_id && !$comment_id) return;
+        if ($post_id == null) return;
 
         $notification = Notification::create([
             'user_id' => $user_id,
