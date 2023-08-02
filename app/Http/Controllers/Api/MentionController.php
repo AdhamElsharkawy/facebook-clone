@@ -17,8 +17,9 @@ class MentionController extends Controller
     public function store(Request $request)
     {
         $validations = $this->apiValidationTrait($request->all(), [
-            "post_id" => "required_if:comment_id,null|exists:posts,id",
-            "comment_id" => "required_if:post_id,null|exists:comments,id",
+            "type" => "required|in:post,comment",
+            "post_id" => "required_if:type,post|exists:posts,id",
+            "comment_id" => "required_if:type,comment|exists:comments,id",
             "mentions" => "required|array",
             "mentions.*.mentioned_id" => "required|exists:users,id",
         ]);
