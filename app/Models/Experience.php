@@ -28,16 +28,16 @@ class Experience extends Model
         
     } //end of getDurationAttribute
 
-    public function getTypeAttribute($value)
-    {
-        if ($value == 1) {
-            return 'Full Time';
-        } elseif ($value == 2) {
-            return 'Part Time';
-        } elseif ($value == 3) {
-            return 'Internship';
-        }
-    } //end of getTypeAttribute
+    // public function getTypeAttribute($value)
+    // {
+    //     if ($value == 1) {
+    //         return 'Full Time';
+    //     } elseif ($value == 2) {
+    //         return 'Part Time';
+    //     } elseif ($value == 3) {
+    //         return 'Internship';
+    //     }
+    // } //end of getTypeAttribute
 
     public function getIsCurrentAttribute($value)
     {
