@@ -21,7 +21,7 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
-    return `../${layoutConfig.darkTheme.value ? "Logo" : "Logo"}.svg`;
+    return '../images/Logo_inteligencia.svg';
 });
 
 const onTopBarMenuButton = () => {
