@@ -8,7 +8,6 @@ use App\Http\Traits\SeoTrait;
 use App\Http\Traits\GeneralTrait;
 use App\Models\Mention;
 use App\Models\Seo;
-use App\Models\Comment;
 use App\Http\Controllers\Api\NotificationController;
 
 class MentionController extends Controller
@@ -18,9 +17,8 @@ class MentionController extends Controller
     public function store(Request $request)
     {
         $validations = $this->apiValidationTrait($request->all(), [
-            "type" => "required|in:post,comment",
-            "post_id" => "required_if:type,post|exists:posts,id",
-            "comment_id" => "required_if:type,comment|exists:comments,id",
+            "post_id" => "required_if:comment_id,null|exists:posts,id",
+            "comment_id" => "required_if:post_id,null|exists:comments,id",
             "mentions" => "required|array",
             "mentions.*.mentioned_id" => "required|exists:users,id",
         ]);
@@ -38,7 +36,8 @@ class MentionController extends Controller
             NotificationController::newNotification(
                 $mention["mentioned_id"],
                 "mention",
-                $request->post_id ? $request->post_id : Comment::find($request->comment_id)->post_id,
+                $request->post_id ?? null,
+                $request->comment_id ?? null
             );
         }
 
