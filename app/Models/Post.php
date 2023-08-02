@@ -29,6 +29,7 @@ class Post extends Model
         "my_post",
         "my_like",
         "votes",
+        "is_edited"
     ]; //end of appends
 
     public function getImagesAttribute($value)
@@ -92,6 +93,11 @@ class Post extends Model
     {
         return $this->polls->sum('votes');
     } //end of getVotesAttribute
+
+    public function getIsEditedAttribute()
+    {
+        return $this->updated_at > $this->created_at;
+    } //end of getIsEditedAttribute
 
     public function user()
     {
