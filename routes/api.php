@@ -55,6 +55,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // user apis
     Route::get("users", [UserController::class, 'index'])->name('users');
+    Route::get("users/{user}", [UserController::class, 'show'])->name('users.show');
 
     // mentions apis
     Route::post("mentions", [MentionController::class, 'store'])->name('mentions.store');
