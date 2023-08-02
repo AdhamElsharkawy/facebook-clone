@@ -325,7 +325,11 @@ class PostController extends Controller
         }
 
         // check if the user already voted
-        if ($poll->users()->where('user_id', auth('api')->user()->id)->first()) {
+        $user_voted = $post->polls()->whereHas('users', function ($query) {
+            $query->where('user_id', auth('api')->user()->id);
+        })->first();
+
+        if ($user_voted) {
             return response()->json([
                 'status' => false,
                 'message' => 'you already voted',
