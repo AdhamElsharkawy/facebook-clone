@@ -21,7 +21,7 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
-    return '../images/Logo_inteligencia.svg';
+    return '/assets/images/Logo_inteligencia.svg';
 });
 
 const onTopBarMenuButton = () => {

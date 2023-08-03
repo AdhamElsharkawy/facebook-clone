@@ -21,7 +21,7 @@ export default {
     computed: {
         logoUrl() {
             const { layoutConfig } = useLayout();
-            return '../images/Logo_inteligencia.svg';
+            return '/assets/images/Logo_inteligencia.svg';
         },
     }, //end of computed
 
@@ -46,9 +46,9 @@ export default {
                 });
         }, // end of login
 
-        forgetPassword() {
-            //relax and try to remember it
-        }, //end of forgetPassword
+        // forgetPassword() {
+        //     //relax and try to remember it
+        // }, //end of forgetPassword
     }, //end of methods
 
     async beforeRouteEnter(to, from, next) {
@@ -144,7 +144,7 @@ export default {
                                     >Remember me</label
                                 >
                             </div>
-                            <Button
+                            <!-- <Button
                                 class="font-medium no-underline ml-2 text-right cursor-pointer"
                                 label="Info"
                                 severity="info"
@@ -152,7 +152,7 @@ export default {
                                 style="color: var(--primary-color)"
                                 @click.prevent="forgetPassword"
                                 >Forgot password?</Button
-                            >
+                            > -->
                         </div>
                         <div v-if="errors" class="my-2">
                             <PageErrors :errors="errors" />
