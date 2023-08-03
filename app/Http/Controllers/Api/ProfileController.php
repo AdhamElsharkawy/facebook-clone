@@ -103,6 +103,17 @@ class ProfileController extends Controller
         return $user;
     } //end of getProfileData
 
+    public function getMyPosts(){
+        $user = Auth::guard('api')->user();
+        $posts = self::getPosts($user->id);
+        $seo = Seo::first();
+        return $this->apiSuccessResponse(
+            ['posts' => $posts],
+            $this->seo('My Posts', 'profile', $seo->description, $seo->keywords),
+            'my posts retrieved successfully',
+        );
+    } // end of getMyPosts
+
     public function update(Request $request)
     {
         $rules = [
