@@ -103,7 +103,9 @@
         >
             <template #body="slotProps">
                 <span class="p-column-title">Type</span>
-                {{ slotProps.data.type}}
+                <p v-if="slotProps.data.type === 1">Full Time</p>
+                <p v-else-if="slotProps.data.type === 2">Part Time</p>
+                <p v-else-if="slotProps.data.type === 3">Internship</p>
             </template>
         </Column>
 

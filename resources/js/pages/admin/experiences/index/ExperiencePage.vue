@@ -187,6 +187,7 @@ export default {
                     this.currentPage = response.data.experiences.current_page;
                     this.companies = response.data.companies;
                     this.users = response.data.users;
+                    console.log(response.data.experiences.data);
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
