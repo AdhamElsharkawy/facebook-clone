@@ -34,6 +34,7 @@ require __DIR__ . '/auth.php';
 Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     // profile apis
     Route::put("profile", [ProfileController::class, 'update'])->name('user.update');
+    Route::get("profile/posts", [ProfileController::class, 'getPosts'])->name('user.posts');
     Route::put("profile/theme", [ProfileController::class, 'updateTheme'])->name('user.update-theme');
     Route::put("profile/social", [ProfileController::class, 'updateSocial'])->name('user.update-social');
 
