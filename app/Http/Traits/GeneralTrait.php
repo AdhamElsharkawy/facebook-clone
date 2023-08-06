@@ -47,6 +47,12 @@ trait GeneralTrait
 
     public function apiValidationTrait($request, $rules, $messages = null)
     {
+        if($request == []){
+            return response()->json([
+                'status' => 'fail',
+                'data' => 'No Data',
+            ], 422);
+        }
         if ($messages) {
             $validator = Validator::make($request, $rules, $messages);
         } else {
