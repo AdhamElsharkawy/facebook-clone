@@ -1,4 +1,4 @@
-<script setup>
+    <script setup>
 import { ref } from "vue";
 import AppMenuItem from "./AppMenuItem.vue";
 import { useI18n } from "vue-i18n";
@@ -29,43 +29,43 @@ const adminModel = ref([
             },
             {
                 label: 'Departments',
-                icon: "pi pi-users",
+                icon: "pi pi-link",
                 to: "/admin/departments",
                 name: "admin.departments",
             },
             {
                 label: 'Events',
-                icon: "pi pi-users",
+                icon: "pi pi-calendar",
                 to: "/admin/events",
                 name: "admin.events",
             },
             {
                 label: 'Colleges',
-                icon: "pi pi-users",
+                icon: "pi pi-book",
                 to: "/admin/colleges",
                 name: "admin.colleges",
             },
             {
                 label: 'Companies',
-                icon: "pi pi-users",
+                icon: "pi pi-briefcase",
                 to: "/admin/companies",
                 name: "admin.companies",
             },
             {
                 label: 'Educations',
-                icon: "pi pi-users",
+                icon: "pi pi-inbox",
                 to: "/admin/educations",
                 name: "admin.educations",
             },
             {
                 label: 'Experiences',
-                icon: "pi pi-users",
+                icon: "pi pi-ticket",
                 to: "/admin/experiences",
                 name: "admin.experiences",
             },
             {
                 label: 'Certifications',
-                icon: "pi pi-users",
+                icon: "pi pi-file",
                 to: "/admin/certifications",
                 name: "admin.certifications",
             },
@@ -77,7 +77,7 @@ const adminModel = ref([
             },
             {
                 label: 'Comments',
-                icon: "pi pi-users",
+                icon: "pi pi-comments",
                 to: "/admin/comments",
                 name: "admin.comments",
             }
