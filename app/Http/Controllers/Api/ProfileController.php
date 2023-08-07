@@ -116,16 +116,12 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        $rules = [
+        $validator = $this->apiValidationTrait($request->all(), [
             'title' => 'required|string',
             'mobile' => 'required|numeric|digits:12',
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
-        ];
-        try {
-            $request->validate($rules);
-        } catch (\Exception $e) {
-            return $this->apiValidationTrait($request->all(), $rules);
-        }
+        ]);
+        if ($validator) return $validator;
         $form_data = $request->only(['title', 'mobile']);
         $user = Auth::guard('api')->user();
         if ($request->image) {
