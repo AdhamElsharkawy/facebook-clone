@@ -71,6 +71,10 @@ class PostController extends Controller
         }
 
         if ($request->polls) {
+            $polls = $post->polls;
+            foreach ($polls as $poll) {
+                $poll->users()->detach();
+            }
             $post->polls()->delete();
             foreach ($polls_form_data["polls"] as $poll) {
                 $post->polls()->create([
@@ -98,6 +102,10 @@ class PostController extends Controller
             for ($i = 0; $i < count(($post->images)); $i++) {
                 $post->images[$i] !=  'assets/images/default.png' ? $this->deleteS3Image($post->images[$i]) : '';
             }
+        }
+        $polls = $post->polls;
+        foreach ($polls as $poll) {
+            $poll->users()->detach();
         }
         $post->polls()->delete();
         $post->comments()->delete();

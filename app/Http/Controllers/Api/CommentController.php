@@ -115,7 +115,7 @@ class CommentController extends Controller
         $comment->likes()->delete();
 
         if ($comment->images) {
-            foreach (json_decode($comment->images) as $image) {
+            foreach ($comment->images as $image) {
                 // $this->deleteImg($image, 'images/posts/comments/');
                 $this->deleteS3Image($image, 'images/posts/comments/');
             }

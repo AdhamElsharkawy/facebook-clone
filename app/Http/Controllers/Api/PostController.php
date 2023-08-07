@@ -241,12 +241,15 @@ class PostController extends Controller
         if (!$post) return $this->notFound();
 
         if ($post->images) {
-            foreach (json_decode($post->images) as $image) {
+            foreach ($post->images as $image) {
                 // $this->deleteImg($image, 'images/posts/');
                 $this->deleteS3Image($image);
             }
         }
-
+        $polls = $post->polls()->get();
+        foreach ($polls as $poll) {
+            $poll->users()->detach();
+        }
         $post->polls()->delete();
         $post->delete();
 
