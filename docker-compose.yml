@@ -56,7 +56,7 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
-    
+
     blue-redis:
         container_name: 'blue-redis'
         image: 'redis:alpine'
@@ -65,16 +65,17 @@ services:
         restart: unless-stopped
         environment:
             REDIS_PASSWORD: '${REDIS_PASSWORD}'
+        deploy:
+            resources:
+                limits:
+                    cpus: "0.5"
+                    memory: 256M
         networks:
             - blue-intranet-net
-        resources:
-            limits:
-                memory: 256M
-                cpus: '0.25'
         volumes:
             - 'blue-redis:/data'
         command: redis-server --appendonly yes
-        
+
 networks:
     blue-intranet-net:
         driver: bridge
