@@ -29,6 +29,7 @@ services:
             - blue-intranet-net
         depends_on:
             - blue-intranetDB
+            - blue-redis
 
     blue-intranetDB:
         container_name: 'blue-intranetDB'
@@ -55,9 +56,30 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
+    
+    blue-redis:
+        container_name: 'blue-redis'
+        image: 'redis:alpine'
+        ports:
+            - '6379:6379'
+        restart: unless-stopped
+        environment:
+            REDIS_PASSWORD: '${REDIS_PASSWORD}'
+        networks:
+            - blue-intranet-net
+        resources:
+            limits:
+                memory: 256M
+                cpus: '0.25'
+        volumes:
+            - 'blue-redis:/data'
+        command: redis-server --appendonly yes
+        
 networks:
     blue-intranet-net:
         driver: bridge
 volumes:
     blue-intranet-mysql:
+        driver: local
+    blue-redis:
         driver: local
