@@ -185,11 +185,10 @@ class PostController extends Controller
         }
         
         if(!$request->images) $request->images = [];
-        
         $images = [];
         if ($request->old_images && count($request->old_images) > 0) {
             foreach ($request->old_images as $image) {
-                if (!in_array($image, $request->images)) {
+                if (!in_array($image, $post->images)) {
                     // $this->deleteImg($image, 'images/posts/');
                     $this->deleteS3Image($image);
                 }else {
