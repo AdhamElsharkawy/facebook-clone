@@ -41,7 +41,7 @@ class PostController extends Controller
         if (!$posts) return $this->notFound();
 
         foreach ($posts as $post) {
-            $post->makeHidden(['user_id', 'likes', 'images']);
+            $post->makeHidden(['user_id', 'likes']);
             $post->user->makeHidden(['id', 'image']);
             $post->user->makeHidden('department_id');
             $post->user->department->makeHidden('id');
@@ -146,7 +146,7 @@ class PostController extends Controller
 
         $post->makeHidden(['user_id', 'likes']);
         foreach ($post->comments as $comment) {
-            $comment->makeHidden(['post_id', 'user_id', 'likes', 'images']);
+            $comment->makeHidden(['post_id', 'user_id', 'likes']);
             $comment->user->makeHidden('id');
         }
 
