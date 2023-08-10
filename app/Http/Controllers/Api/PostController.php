@@ -183,20 +183,22 @@ class PostController extends Controller
         if (!$post) {
             return $this->notFound();
         }
-
+        
+        if(!$request->images) $request->images = [];
+        
         $images = [];
-        if ($request->old_images) {
+        if ($request->old_images && count($request->old_images) > 0) {
             foreach ($request->old_images as $image) {
                 if (!in_array($image, $request->images)) {
                     // $this->deleteImg($image, 'images/posts/');
                     $this->deleteS3Image($image);
-                } else {
+                }else {
                     $images[] = $image;
                 }
             }
         }
 
-        if ($request->images) {
+        if ($request->images && count($request->images) > 0) {
             foreach ($request->images as $image) {
                 // $images[] = $this->img($image, 'images/posts/');
                 $images[] = $this->uploadS3Image($image, 'images/posts');
