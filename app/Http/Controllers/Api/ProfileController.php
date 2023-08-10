@@ -39,9 +39,9 @@ class ProfileController extends Controller
         if ($posts->count() == 0) return $posts;
 
         foreach ($posts as $post) {
-            $post->makeHidden(['user_id', 'likes', 'images']);
+            $post->makeHidden(['user_id', 'likes']);
             foreach ($post->comments as $comment) {
-                $comment->makeHidden(['id', 'post_id', 'user_id', 'likes', 'images']);
+                $comment->makeHidden(['id', 'post_id', 'user_id', 'likes']);
                 $comment->user->makeHidden('id');
             }
         }
