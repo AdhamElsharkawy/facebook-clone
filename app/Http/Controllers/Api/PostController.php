@@ -188,11 +188,11 @@ class PostController extends Controller
         $images = [];
         if ($request->old_images && count($request->old_images) > 0) {
             foreach ($request->old_images as $image) {
-                if (!in_array($image, $post->images)) {
+                if (in_array($image, $post->images)) {
                     // $this->deleteImg($image, 'images/posts/');
-                    $this->deleteS3Image($image);
-                }else {
                     $images[] = $image;
+                }else {
+                    $this->deleteS3Image($image);
                 }
             }
         }
@@ -205,7 +205,7 @@ class PostController extends Controller
         }
 
         $form_data = $request->except(['images', 'old_images', 'polls']);
-        if ($request->images) {
+        if ($request->images || $request->old_images) {
             $form_data['images'] = json_encode($images);
         }
         $form_data['created_at'] = $request->created_at ? $request->created_at : now();
