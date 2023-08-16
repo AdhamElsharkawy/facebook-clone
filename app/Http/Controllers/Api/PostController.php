@@ -41,13 +41,12 @@ class PostController extends Controller
         if (!$posts) return $this->notFound();
 
         foreach ($posts as $post) {
-            $post->makeHidden(['user_id', 'likes']);
-            $post->user->makeHidden(['id', 'image']);
+            $post->makeHidden(['likes']);
+            $post->user->makeHidden(['image']);
             $post->user->makeHidden('department_id');
             $post->user->department->makeHidden('id');
             foreach ($post->comments as $comment) {
-                $comment->makeHidden(['post_id', 'user_id', 'likes', 'images']);
-                $comment->user->makeHidden('id');
+                $comment->makeHidden(['likes', 'images']);
             }
             // remove the post that has a date didn't come yet
             if ($post->created_at > now()) {
