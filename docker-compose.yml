@@ -17,6 +17,7 @@ services:
             - 'host.docker.internal:host-gateway'
         ports:
             - '8003:80'
+            - '6003:6001'
         environment:
             WWWUSER: 1000
             LARAVEL_SAIL: 1
@@ -59,7 +60,7 @@ services:
 
     blue-redis:
         container_name: 'blue-redis'
-        image: 'redis:alpine'
+        image: 'redis:5.0.5-alpine3.9'
         ports:
             - '6379:6379'
         restart: unless-stopped
@@ -74,7 +75,7 @@ services:
             - blue-intranet-net
         volumes:
             - 'blue-redis:/data'
-        command: redis-server --appendonly yes
+        command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
 
 networks:
     blue-intranet-net:
