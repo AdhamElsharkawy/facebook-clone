@@ -95,4 +95,10 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     Route::put("comments/{comment}/like", [CommentController::class, 'reactLike'])->name('comments.like');
     Route::put("comments/{comment}/undo-like", [CommentController::class, 'undoReactLike'])->name('comments.undo-like');
     Route::delete("comments/{comment}", [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    // test-event
+    Route::get("test-event", function () {
+        broadcast(new NewNotification(auth('api')->user(), 'New Notification'));
+        return response()->json(['message' => 'Event has been sent!']);
+    });
 });

@@ -6,7 +6,7 @@
 	"databaseConfig": {
 		"redis": {
 			"port": "6379",
-			"host": "63.32.92.143",
+			"host": "blue-intranet-redis",
 			"password": "blueholding"
 		},
 		"sqlite": {
@@ -28,7 +28,7 @@
 		"redis": true
 	},
 	"apiOriginAllow": {
-		"allowCors": false,
+		"allowCors": true,
 		"allowOrigin": "",
 		"allowMethods": "",
 		"allowHeaders": ""

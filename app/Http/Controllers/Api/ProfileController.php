@@ -117,7 +117,7 @@ class ProfileController extends Controller
     {
         $validator = $this->apiValidationTrait($request->all(), [
             'title' => 'required|string',
-            'mobile' => 'required|numeric|digits:12',
+            'mobile' => 'required|numeric|digits:9',
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
         ]);
         if ($validator) return $validator;
