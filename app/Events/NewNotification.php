@@ -11,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use App\Models\User;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewNotification implements ShouldBroadcast
+class NewNotification implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
