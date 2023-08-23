@@ -22,10 +22,6 @@ Route::get(
     }
 )->where('any', '^(?!api\/)[\/\w\.\,-]*');
 
-Route::post('/broadcasting/auth', function () {
-    return auth('jwt')->user();
-})->middleware('jwt:api');
-
 // Route::get('/t',function(){
 //     Round::where('name', 'ROUND1')->first()->update(['id' => '1']);
 //     Round::where('name', 'ROUND2')->first()->update(['id' => '2']);

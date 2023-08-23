@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('user.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
-});
+}, ['guards' => ['sanctum']]);
 
 // Broadcast::channel('notifications-channel', function ($user) {
 //     return true; // just allow all authenticated users

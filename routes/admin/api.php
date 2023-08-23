@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SeoController;
+use App\Events\NewNotification;
+use App\Models\User;
 
 //don't forget it has an admin prefix
 require __DIR__ . '/auth.php';
@@ -41,4 +43,10 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     Route::delete('comments/delete/all', [CommentController::class, 'destroyAll']);
     //seos
     Route::resource('seos', SeoController::class)->only(['index', 'update']);
+
+});
+
+Route::get("trigger-noitification", function () {
+    broadcast(new NewNotification(User::find(1), 'New Notification'));
+    return response()->json(['message' => 'Event has been sent!']);
 });

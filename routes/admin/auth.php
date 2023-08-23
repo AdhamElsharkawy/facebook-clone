@@ -62,4 +62,8 @@ Route::group(['middleware' => 'admin:sanctum', 'as' => 'admin.'], function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::post('/broadcasting/auth', function () {
+        return auth()->user();
+    });
 });
