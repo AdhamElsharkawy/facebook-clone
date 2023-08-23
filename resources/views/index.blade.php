@@ -24,7 +24,7 @@
 
 <body>
     <div id="app"></div>
-    <script>
+    {{-- <script>
         // window.laravel_echo_port = '{{ env('LARAVEL_ECHO_PORT') }}';
         window.pusher_key = '{{ env('PUSHER_APP_KEY') }}';
         window.pusher_cluster = '{{ env('PUSHER_APP_CLUSTER') }}';
@@ -32,7 +32,7 @@
             {!! json_encode([
                 'user' => Auth::guard('sanctum')->check() ? Auth::guard('sanctum')->id() : null,
             ]) !!};
-    </script>
+    </script> --}}
     {{-- <script src="//{{ Request::getHost() }}:{{ env('LARAVEL_ECHO_PORT') }}/socket.io/socket.io.js"></script> --}}
     <script type="module" src="{{ mix('js/app.js') }}"></script>
 </body>

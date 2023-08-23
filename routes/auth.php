@@ -12,5 +12,9 @@ Route::group(['as' => 'api.'], function () {
 
         Route::post('logout', 'logout')->name('logout');
         Route::post('refresh', 'refresh')->name('refresh');
+
+        Route::post('/broadcasting/auth', function () {
+            return auth('api')->tokenById(auth('api')->user()->id);
+        });
     });
 });

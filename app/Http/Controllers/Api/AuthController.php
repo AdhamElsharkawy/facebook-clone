@@ -139,7 +139,6 @@ class AuthController extends Controller
         ]);
     } // end of refresh
 
-
     public function register(Request $request)
     {
         $request->validate([
