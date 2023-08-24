@@ -27,7 +27,9 @@
         "vue-loader": "^16.8.3"
     },
     "dependencies": {
+        "@ably/laravel-echo": "^1.0.3",
         "@vueform/multiselect": "^2.6.2",
+        "ably": "^1.2.43",
         "chart.js": "^4.3.0",
         "install": "^0.13.0",
         "jquery": "^3.6.4",

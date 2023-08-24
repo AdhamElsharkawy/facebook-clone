@@ -22,6 +22,22 @@ axios.defaults.withCredentials = true;
 //     authEndpoint: "/api/admin/broadcasting/auth",
 // });
 
+// import Echo from '@ably/laravel-echo';
+
+// window.Ably = require('ably');
+
+// Create new echo client instance using ably-js client driver.
+// window.Echo = new Echo({
+//     broadcaster: 'ably',
+//     key: window.ably_key,
+//     authEndpoint: '/api/admin/broadcasting/auth',
+//     auth: {
+//         headers: {
+//             'X-CSRF-TOKEN': window.Laravel.csrfToken,
+//         },
+//     },
+// });
+
 // // public channel
 // window.Echo.channel("notifications-channel").listen(
 //     ".NotificationEvent",
