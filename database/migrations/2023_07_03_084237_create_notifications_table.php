@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('type');
             $table->bigInteger('post_id')->nullable()->unsigned();
             $table->bigInteger('comment_id')->nullable()->unsigned();
+            $table->string('message')->nullable();
+            $table->string('causer_name')->nullable();
 
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade')->onUpdate('cascade');

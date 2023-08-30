@@ -64,6 +64,7 @@ class AuthController extends Controller
                 $form_data["name"] = $odoo_user['name'];
                 $form_data["email"] = $odoo_user['username'];
                 $form_data["password"] = Hash::make($request->password);
+                $form_data["image"] = $odoo_user['web.base.url'] . $odoo_user['image'];
                 $user = User::create($form_data);
 
                 // check if his odoo department exist in our db and if not create it

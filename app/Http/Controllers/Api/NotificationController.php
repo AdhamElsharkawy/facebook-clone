@@ -35,7 +35,8 @@ class NotificationController extends Controller
         $notification = Notification::create([
             'user_id' => $user_id,
             'type' => $type,
-            'post_id' => $post_id
+            'post_id' => $post_id,
+            'causer_name' => auth('api')->user()->name
         ]);
 
         // broadcast(new NewNotification(User::find($user_id), $notification));
